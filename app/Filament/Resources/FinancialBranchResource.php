@@ -22,7 +22,7 @@ class FinancialBranchResource extends Resource
     protected static ?string $model = FinancialBranch::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
-    protected static ?string $navigationGroup = 'Core';
+    protected static ?string $navigationGroup = 'البيانات الأساسية';
     protected static ?string $navigationLabel = 'الأفرع المالية ';
     protected static ?string $label = 'الأفرع المالية ';
 

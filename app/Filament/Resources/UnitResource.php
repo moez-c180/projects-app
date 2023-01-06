@@ -23,7 +23,9 @@ class UnitResource extends Resource
     protected static ?string $model = Unit::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
-
+    protected static ?string $navigationGroup = 'البيانات الأساسية';
+    protected static ?string $navigationLabel = 'الوحدات ';
+    protected static ?string $label = 'الوحدات ';
     public static function form(Form $form): Form
     {
         return $form

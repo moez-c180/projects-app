@@ -21,7 +21,9 @@ class DepartmentResource extends Resource
     protected static ?string $model = Department::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
-
+    protected static ?string $navigationGroup = 'البيانات الأساسية';
+    protected static ?string $navigationLabel = 'الأسلحة ';
+    protected static ?string $label = 'الأسلحة ';
     public static function form(Form $form): Form
     {
         return $form

@@ -11,5 +11,13 @@ module.exports = {
                 warning: colors.yellow,
             },
         },
+        fontFamily: {
+            sans: ['"Tajawal"', 'sans-serif'],
+        }
     },
+    plugins: [
+        require('@tailwindcss/forms'), 
+        require('@tailwindcss/typography'), 
+    ],
+    // 'google_fonts' => "https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap",
 }

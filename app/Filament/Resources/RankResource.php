@@ -21,6 +21,9 @@ class RankResource extends Resource
     protected static ?string $model = Rank::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationGroup = 'البيانات الأساسية';
+    protected static ?string $navigationLabel = 'الرتب و الدرجات ';
+    protected static ?string $label = 'الرتب و الدرجات ';
 
     public static function form(Form $form): Form
     {

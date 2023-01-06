@@ -21,6 +21,9 @@ class IncomeCategoryResource extends Resource
     protected static ?string $model = IncomeCategory::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationGroup = 'البيانات الأساسية';
+    protected static ?string $navigationLabel = 'أنواع الإيراد ';
+    protected static ?string $label = 'أنواع الإيراد ';
 
     public static function form(Form $form): Form
     {

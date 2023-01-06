@@ -29,6 +29,8 @@ class MemberResource extends Resource
     protected static ?string $model = Member::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationLabel = 'الأعضاء ';
+    protected static ?string $label = 'الأعضاء ';
 
     public static function form(Form $form): Form
     {
