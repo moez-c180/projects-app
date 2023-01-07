@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\TextColumn;
 use stdClass;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Card;
 
 class RankResource extends Resource
 {
@@ -29,7 +30,10 @@ class RankResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')->required()->maxLength(255)
+                Card::make()->schema([
+                    TextInput::make('name')
+                    ->label('الاسم')->required()->maxLength(255)
+                ])
             ]);
     }
 
@@ -40,9 +44,8 @@ class RankResource extends Resource
                 TextColumn::make('#')->getStateUsing(static function (stdClass $rowLoop): string {
                     return (string) $rowLoop->iteration;
                 }),
-                TextColumn::make('code'),
-                TextColumn::make('name'),
-                TextColumn::make('created_at')->dateTime('d-m-Y, H:i a')
+                TextColumn::make('name')->label('الاسم'),
+                TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();
                         return $state->since();

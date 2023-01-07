@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use stdClass;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Card;
 
 class FinancialBranchResource extends Resource
 {
@@ -30,8 +31,12 @@ class FinancialBranchResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('code')->required()->maxLength(255),
-                TextInput::make('name')->required()->maxLength(255)
+                Card::make()->schema([
+                    TextInput::make('code')
+                        ->label('الكود')->required()->maxLength(255),
+                    TextInput::make('name')
+                        ->label('الاسم')->required()->maxLength(255)
+                ])
             ]);
     }
 
@@ -42,9 +47,9 @@ class FinancialBranchResource extends Resource
                 TextColumn::make('#')->getStateUsing(static function (stdClass $rowLoop): string {
                     return (string) $rowLoop->iteration;
                 }),
-                TextColumn::make('code'),
-                TextColumn::make('name'),
-                TextColumn::make('created_at')->dateTime('d-m-Y, H:i a')
+                TextColumn::make('code')->label('الكود'),
+                TextColumn::make('name')->label('الاسم'),
+                TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();
                         return $state->since();

@@ -24,6 +24,7 @@ use Filament\Tables\Columns\TextColumn;
 use stdClass;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Tables\Columns\BadgeColumn;
+use Filament\Forms\Components\Card;
 
 class SafeEntryResource extends Resource
 {
@@ -37,53 +38,67 @@ class SafeEntryResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('safe_entry_type')
-                    ->options([
-                        'in' => 'وارد',
-                        'out' => 'صادر',
-                    ])
-                    ->reactive()
-                    ->required(),
-                Select::make('safe_entry_category_id')
-                    ->options(function(Closure $get) {
-                        if ( !empty($get('safe_entry_type')) ) {
-                            return SafeEntryCategory::whereCategory($get('safe_entry_type'))->pluck('name', 'id');
-                        }
-                    })
-                    ->required()
-                    ->hidden(fn (Closure $get) => $get('safe_entry_type') === null),
-                TextInput::make('amount')
-                    ->numeric()
-                    ->minValue(1)
-                    ->required(),
-                TextInput::make('contact_name')->maxLength(255),
-                Textarea::make('description')->required(),
-                DateTimePicker::make('operation_time'),
-                Select::make('payable_type')
-                    ->options([
-                        Unit::class => 'Unit',
-                        Member::class => 'Member',
-                    ])
-                    ->reactive()
-                    ->required(),
-                Select::make('payable_id')
-                    ->searchable()
-                    ->getSearchResultsUsing(function(string $search, Closure $get) {
-                        $searchable = $get('payable_type');
-                        if ($searchable == Unit::class)
-                        {
-                            return Unit::query()->whereLike('name', $search)->limit(50)->pluck('name', 'id');
-                        } elseif ($searchable == Member::class)
-                        {
-                            return Member::query()->whereLike('name', $search)->limit(50)->pluck('name', 'id');
-                        } else {
-                            return null;
-                        }
-                    })
-                    ->required()
-                
-                
-
+                Card::make()->schema([
+                    Select::make('safe_entry_type')
+                        ->label('صادر / وارد')
+                        ->options([
+                            'in' => 'وارد',
+                            'out' => 'صادر',
+                        ])
+                        ->reactive()
+                        ->required(),
+                    Select::make('safe_entry_category_id')
+                        ->label('نوع حركة الخزينة')
+                        ->options(function(Closure $get) {
+                            if ( !empty($get('safe_entry_type')) ) {
+                                return SafeEntryCategory::whereCategory($get('safe_entry_type'))->pluck('name', 'id');
+                            }
+                        })
+                        ->required()
+                        ->hidden(fn (Closure $get) => $get('safe_entry_type') === null),
+                    TextInput::make('amount')
+                        ->label('المبلغ')
+                        ->numeric()
+                        ->minValue(1)
+                        ->required(),
+                    TextInput::make('contact_name')
+                        ->label('اسم القائم بالمعاملة')
+                        ->maxLength(255),
+                    Textarea::make('description')
+                        ->label('التوصيف')->required(),
+                    DateTimePicker::make('operation_time')
+                        ->label('تاريخ العملية'),
+                    Select::make('payable_type')
+                        ->label('وحدة / عضو')
+                        ->options([
+                            Unit::class => 'Unit',
+                            Member::class => 'Member',
+                        ])
+                        ->reactive()
+                        ->required(),
+                    Select::make('payable_id')
+                        ->label('الاسم')
+                        ->searchable()
+                        ->getSearchResultsUsing(function(string $search, Closure $get) {
+                            $searchable = $get('payable_type');
+                            if ($searchable == Unit::class)
+                            {
+                                return Unit::query()->whereLike('name', $search)->limit(50)->pluck('name', 'id');
+                            } elseif ($searchable == Member::class)
+                            {
+                                return Member::query()->whereLike('name', $search)->limit(50)->pluck('name', 'id');
+                            } else {
+                                return null;
+                            }
+                        })
+                        ->required()
+                        ->hiddenOn('view'),
+                    TextInput::make('payable_name')
+                        ->default(function(Closure $get) {
+                            return $get('payable.name');
+                        })
+                        ->label('الاسم')->visibleOn('view'),
+                ])
             ])->columns(1);
     }
 
@@ -95,6 +110,7 @@ class SafeEntryResource extends Resource
                     return (string) $rowLoop->iteration;
                 }),
                 BadgeColumn::make('safeEntryCategory.category')
+                    ->label('صادر / وارد')
                     ->colors([
                         'success' => static fn ($state): bool => $state === 'وارد',
                         'danger' => static fn ($state): bool => $state === 'صادر',
@@ -102,20 +118,25 @@ class SafeEntryResource extends Resource
                     ->getStateUsing(function(Model $record) {
                         return $record->safeEntryCategory->category == 'in' ? 'وارد' : 'صادر';
                     }),
-                TextColumn::make('safeEntryCategory.name'),
+                TextColumn::make('safeEntryCategory.name')
+                    ->label('نوع حركة الخزينة'),
                 TextColumn::make('payable_type')
+                    ->label('وحدة / عضو')
                     ->getStateUsing(function(Model $record) {
                         return $record->payable_type == Unit::class ? 'وحدة' : 'عضو';
                     }),
                 TextColumn::make('payable_id')
+                    ->label('الاسم')
                     ->getStateUsing(function(Model $record) {
                         return $record->payable->name;
                     }),
                 TextColumn::make('amount')
+                    ->label('المبلغ')
                     ->description('جم'),
-                TextColumn::make('description')->words(10),
+                TextColumn::make('description')
+                    ->label('التوصيف')->words(10),
 
-                TextColumn::make('created_at')->dateTime('d-m-Y, H:i a')
+                TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();
                         return $state->since();

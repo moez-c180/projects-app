@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use stdClass;
+use Filament\Forms\Components\Card;
 
 class UnitResource extends Resource
 {
@@ -30,11 +31,16 @@ class UnitResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('code')->required()->maxLength(255),
-                TextInput::make('name')->required()->maxLength(255),
-                Select::make('financial_branch_id')
-                    ->options(FinancialBranch::all()->pluck('name', 'id'))
-                    ->required()
+                Card::make()->schema([
+                    TextInput::make('code')
+                        ->label('الكود')->required()->maxLength(255),
+                    TextInput::make('name')
+                        ->label('الاسم')->required()->maxLength(255),
+                    Select::make('financial_branch_id')
+                        ->label('الفرع المالي')
+                        ->options(FinancialBranch::all()->pluck('name', 'id'))
+                        ->required()
+                ])
             ]);
     }
 
@@ -45,10 +51,10 @@ class UnitResource extends Resource
                 TextColumn::make('#')->getStateUsing(static function (stdClass $rowLoop): string {
                     return (string) $rowLoop->iteration;
                 }),
-                TextColumn::make('financialBranch.name'),
-                TextColumn::make('code'),
-                TextColumn::make('name'),
-                TextColumn::make('created_at')->dateTime('d-m-Y, H:i a')
+                TextColumn::make('financialBranch.name')->label('الفرع المالي'),
+                TextColumn::make('code')->label('الكود'),
+                TextColumn::make('name')->label('الاسم'),
+                TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();
                         return $state->since();

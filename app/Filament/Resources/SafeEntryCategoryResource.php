@@ -16,6 +16,7 @@ use Filament\Tables\Columns\TextColumn;
 use stdClass;
 use App\Models\SafeEntryCategory;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Card;
 
 class SafeEntryCategoryResource extends Resource
 {
@@ -30,13 +31,17 @@ class SafeEntryCategoryResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')->required()->maxLength(255),
-                Select::make('category')
-                    ->options([
-                        'in' => 'وارد',
-                        'out' => 'صادر',
-                    ])
-                    ->required()
+                Card::make()->schema([
+                    TextInput::make('name')
+                        ->label('الاسم')->required()->maxLength(255),
+                    Select::make('category')
+                        ->options([
+                            'in' => 'وارد',
+                            'out' => 'صادر',
+                        ])
+                        ->label('التصنيف')
+                        ->required()
+                ])
             ]);
     }
 
@@ -47,9 +52,9 @@ class SafeEntryCategoryResource extends Resource
                 TextColumn::make('#')->getStateUsing(static function (stdClass $rowLoop): string {
                     return (string) $rowLoop->iteration;
                 }),
-                TextColumn::make('name'),
-                TextColumn::make('category'),
-                TextColumn::make('created_at')->dateTime('d-m-Y, H:i a')
+                TextColumn::make('name')->label('الاسم'),
+                TextColumn::make('category')->label('التصنيف'),
+                TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();
                         return $state->since();
