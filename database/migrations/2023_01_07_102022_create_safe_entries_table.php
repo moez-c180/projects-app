@@ -13,11 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('income_categories', function (Blueprint $table) {
+        Schema::create('safe_entries', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->foreignId('safe_entry_category_id')->constrained();
+            $table->morphs('payable');
+            $table->integer('amount');
+            $table->string('contact_name')->nullable();
+            $table->text('description');
+            $table->dateTime('operation_time');
             $table->timestamps();
             $table->softDeletes();
+            
         });
     }
 
@@ -28,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('income_categories');
+        Schema::dropIfExists('safe_entries');
     }
 };

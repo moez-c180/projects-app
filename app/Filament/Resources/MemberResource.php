@@ -22,7 +22,10 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Contracts\Queue\Job;
 use stdClass;
+use App\Filament\Resources\MemberResource\RelationManagers\JobsRelationManager;
+use App\Filament\Resources\MemberResource\RelationManagers\PromotionsRelationManager;
 
 class MemberResource extends Resource
 {
@@ -103,13 +106,15 @@ class MemberResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
     
     public static function getRelations(): array
     {
         return [
-            //
+            JobsRelationManager::class,
+            PromotionsRelationManager::class,
         ];
     }
     

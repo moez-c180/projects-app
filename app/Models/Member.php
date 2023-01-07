@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Department;
 use App\Models\Rank;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\MemberPromotion;
+use App\Models\MemberJob;
 
 class Member extends Model
 {
@@ -71,5 +74,25 @@ class Member extends Model
     public function rank(): BelongsTo
     {
         return $this->belongsTo(Rank::class);
+    }
+
+    /**
+     * Get all of the jobs for the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function jobs(): HasMany
+    {
+        return $this->hasMany(MemberJob::class);
+    }
+
+    /**
+     * Get all of the promotions for the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function promotions(): HasMany
+    {
+        return $this->hasMany(MemberPromotion::class);
     }
 }

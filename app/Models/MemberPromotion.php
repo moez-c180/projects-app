@@ -14,6 +14,12 @@ class MemberPromotion extends Model
     use HasFactory;
     use SoftDeletes;
     
+    protected $fillable = [
+        'member_id',
+        'rank_id',
+        'promotion_date',
+    ];
+
     /**
      * Get the member that owns the MemberPromotion
      *

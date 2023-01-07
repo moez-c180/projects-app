@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('memberships', function (Blueprint $table) {
+        Schema::create('safe_entry_categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('member_id')->constrained()->cascadeOnDelete();
-            $table->char('year', 4);
-            $table->char('month', 2);
-            $table->integer('amount');
-            $table->text('notes')->nullable();
+            $table->string('name');
+            $table->enum('category', ['in', 'out']);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('memberships');
+        Schema::dropIfExists('safe_entry_categories');
     }
 };
