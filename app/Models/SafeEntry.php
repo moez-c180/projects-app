@@ -9,11 +9,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\SafeEntryCategory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class SafeEntry extends Model
+class SafeEntry extends Model implements HasMedia
 {
     use HasFactory;
     use SoftDeletes;
+    use InteractsWithMedia;
 
     protected $fillable = [
         'safe_entry_category_id',
@@ -27,6 +30,7 @@ class SafeEntry extends Model
     ];
 
     protected $casts = ['operation_time' => 'datetime'];
+    const MEDIA_LIBRARY_COLLECTION = 'safe-entry-attachments';
 
     protected function amount(): Attribute
     {

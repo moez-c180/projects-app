@@ -12,6 +12,7 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "marjose123/filament-lockscreen": "^1.1",
         "phpsa/filament-authentication": "^2.3",
         "saade/filament-laravel-log": "^1.1",
         "savannabits/filament-flatpickr": "^1.0",

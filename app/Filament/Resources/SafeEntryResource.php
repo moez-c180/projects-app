@@ -25,6 +25,7 @@ use stdClass;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class SafeEntryResource extends Resource
 {
@@ -98,6 +99,9 @@ class SafeEntryResource extends Resource
                             return $get('payable.name');
                         })
                         ->label('الاسم')->visibleOn('view'),
+                    SpatieMediaLibraryFileUpload::make('attachments')->label('مرفقات')
+                        ->collection(SafeEntry::MEDIA_LIBRARY_COLLECTION)
+                        ->multiple(),
                 ])
             ])->columns(1);
     }
