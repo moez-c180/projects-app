@@ -85,16 +85,18 @@ class MemberResource extends Resource
                 TextColumn::make('#')->getStateUsing(static function (stdClass $rowLoop): string {
                     return (string) $rowLoop->iteration;
                 }),
-                TextColumn::make('military_number')->label('الرقم العسكري'),
-                TextColumn::make('seniority_number')->label('رقم الأقدمية'),
+                TextColumn::make('military_number')->label('الرقم العسكري')->searchable(isIndividual: true, isGlobal: false),
+                TextColumn::make('seniority_number')->label('رقم الأقدمية')->searchable(isIndividual: true, isGlobal: false),
                 TextColumn::make('rank.name')->label('الرتبة / الدرجة'),
-                TextColumn::make('name')->label('الاسم'),
+                TextColumn::make('name')->label('الاسم')->searchable(isIndividual: true, isGlobal: false),
                 BooleanColumn::make('is_nco')->label('ضابط صف'),
                 BooleanColumn::make('is_institute_graduate')->label('معهد فني'),
                 BooleanColumn::make('is_general_staff')->label('أ ح'),
                 TextColumn::make('category.name')->label('الفئة'),
                 TextColumn::make('class')->label('الدفعة'),
                 TextColumn::make('department.name')->label('السلاح'),
+                TextColumn::make('home_phone_number')->label('رقم تليفون المنزل')->searchable(isIndividual: true, isGlobal: false),
+                TextColumn::make('mobile_phone_number')->label('رقم تليفون المحمول')->searchable(isIndividual: true, isGlobal: false),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();
