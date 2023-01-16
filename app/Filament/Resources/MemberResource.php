@@ -87,7 +87,11 @@ class MemberResource extends Resource
                 }),
                 TextColumn::make('military_number')->label('الرقم العسكري')->searchable(isIndividual: true, isGlobal: false),
                 TextColumn::make('seniority_number')->label('رقم الأقدمية')->searchable(isIndividual: true, isGlobal: false),
-                TextColumn::make('rank.name')->label('الرتبة / الدرجة'),
+                TextColumn::make('rank.name')
+                ->getStateUsing(function($record) {
+                    return $record->withGeneralStaffRank();
+                })
+                ->label('الرتبة / الدرجة'),
                 TextColumn::make('name')->label('الاسم')->searchable(isIndividual: true, isGlobal: false),
                 BooleanColumn::make('is_nco')->label('ضابط صف'),
                 BooleanColumn::make('is_institute_graduate')->label('معهد فني'),

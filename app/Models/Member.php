@@ -95,4 +95,13 @@ class Member extends Model
     {
         return $this->hasMany(MemberPromotion::class);
     }
+
+    public function withGeneralStaffRank()
+    {
+        if ($this->is_general_staff)
+        {
+            return implode(" ", [$this->rank->name, "أ ح"]);
+        }
+        return $this->this->rank->name;
+    }
 }

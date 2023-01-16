@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "dyrynda/laravel-cascade-soft-deletes": "^4.2",
         "filament/filament": "^2.16",
         "filament/spatie-laravel-media-library-plugin": "^2.1",
         "guzzlehttp/guzzle": "^7.2",
@@ -16,6 +17,7 @@
         "phpsa/filament-authentication": "^2.3",
         "saade/filament-laravel-log": "^1.1",
         "savannabits/filament-flatpickr": "^1.0",
+        "shuvroroy/filament-spatie-laravel-backup": "^1.2",
         "spatie/laravel-medialibrary": "^10.0.0",
         "z3d0x/filament-logger": "^0.4.2"
     },
