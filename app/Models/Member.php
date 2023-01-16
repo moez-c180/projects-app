@@ -96,11 +96,16 @@ class Member extends Model
         return $this->hasMany(MemberPromotion::class);
     }
 
-    public function withGeneralStaffRank()
+    public function getRankName()
     {
         if ($this->is_general_staff)
         {
             return implode(" ", [$this->rank->name, "أ ح"]);
+        }
+        
+        if ($this->is_institute_graduate)
+        {
+            return implode(" ", [$this->rank->name, "معهد فني"]);
         }
         return $this->rank->name;
     }
