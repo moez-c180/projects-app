@@ -82,7 +82,7 @@ class MemberResource extends Resource
                     Textarea::make('pension_reason')->label('سبب الإحالة للمعاش'),
                     DatePicker::make('death_date')->label('تاريخ الوفاة'),
                     Textarea::make('notes')->label('ملاحظات')
-                ])
+                ])->columns(2)
             ]);
     }
 

@@ -41,10 +41,11 @@ class MembershipResource extends Resource
                             return Member::query()
                             ->whereLike('name', $search)
                             ->limit(50)->pluck('name', 'id');
-                        })
+                        })->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
                         ->required(),
                     TextInput::make('amount')
                         ->label('المبلغ')
+                        ->minValue(1)
                         ->numeric()->required(),
                     Select::make('year')
                         ->label('السنة')
