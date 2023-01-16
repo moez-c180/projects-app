@@ -27,6 +27,9 @@ use stdClass;
 use App\Filament\Resources\MemberResource\RelationManagers\JobsRelationManager;
 use App\Filament\Resources\MemberResource\RelationManagers\PromotionsRelationManager;
 use Filament\Forms\Components\Card;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
 
 class MemberResource extends Resource
 {
@@ -41,14 +44,18 @@ class MemberResource extends Resource
         return $form
             ->schema([
                 Card::make()->schema([
-                    TextInput::make('military_number')->label('الرقم العسكري')->maxLength(255),
-                    TextInput::make('seniority_number')->label('رقم الأقدمية')->maxLength(255),
+                    TextInput::make('military_number')
+                        ->unique()
+                        ->label('الرقم العسكري')->maxLength(255),
+                    TextInput::make('seniority_number')
+                        ->unique()
+                        ->label('رقم الأقدمية')->maxLength(255),
                     Select::make('rank_id')
                         ->label('الرتبة / الدرجة')
                         ->options(Rank::all()->pluck('name', 'id'))
                         ->required(),
                     Toggle::make('is_institute_graduate')->label('معهد فني'),
-                    Toggle::make('is_nco')->label('ضابط صف'),
+                    Toggle::make('is_nco')->label('شرفيين'),
                     Select::make('category_id')
                         ->label('الفئة')
                         ->options(Category::all()->pluck('name', 'id'))
@@ -63,6 +70,7 @@ class MemberResource extends Resource
                     TextInput::make('class')->maxLength(255)->label('الدفعة'),
                     Select::make('department_id')
                         ->label('السلاح')
+                        ->required()
                         ->options(Department::all()->pluck('name', 'id')),
                     DatePicker::make('graduation_date')->label('تاريخ التخرج'),
                     DatePicker::make('birth_date')->label('تاريخ الميلاد'),
@@ -93,7 +101,7 @@ class MemberResource extends Resource
                 })
                 ->label('الرتبة / الدرجة'),
                 TextColumn::make('name')->label('الاسم')->searchable(isIndividual: true, isGlobal: false),
-                BooleanColumn::make('is_nco')->label('ضابط صف'),
+                BooleanColumn::make('is_nco')->label('شرفيين'),
                 // BooleanColumn::make('is_institute_graduate')->label('معهد فني'),
                 // BooleanColumn::make('is_general_staff')->label('أ ح'),
                 TextColumn::make('category.name')->label('الفئة'),
@@ -109,7 +117,23 @@ class MemberResource extends Resource
                     })->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('rank_id')
+                    ->label('السلاح')
+                    ->options(Rank::all()->pluck('name', 'id')),
+                SelectFilter::make('department_id')
+                    ->label('السلاح')
+                    ->options(Department::all()->pluck('name', 'id')),
+                SelectFilter::make('category_id')
+                    ->label('الفئة')
+                    ->options(Category::all()->pluck('name', 'id')),
+                Filter::make('is_nco')
+                    ->label('شرفيين')
+                    ->query(fn (Builder $query): Builder => $query->where('is_nco', true)),
+                Filter::make('is_institute_graduate')
+                    ->label('معهد فني')
+                    ->query(fn (Builder $query): Builder => $query->where('is_institute_graduate', true)),
+                DateFilter::make('created_at')
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
