@@ -9,20 +9,27 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\Select;
+use App\Models\Rank;
+use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Columns\TextColumn;
 
 class PromotionsRelationManager extends RelationManager
 {
     protected static string $relationship = 'promotions';
-
-    protected static ?string $recordTitleAttribute = 'id';
+    protected static ?string $title = 'الترقي ';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('id')
-                    ->required()
-                    ->maxLength(255),
+                Select::make('rank_id')
+                    ->label('الرتبة الحالية')
+                    ->options(Rank::all()->pluck('name', 'id'))
+                    ->required(),
+                DatePicker::make('promotion_date')
+                    ->label('تاريخ الترقي')
+                    ->required(),
             ]);
     }
 
@@ -30,7 +37,8 @@ class PromotionsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id'),
+                TextColumn::make('rank.name')->label('الرتبة'),
+                TextColumn::make('promotion_date')->label('تاريخ الترقي'),
             ])
             ->filters([
                 //

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Member;
 use App\Models\Unit;
+use App\Models\Rank;
 
 class MemberPromotion extends Model
 {
@@ -38,5 +39,15 @@ class MemberPromotion extends Model
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class);
+    }
+    
+    /**
+     * Get the rank that owns the MemberPromotion
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function rank(): BelongsTo
+    {
+        return $this->belongsTo(Rank::class);
     }
 }
