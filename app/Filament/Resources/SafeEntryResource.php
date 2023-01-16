@@ -132,7 +132,7 @@ class SafeEntryResource extends Resource
                 TextColumn::make('payable_id')
                     ->label('الاسم')
                     ->getStateUsing(function(Model $record) {
-                        return $record->payable->name;
+                        return $record->payable?->name;
                     }),
                 TextColumn::make('amount')
                     ->label('المبلغ')
