@@ -132,7 +132,7 @@ class MemberResource extends Resource
                 Filter::make('is_institute_graduate')
                     ->label('معهد فني')
                     ->query(fn (Builder $query): Builder => $query->where('is_institute_graduate', true)),
-                DateFilter::make('created_at')
+                DateFilter::make('created_at')->label('تاريخ التسجيل')
 
             ])
             ->actions([
