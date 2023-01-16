@@ -102,6 +102,6 @@ class Member extends Model
         {
             return implode(" ", [$this->rank->name, "أ ح"]);
         }
-        return $this->this->rank->name;
+        return $this->rank->name;
     }
 }
