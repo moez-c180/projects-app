@@ -77,6 +77,7 @@ class RankResource extends Resource
         return [
             'index' => Pages\ListRanks::route('/'),
             'create' => Pages\CreateRank::route('/create'),
+            'view' => Pages\ViewRank::route('/{record}'),
             'edit' => Pages\EditRank::route('/{record}/edit'),
         ];
     }    
