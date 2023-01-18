@@ -31,6 +31,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
 use Illuminate\Validation\Rule;
+use App\Models\BankName;
 
 class MemberResource extends Resource
 {
@@ -78,10 +79,17 @@ class MemberResource extends Resource
                     DatePicker::make('travel_date')->label('تاريخ السفر'),
                     DatePicker::make('return_date')->label('تاريخ العودة'),
                     TextInput::make('national_id_number')->label('الرقم القومي')->maxLength(14),
+                    Select::make('bank_name_id')
+                        ->options(BankName::all()->pluck('name', 'id'))
+                        ->label('البنك'),
+                    TextInput::make('bank_branch_name')->label('اسم فرع البنك')->maxLength(255),
                     TextInput::make('bank_account_number')->label('رقم حساب البنك')->maxLength(255),
                     DatePicker::make('pension_date')->label('تاريخ الإحالة للمعاش'),
                     Textarea::make('pension_reason')->label('سبب الإحالة للمعاش'),
                     DatePicker::make('death_date')->label('تاريخ الوفاة'),
+                    TextInput::make('register_number')->label('رقم السجل'),
+                    TextInput::make('file_number')->label('رقم الملف'),
+                    TextInput::make('review')->label('مراجعة'),
                     Textarea::make('notes')->label('ملاحظات')
                 ])->columns(2)
             ]);

@@ -11,6 +11,7 @@ use App\Models\Rank;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\MemberPromotion;
 use App\Models\MemberJob;
+use App\Models\BankName;
 
 class Member extends Model
 {
@@ -44,6 +45,11 @@ class Member extends Model
         'death_date',
         'is_subscribed',
         'notes',
+        'bank_name_id',
+        'bank_branch_name',
+        'register_number',
+        'file_number',
+        'review',
     ];
 
     /**
@@ -96,6 +102,16 @@ class Member extends Model
         return $this->hasMany(MemberPromotion::class);
     }
 
+    /**
+     * Get the bankName that owns the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function bankName(): BelongsTo
+    {
+        return $this->belongsTo(BankName::class);
+    }
+
     public function getRankName()
     {
         if ($this->is_general_staff)
@@ -109,4 +125,5 @@ class Member extends Model
         }
         return $this->rank->name;
     }
+    
 }
