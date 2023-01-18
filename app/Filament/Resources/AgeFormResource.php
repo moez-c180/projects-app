@@ -79,14 +79,16 @@ class AgeFormResource extends Resource
                 TextColumn::make('#')->getStateUsing(static function (stdClass $rowLoop): string {
                     return (string) $rowLoop->iteration;
                 }),
-                TextColumn::make('age_form_type')->label('Age'),
-                TextColumn::make('serial')->label('Serial'),
-                TextColumn::make('member.rank.name')->label('Rank'),
-                TextColumn::make('member.name')->label('Name')
+                TextColumn::make('age_form_type')->label('السن'),
+                TextColumn::make('serial')->label('رقم المذكرة'),
+                TextColumn::make('member.rank.name')
+                    ->getStateUsing(fn($record) => $record->member->getRankName())
+                    ->label('الرتبة'),
+                TextColumn::make('member.name')->label('اسم العضو')
                     ->url(fn ($record) => url('/admin/members/'.$record->member->id.'/edit'), true),
-                TextColumn::make('member.birth_date')->label('Birth Date'),
-                TextColumn::make('amount'),
-                TextColumn::make('form_date'),
+                TextColumn::make('member.birth_date')->label('تاريخ الميلاد'),
+                TextColumn::make('amount')->label('المبلغ'),
+                TextColumn::make('form_date')->label('تاريخ المذكرة'),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();
