@@ -6,23 +6,24 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Member;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Traits\HasAmount;
 use App\Traits\HasMember;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class Membership extends Model
+class MemberForm extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use HasAmount;
     use HasMember;
 
     protected $fillable = [
         'member_id',
-        'month',
-        'year',
-        'amount',
-        'notes',
+        'form_type',
+        'form_id',
     ];
 
+    // public function formable(): MorphTo
+    // {
+    //     return $this->morphTo(Form)
+    // }
 }

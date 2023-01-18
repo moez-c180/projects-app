@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Unit;
+use App\Traits\HasMember;
 
 class MemberJob extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use HasMember;
 
     protected $fillable = [
         'member_id',
@@ -19,16 +21,6 @@ class MemberJob extends Model
         'job_filled_date',
         'current_job'
     ];
-
-    /**
-     * Get the member that owns the MemberJob
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function member(): BelongsTo
-    {
-        return $this->belongsTo(Member::class);
-    }
 
     /**
      * Get the unit that owns the MemberJob

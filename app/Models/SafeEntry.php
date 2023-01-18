@@ -11,12 +11,14 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use App\Traits\HasAmount;
 
 class SafeEntry extends Model implements HasMedia
 {
     use HasFactory;
     use SoftDeletes;
     use InteractsWithMedia;
+    use HasAmount;
 
     protected $fillable = [
         'safe_entry_category_id',
@@ -31,14 +33,6 @@ class SafeEntry extends Model implements HasMedia
 
     protected $casts = ['operation_time' => 'datetime'];
     const MEDIA_LIBRARY_COLLECTION = 'safe-entry-attachments';
-
-    protected function amount(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value/100,
-            set: fn ($value) => $value * 100,
-        );
-    }
     
     /**
      * Get the safeEntryCategory that owns the SafeEntry

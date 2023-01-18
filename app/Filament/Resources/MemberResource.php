@@ -30,6 +30,7 @@ use Filament\Forms\Components\Card;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
+use Illuminate\Validation\Rule;
 
 class MemberResource extends Resource
 {
@@ -45,10 +46,10 @@ class MemberResource extends Resource
             ->schema([
                 Card::make()->schema([
                     TextInput::make('military_number')
-                        ->unique()
+                        // ->rules(Rule::unique('members', 'military_number'))
                         ->label('الرقم العسكري')->maxLength(255),
                     TextInput::make('seniority_number')
-                        ->unique()
+                    // ->unique()
                         ->label('رقم الأقدمية')->maxLength(255),
                     Select::make('rank_id')
                         ->label('الرتبة / الدرجة')

@@ -9,27 +9,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Member;
 use App\Models\Unit;
 use App\Models\Rank;
+use App\Traits\HasMember;
 
 class MemberPromotion extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use HasMember;
     
     protected $fillable = [
         'member_id',
         'rank_id',
         'promotion_date',
     ];
-
-    /**
-     * Get the member that owns the MemberPromotion
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function member(): BelongsTo
-    {
-        return $this->belongsTo(Member::class);
-    }
 
     /**
      * Get the unit that owns the MemberPromotion

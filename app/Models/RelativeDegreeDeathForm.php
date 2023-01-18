@@ -6,23 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Traits\HasAmount;
 
 class RelativeDegreeDeathForm extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use HasAmount;
 
     protected $fillable = [
         'name',
         'amount',
         'in_cairo'
     ];
-
-    protected function amount(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value/100,
-            set: fn ($value) => $value * 100,
-        );
-    }
 }
