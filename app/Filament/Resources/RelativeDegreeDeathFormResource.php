@@ -79,6 +79,7 @@ class RelativeDegreeDeathFormResource extends Resource
         return [
             'index' => Pages\ListRelativeDegreeDeathForms::route('/'),
             'create' => Pages\CreateRelativeDegreeDeathForm::route('/create'),
+            'view' => Pages\ViewRelativeDegreeDeathForm::route('/{record}'),
             'edit' => Pages\EditRelativeDegreeDeathForm::route('/{record}/edit'),
         ];
     }    
