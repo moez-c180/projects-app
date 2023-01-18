@@ -32,6 +32,8 @@ use Filament\Tables\Filters\SelectFilter;
 use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
 use Illuminate\Validation\Rule;
 use App\Models\BankName;
+use Closure;
+use Filament\Forms\Components\Hidden;
 
 class MemberResource extends Resource
 {
@@ -46,6 +48,7 @@ class MemberResource extends Resource
         return $form
             ->schema([
                 Card::make()->schema([
+                    Hidden::make('id'),
                     TextInput::make('military_number')
                         // ->rules(Rule::unique('members', 'military_number'))
                         ->label('الرقم العسكري')->maxLength(255),
@@ -55,7 +58,19 @@ class MemberResource extends Resource
                     Select::make('rank_id')
                         ->label('الرتبة / الدرجة')
                         ->options(Rank::all()->pluck('name', 'id'))
-                        ->required(),
+                        ->required()
+                        ->disabled(function(Closure $get) {
+                            if ( is_null($get('id')))
+                            {
+                                return false;
+                            }
+                            $member = Member::findOrFail($get('id'));
+                            if ($member->promotions()->count() > 0)
+                            {
+                                return true;
+                            }
+                            return false;
+                        }),
                     Toggle::make('is_institute_graduate')->label('معهد فني'),
                     Toggle::make('is_nco')->label('شرفيين'),
                     Select::make('category_id')

@@ -44,10 +44,16 @@ class PromotionsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                ->after(function($record) {
+                        $record->member->update(['rank_id' => $record->rank_id]);
+                }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->after(function($record) {
+                        $record->member->update(['rank_id' => $record->rank_id]);
+                }),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

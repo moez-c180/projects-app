@@ -12,7 +12,7 @@ class EditMemberPromotion extends EditRecord
 
     protected function afterSave(): void
     {
-        dd("asd");
+        $this->record->member->update(['rank_id' => $this->record->rank_id]);
     }
 
     protected function getActions(): array
