@@ -97,6 +97,7 @@ class AgeFormResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('age_form_type')
+                    ->label('السن')
                     ->options(AgeForm::AGE_FORM_VALUES),
                 DateFilter::make('created_at')->label('تاريخ التسجيل')
 
