@@ -58,6 +58,8 @@ class RelativeDeathFormResource extends Resource
                     TextInput::make('amount')
                         ->label('قيمة المنحة')
                         ->required()
+                        ->numeric()
+                        ->minValue(1)
                         ->disabled(),
                     DatePicker::make('form_date')
                         ->label('تاريخ المذكرة')->required()

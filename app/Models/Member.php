@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\MemberPromotion;
 use App\Models\MemberJob;
 use App\Models\BankName;
+use App\Models\Unit;
 
 class Member extends Model
 {
@@ -124,6 +125,11 @@ class Member extends Model
             return implode(" ", [$this->rank->name, "معهد فني"]);
         }
         return $this->rank->name;
+    }
+
+    public function getUnit(): Unit
+    {
+        return $this->jobs()->orderByDesc('created_at')->first()?->unit;
     }
     
 }
