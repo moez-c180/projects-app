@@ -62,6 +62,7 @@ class RefundFormResource extends Resource
                 TextColumn::make('member.name')->label('اسم العضو')
                     ->url(fn ($record) => url('/admin/members/'.$record->member->id), true),
                 TextColumn::make('amount')->label('المبلغ'),
+                TextColumn::make('notes')->label('ملاحظات'),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();
