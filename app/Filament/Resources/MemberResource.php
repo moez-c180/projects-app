@@ -71,8 +71,6 @@ class MemberResource extends Resource
                             }
                             return false;
                         }),
-                    Toggle::make('is_institute_graduate')->label('معهد فني'),
-                    Toggle::make('is_nco')->label('شرفيين'),
                     Select::make('category_id')
                         ->label('الفئة')
                         ->options(Category::all()->pluck('name', 'id'))
@@ -125,9 +123,10 @@ class MemberResource extends Resource
                 })
                 ->label('الرتبة / الدرجة'),
                 TextColumn::make('name')->label('الاسم')->searchable(isIndividual: true, isGlobal: false),
-                BooleanColumn::make('is_nco')->label('شرفيين'),
-                // BooleanColumn::make('is_institute_graduate')->label('معهد فني'),
-                // BooleanColumn::make('is_general_staff')->label('أ ح'),
+                BooleanColumn::make('is_nco')
+                    ->getStateUsing(function($record) {
+                        return $record->category->is_nco;
+                    })->label('شرفيين'),
                 TextColumn::make('category.name')->label('الفئة'),
                 TextColumn::make('class')->label('الدفعة'),
                 TextColumn::make('department.name')->label('السلاح'),
@@ -150,12 +149,6 @@ class MemberResource extends Resource
                 SelectFilter::make('category_id')
                     ->label('الفئة')
                     ->options(Category::all()->pluck('name', 'id')),
-                Filter::make('is_nco')
-                    ->label('شرفيين')
-                    ->query(fn (Builder $query): Builder => $query->where('is_nco', true)),
-                Filter::make('is_institute_graduate')
-                    ->label('معهد فني')
-                    ->query(fn (Builder $query): Builder => $query->where('is_institute_graduate', true)),
                 DateFilter::make('created_at')->label('تاريخ التسجيل')
 
             ])

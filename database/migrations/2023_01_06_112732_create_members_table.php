@@ -17,9 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('military_number')->nullable();
             $table->string('seniority_number')->nullable();
-            $table->foreignId('rank_id')->constrained()->cascadeOnDelete();
-            $table->boolean('is_institute_graduate')->default(0);
-            $table->boolean('is_nco')->default(0);
+            $table->foreignId('rank_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->boolean('is_general_staff')->default(0);
             $table->string('name');
@@ -40,6 +38,11 @@ return new class extends Migration
             $table->text('pension_reason')->nullable();
             $table->date('death_date')->nullable();
             $table->boolean('is_subscribed')->default(0);
+            $table->foreignId('bank_name_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->string('bank_branch_name')->nullable();
+            $table->string('register_number')->nullable();
+            $table->string('file_number')->nullable();
+            $table->string('review')->nullable();
             $table->longText('notes')->nullable();
             $table->timestamps();
             $table->softDeletes();

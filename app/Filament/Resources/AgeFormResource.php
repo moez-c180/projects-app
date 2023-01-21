@@ -59,7 +59,7 @@ class AgeFormResource extends Resource
                     ->reactive()
                     ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
                         $member = Member::findOrFail($get('member_id'));
-                        $amount = AgeForm::getAmount($state, $member->is_nco);
+                        $amount = AgeForm::getAmount($state, $member->category->is_nco);
                         $set('amount', $amount);
                     }),
                 TextInput::make('amount')

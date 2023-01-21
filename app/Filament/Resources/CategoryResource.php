@@ -14,8 +14,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\TextColumn;
 use stdClass;
-use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 
 class CategoryResource extends Resource
 {
@@ -25,6 +27,7 @@ class CategoryResource extends Resource
     protected static ?string $navigationGroup = 'البيانات الأساسية';
     protected static ?string $navigationLabel = 'الفئات ';
     protected static ?string $label = 'الفئات ';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -32,7 +35,9 @@ class CategoryResource extends Resource
                 Card::make()->schema([
                     TextInput::make('name')
                         ->label('الاسم')
-                        ->required()->maxLength(255)
+                        ->required()->maxLength(255),
+                    Toggle::make('is_nco')
+                        ->label('شرفيين')
                 ])
             ]);
     }
@@ -45,6 +50,7 @@ class CategoryResource extends Resource
                     return (string) $rowLoop->iteration;
                 }),
                 TextColumn::make('name')->label('الاسم'),
+                ToggleColumn::make('is_nco')->label('شرفيين'),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();
@@ -76,8 +82,8 @@ class CategoryResource extends Resource
     {
         return [
             'index' => Pages\ListCategories::route('/'),
-            'view' => Pages\ViewCategory::route('/{record}'),
             'create' => Pages\CreateCategory::route('/create'),
+            'view' => Pages\ViewCategory::route('/{record}'),
             'edit' => Pages\EditCategory::route('/{record}/edit'),
         ];
     }    

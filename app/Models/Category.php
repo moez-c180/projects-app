@@ -13,7 +13,10 @@ class Category extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'is_nco'
+    ];
 
     /**
      * Get all of the members for the Category

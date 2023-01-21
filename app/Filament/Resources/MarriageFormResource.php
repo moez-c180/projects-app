@@ -66,7 +66,7 @@ class MarriageFormResource extends Resource
                     ->reactive()
                     ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
                         $member = Member::findOrFail($get('member_id'));
-                        $amount = MarriageForm::getAmount($state, $member->is_nco);
+                        $amount = MarriageForm::getAmount($state, $member->category->is_nco);
                         $set('amount', $amount);
                     })->visible(fn(Closure $get) => !is_null($get('member_id')) ),
                 TextInput::make('relative_type')
