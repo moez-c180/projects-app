@@ -87,7 +87,7 @@ class AgeFormResource extends Resource
                 TextColumn::make('member.name')->label('اسم العضو')
                     ->url(fn ($record) => url('/admin/members/'.$record->member->id), true),
                 TextColumn::make('member.birth_date')->label('تاريخ الميلاد'),
-                TextColumn::make('amount')->label('المبلغ'),
+                TextColumn::make('amount')->label('المبلغ')->description('جم'),
                 TextColumn::make('form_date')->label('تاريخ المذكرة'),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {

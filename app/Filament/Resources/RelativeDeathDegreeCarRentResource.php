@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\RelativeDegreeDeathFormResource\Pages;
-use App\Filament\Resources\RelativeDegreeDeathFormResource\RelationManagers;
-use App\Models\RelativeDegreeDeathForm;
+use App\Filament\Resources\RelativeDeathDegreeCarRentResource\Pages;
+use App\Filament\Resources\RelativeDeathDegreeCarRentResource\RelationManagers;
+use App\Models\RelativeDeathDegreeCarRent;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -15,17 +15,18 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\BooleanColumn;
 
-class RelativeDegreeDeathFormResource extends Resource
+class RelativeDeathDegreeCarRentResource extends Resource
 {
-    protected static ?string $model = RelativeDegreeDeathForm::class;
+    protected static ?string $model = RelativeDeathDegreeCarRent::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
     protected static ?string $navigationGroup = 'البيانات الأساسية';
     protected static ?string $navigationLabel = 'قيم ايجار سيارة مذكرة الوفاة ';
     protected static ?string $label = 'قيم ايجار سيارة مذكرة الوفاة ';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -50,7 +51,8 @@ class RelativeDegreeDeathFormResource extends Resource
                 TextColumn::make('name')
                     ->label('درجة القرابة'),
                 TextColumn::make('amount')
-                    ->label('المبلغ'),
+                    ->label('المبلغ')
+                    ->description('جم'),
                 BooleanColumn::make('in_cairo')
                     ->label('داخل القاهرة')
             ])
@@ -77,10 +79,9 @@ class RelativeDegreeDeathFormResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRelativeDegreeDeathForms::route('/'),
-            'create' => Pages\CreateRelativeDegreeDeathForm::route('/create'),
-            'view' => Pages\ViewRelativeDegreeDeathForm::route('/{record}'),
-            'edit' => Pages\EditRelativeDegreeDeathForm::route('/{record}/edit'),
+            'index' => Pages\ListRelativeDeathDegreeCarRents::route('/'),
+            'create' => Pages\CreateRelativeDeathDegreeCarRent::route('/create'),
+            'edit' => Pages\EditRelativeDeathDegreeCarRent::route('/{record}/edit'),
         ];
     }    
 }

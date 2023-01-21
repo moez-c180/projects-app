@@ -18,6 +18,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use stdClass;
+use Filament\Forms\Components\Card;
 
 class RefundFormResource extends Resource
 {
@@ -33,7 +34,8 @@ class RefundFormResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('member_id')
+                Card::make([
+                    Select::make('member_id')
                         ->label(' العضو')
                         ->searchable()
                         ->getSearchResultsUsing(function(string $search) {
@@ -49,6 +51,7 @@ class RefundFormResource extends Resource
                         ->minValue(1)
                         ->required(),
                     Textarea::make('notes')->label('ملاحظات')
+                ])
             ]);
     }
 

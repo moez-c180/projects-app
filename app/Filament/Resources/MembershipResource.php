@@ -85,7 +85,7 @@ class MembershipResource extends Resource
                 TextColumn::make('member.name')->label('اسم العضو'),
                 TextColumn::make('month')->label('الشهر'),
                 TextColumn::make('year')->label('السنة'),
-                TextColumn::make('amount')->label('المبلغ'),
+                TextColumn::make('amount')->label('المبلغ')->description('جم'),
                 TextColumn::make('notes')->label('ملاحظات')->words(5),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {

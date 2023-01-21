@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('relative_degree_death_forms', function (Blueprint $table) {
+        Schema::create('relative_death_degree_car_rents', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->integer('amount');
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('relative_degree_death_forms');
+        Schema::dropIfExists('relative_death_degree_car_rents');
     }
 };

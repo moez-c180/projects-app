@@ -99,7 +99,7 @@ class MarriageFormResource extends Resource
                 TextColumn::make('member.name')->label('اسم العضو')
                     ->url(fn ($record) => url('/admin/members/'.$record->member->id), true),
                 TextColumn::make('marriage_date')->label('تاريخ الزواج'),
-                TextColumn::make('amount')->label('المبلغ'),
+                TextColumn::make('amount')->label('المبلغ')->description('جم'),
                 TextColumn::make('relative_type')->label('درجة القرابة'),
                 TextColumn::make('relative_name')->label('اسم المعول'),
                 TextColumn::make('form_date')->label('تاريخ المذكرة'),
