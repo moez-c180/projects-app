@@ -85,7 +85,7 @@ class AgeFormResource extends Resource
                     ->getStateUsing(fn($record) => $record->member->getRankName())
                     ->label('الرتبة'),
                 TextColumn::make('member.name')->label('اسم العضو')
-                    ->url(fn ($record) => url('/admin/members/'.$record->member->id.'/edit'), true),
+                    ->url(fn ($record) => url('/admin/members/'.$record->member->id), true),
                 TextColumn::make('member.birth_date')->label('تاريخ الميلاد'),
                 TextColumn::make('amount')->label('المبلغ'),
                 TextColumn::make('form_date')->label('تاريخ المذكرة'),

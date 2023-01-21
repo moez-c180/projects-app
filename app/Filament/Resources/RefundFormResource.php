@@ -60,7 +60,7 @@ class RefundFormResource extends Resource
                     return (string) $rowLoop->iteration;
                 }),
                 TextColumn::make('member.name')->label('اسم العضو')
-                    ->url(fn ($record) => url('/admin/members/'.$record->member->id.'/view'), true),
+                    ->url(fn ($record) => url('/admin/members/'.$record->member->id), true),
                 TextColumn::make('amount')->label('المبلغ'),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {

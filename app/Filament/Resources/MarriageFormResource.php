@@ -97,7 +97,7 @@ class MarriageFormResource extends Resource
                     ->getStateUsing(fn($record) => $record->member->getRankName())
                     ->label('الرتبة'),
                 TextColumn::make('member.name')->label('اسم العضو')
-                    ->url(fn ($record) => url('/admin/members/'.$record->member->id.'/view'), true),
+                    ->url(fn ($record) => url('/admin/members/'.$record->member->id), true),
                 TextColumn::make('marriage_date')->label('تاريخ الزواج'),
                 TextColumn::make('amount')->label('المبلغ'),
                 TextColumn::make('relative_type')->label('درجة القرابة'),
