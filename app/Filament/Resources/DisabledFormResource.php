@@ -82,7 +82,7 @@ class DisabledFormResource extends Resource
                     ->url(fn ($record) => url('/admin/members/'.$record->member->id), true),
                 TextColumn::make('form_amount')->label('قيمة المنحة'),
                 TextColumn::make('total_form_amounts')->label('منح تم صرفها'),
-                TextColumn::make('amount')->label('صافي المستحق'),
+                TextColumn::make('amount')->label('المبلغ'),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();

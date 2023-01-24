@@ -75,8 +75,8 @@ class FellowshipGrantFormResource extends Resource
                     ->label('الرتبة'),
                 TextColumn::make('member.name')->label('اسم العضو')
                     ->url(fn ($record) => url('/admin/members/'.$record->member->id), true),
-                TextColumn::make('grant_amount'),
-                TextColumn::make('amount'),
+                TextColumn::make('grant_amount')->label('قيمة المنحة'),
+                TextColumn::make('amount')->label('المبلغ'),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();

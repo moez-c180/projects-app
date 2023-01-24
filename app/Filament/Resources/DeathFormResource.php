@@ -54,22 +54,22 @@ class DeathFormResource extends Resource
                         ->default(now())
                         ->maxDate(now()),
                     TextInput::make('late_payments_amount')
-                        ->label('late_payments_amount')
+                        ->label('المتأخرات')
                         ->required()
                         ->numeric()
                         ->minValue(0),
                     TextInput::make('total_form_payments')
-                        ->label('total_form_payments')
+                        ->label('مجموع المنح')
                         ->required()
                         ->numeric()
                         ->minValue(0),
                     TextInput::make('funeral_fees')
-                        ->label('funeral_fees')
+                        ->label('مصاريف الجنازة')
                         ->required()
                         ->numeric()
                         ->minValue(0),
                     TextInput::make('final_amount')
-                        ->label('final_amount')
+                        ->label('صافي المنحة')
                         ->required()
                         ->numeric()
                         ->minValue(1),
@@ -95,12 +95,12 @@ class DeathFormResource extends Resource
                 TextColumn::make('member.name')->label('اسم العضو')
                     ->url(fn ($record) => url('/admin/members/'.$record->member->id), true),
                 TextColumn::make('form_date')->label('تاريخ المذكرة'),
-                TextColumn::make('death_date'),
-                TextColumn::make('late_payments_amount'),
-                TextColumn::make('total_form_amounts'),
-                TextColumn::make('funeral_fees'),
-                TextColumn::make('final_amount'),
-                TextColumn::make('amount'),
+                TextColumn::make('death_date')->label('تاريخ الوفاة'),
+                TextColumn::make('late_payments_amount')->label('المتأخرات'),
+                TextColumn::make('total_form_amounts')->label('مجموع المنح'),
+                TextColumn::make('funeral_fees')->label('مصاريف الجنازة'),
+                TextColumn::make('final_amount')->label('صافي المنحة'),
+                TextColumn::make('amount')->label('المبلغ'),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();
