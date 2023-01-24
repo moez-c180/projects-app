@@ -32,7 +32,6 @@ class JobsRelationManager extends RelationManager
             ->schema([
                 TextInput::make('current_job')
                     ->label('الوظيفة الحالية')
-                    ->required()
                     ->maxLength(255),
                 Select::make('unit_id')
                     ->label('الوحدة')
