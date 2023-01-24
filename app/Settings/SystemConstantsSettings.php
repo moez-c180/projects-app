@@ -19,7 +19,8 @@ class SystemConstantsSettings extends Settings
     public string $co_age_honor_65;
     public string $co_age_honor_70;
     public string $co_grant;
-    
+    public string $co_funeral_fees; // 2000
+
     public string $nco_death;
     public string $nco_relative_death;
     public string $nco_marriage;
@@ -27,6 +28,7 @@ class SystemConstantsSettings extends Settings
     public string $nco_age_honor_65;
     public string $nco_age_honor_70;
     public string $nco_grant;
+    public string $nco_funeral_fees; // 1000
 
     public static function group(): string
     {
