@@ -13,11 +13,22 @@ use App\Models\MemberPromotion;
 use App\Models\MemberJob;
 use App\Models\BankName;
 use App\Models\Unit;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
+use App\Models\AgeForm;
+use App\Models\DeathForm;
+use App\Models\DisabledForm;
+use App\Models\FellowshipGrantForm;
+use App\Models\MarriageForm;
+use App\Models\MemberForm;
+use App\Models\Membership;
+use App\Models\RefundForm;
+use App\Models\RelativeDeathForm;
 
 class Member extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use CascadeSoftDeletes;
 
     protected $fillable = [
         'military_number',
@@ -51,6 +62,21 @@ class Member extends Model
         'register_number',
         'file_number',
         'review',
+    ];
+
+    protected $cascadeDeletes = [
+        'jobs',
+        'promotions',
+        'relativeDeathForms',
+        'refundForms',
+        'projectClosureForms',
+        'memberships',
+        'memberForms',
+        'marriageForms',
+        'fellowshipGrantForms',
+        'disabledForms',
+        'deathForms',
+        'ageForms',
     ];
 
     /**
@@ -130,6 +156,106 @@ class Member extends Model
     public function getUnit(): Unit
     {
         return $this->jobs()->orderByDesc('created_at')->first()?->unit;
+    }
+
+    /**
+     * Get all of the ageForms for the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function ageForms(): HasMany
+    {
+        return $this->hasMany(AgeForm::class);
+    }
+
+    /**
+     * Get all of the deathForms for the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function deathForms(): HasMany
+    {
+        return $this->hasMany(DeathForm::class);
+    }
+
+    /**
+     * Get all of the disabledForms for the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function disabledForms(): HasMany
+    {
+        return $this->hasMany(DisabledForm::class);
+    }
+
+    /**
+     * Get all of the fellowshipGrantForms for the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function fellowshipGrantForms(): HasMany
+    {
+        return $this->hasMany(FellowshipGrantForm::class);
+    }
+
+    /**
+     * Get all of the marriageForms for the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function marriageForms(): HasMany
+    {
+        return $this->hasMany(MarriageForm::class);
+    }
+
+    /**
+     * Get all of the memberForms for the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function memberForms(): HasMany
+    {
+        return $this->hasMany(MemberForm::class);
+    }
+
+    /**
+     * Get all of the memberships for the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function memberships(): HasMany
+    {
+        return $this->hasMany(Membership::class);
+    }
+
+    /**
+     * Get all of the projectClosureForms for the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function projectClosureForms(): HasMany
+    {
+        return $this->hasMany(ProjectClosureForm::class);
+    }
+
+    /**
+     * Get all of the refundForms for the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function refundForms(): HasMany
+    {
+        return $this->hasMany(RefundForm::class);
+    }
+
+    /**
+     * Get all of the relativeDeathForms for the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function relativeDeathForms(): HasMany
+    {
+        return $this->hasMany(RelativeDeathForm::class);
     }
     
 }
