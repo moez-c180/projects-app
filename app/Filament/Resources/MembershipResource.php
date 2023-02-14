@@ -21,6 +21,11 @@ use Savannabits\Flatpickr\Flatpickr;
 use Filament\Tables\Columns\TextColumn;
 use stdClass;
 use Filament\Forms\Components\Card;
+use App\Models\FinancialBranch;
+use Closure;
+use App\Models\Unit;
+use Carbon\Carbon;
+use App\Filament\Resources\MembershipResource\Pages\ImportMembershipsSheet;
 
 class MembershipResource extends Resource
 {
@@ -29,6 +34,9 @@ class MembershipResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-collection';
     protected static ?string $navigationLabel = 'تسجيل الاشتراكات للأعضاء ';
     protected static ?string $label = 'تسجيل الاشتراكات للأعضاء ';
+    protected static ?string $navigationGroup = 'اشتراكات الأعضاء';
+    protected static ?int $navigationSort = 1;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -41,34 +49,34 @@ class MembershipResource extends Resource
                             return Member::query()
                             ->whereLike('name', $search)
                             ->limit(50)->pluck('name', 'id');
-                        })->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
+                        })
+                        ->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
+                        ->reactive()
+                        ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
+                            $member = Member::findOrFail($get('member_id'));
+                            $financialBranchId = $member->getUnit()->financial_branch_id;
+                            $unitId = $member->getUnit()->id;
+                            $set('financial_branch_id', $financialBranchId);
+                            $set('unit_id', $unitId);
+                        })
                         ->required(),
                     TextInput::make('amount')
                         ->label('المبلغ')
                         ->minValue(1)
                         ->numeric()->required(),
-                    Select::make('year')
-                        ->label('السنة')
-                        ->options(function() {
-                            $years = [];
-                            for($year = 1980; $year <= date('Y'); $year++)
-                            {
-                                $years[$year] = $year; 
-                            }
-                            return $years;
-                        })
-                        ->required()
-                        ->searchable(),
-                    Select::make('month')
-                        ->label('الشهر')
-                        ->options(function() {
-                            $months = [];
-                            for ($m=1; $m<=12; $m++) {
-                                
-                                $months[$m] = date('F', mktime(0,0,0,$m, 1, date('Y')));
-                            }
-                            return $months;
-                        })
+                    DatePicker::make('membership_date')
+                        ->default(Carbon::now()->startOfMonth())
+                        ->label('تاريخ القسط')
+                        ->required(),
+                    Select::make('unit_id')
+                        ->label('الوحدة')
+                        ->searchable()
+                        ->options(Unit::all()->pluck('name', 'id'))
+                        ->required(),
+                    Select::make('financial_branch_id')
+                        ->label('الفرع المالي')
+                        ->searchable()
+                        ->options(FinancialBranch::all()->pluck('name', 'id'))
                         ->required(),
                     Textarea::make('notes')->label('ملاحظات'),
                 ])
@@ -83,9 +91,16 @@ class MembershipResource extends Resource
                     return (string) $rowLoop->iteration;
                 }),
                 TextColumn::make('member.name')->label('اسم العضو'),
-                TextColumn::make('month')->label('الشهر'),
-                TextColumn::make('year')->label('السنة'),
+                TextColumn::make('member_unit')->label('وحدة العضو')->getStateUsing(function($record) {
+                    return $record->getUnit()?->name;
+                }),
+                TextColumn::make('member_financial_branch')->label('الفرع المالي للعضو')->getStateUsing(function($record) {
+                    return $record->getUnit()?->financialBranch?->name;
+                }),
+                TextColumn::make('membership_date')->label('تاريخ القسط'),
                 TextColumn::make('amount')->label('المبلغ')->description('جم'),
+                TextColumn::make('unit.name')->label('الوحدة للقسط'),
+                TextColumn::make('financialBranch.name')->label('الفرع المالي للقسط'),
                 TextColumn::make('notes')->label('ملاحظات')->words(5),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {

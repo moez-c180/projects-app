@@ -55,13 +55,23 @@ class Member extends Model
         'pension_date',
         'pension_reason',
         'death_date',
-        'is_subscribed',
         'notes',
         'bank_name_id',
         'bank_branch_name',
         'register_number',
         'file_number',
         'review',
+        'membership_start_date'
+    ];
+
+    protected $casts = [
+        'graduation_date' => 'date',
+        'birth_date' => 'date',
+        'travel_date' => 'date',
+        'return_date' => 'date',
+        'pension_date' => 'date',
+        'death_date' => 'date',
+        'membership_start_date' => 'date',
     ];
 
     protected $cascadeDeletes = [
@@ -256,6 +266,11 @@ class Member extends Model
     public function relativeDeathForms(): HasMany
     {
         return $this->hasMany(RelativeDeathForm::class);
+    }
+
+    public function getIsSubscribedAttribute()
+    {
+        return !is_null($this->membership_start_date);
     }
     
 }

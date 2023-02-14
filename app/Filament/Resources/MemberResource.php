@@ -103,6 +103,7 @@ class MemberResource extends Resource
                     TextInput::make('register_number')->label('رقم السجل'),
                     TextInput::make('file_number')->label('رقم الملف'),
                     TextInput::make('review')->label('مراجعة'),
+                    DatePicker::make('membership_start_date')->label('تاريخ الاشتراك'),
                     Textarea::make('notes')->label('ملاحظات')
                 ])->columns(2)
             ]);
@@ -130,6 +131,7 @@ class MemberResource extends Resource
                 TextColumn::make('category.name')->label('الفئة'),
                 TextColumn::make('class')->label('الدفعة'),
                 TextColumn::make('department.name')->label('السلاح'),
+                TextColumn::make('membership_start_date')->label('تاريخ الاشتراك'),
                 TextColumn::make('home_phone_number')->label('رقم تليفون المنزل')->searchable(isIndividual: true, isGlobal: false),
                 TextColumn::make('mobile_phone_number')->label('رقم تليفون المحمول')->searchable(isIndividual: true, isGlobal: false),
                 TextColumn::make('address')->label('العنوان')->searchable(isIndividual: true, isGlobal: false),

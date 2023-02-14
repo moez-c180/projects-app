@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Filament\Facades\Filament;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Navigation\NavigationGroup;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,31 @@ class AppServiceProvider extends ServiceProvider
         Filament::serving(function () {
             Filament::registerViteTheme('resources/css/filament.css');
         });
+
+        // Filament Navigation Groups
+        Filament::registerNavigationGroups([
+            NavigationGroup::make()
+                ->label('اشتراكات الأعضاء')
+                ->collapsed(),
+            NavigationGroup::make()
+                ->label('المذكرات')
+                ->collapsed(),
+            NavigationGroup::make()
+                ->label('البيانات الأساسية')
+                ->collapsed(),
+            NavigationGroup::make()
+                ->label('Authentication')
+                ->collapsed(),
+            NavigationGroup::make()
+                ->label('Settings')
+                ->collapsed(),
+            NavigationGroup::make()
+                ->label('System')
+                ->collapsed(),
+            NavigationGroup::make()
+                ->label('إعدادات')
+                ->collapsed(),
+        ]);
 
         Carbon::setWeekStartsAt(Carbon::SATURDAY);
         Carbon::setWeekEndsAt(Carbon::FRIDAY);

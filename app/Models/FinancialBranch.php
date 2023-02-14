@@ -7,15 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Unit;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 
 class FinancialBranch extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use CascadeSoftDeletes;
 
     protected $fillable = [
         'name',
         'code'
+    ];
+    
+    protected $cascadeDeletes = [
+        'units'
     ];
 
     /**
