@@ -19,6 +19,8 @@ use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use stdClass;
 use Filament\Forms\Components\Card;
+use Closure;
+use Filament\Notifications\Notification;
 
 class RefundFormResource extends Resource
 {
@@ -48,8 +50,27 @@ class RefundFormResource extends Resource
                     TextInput::make('amount')
                         ->label('المبلغ')
                         ->numeric()
+                        ->reactive()
                         ->minValue(1)
-                        ->required(),
+                        ->required()
+                        ->visible(fn(Closure $get) => !is_null($get('member_id')))
+                        ->afterStateUpdated(function(Closure $get, Closure $set) {
+                            $member = Member::findOrFail($get('member_id'));
+                            if (!$member)
+                            {
+                                return false;
+                            }
+                            if ($member->wallet < $get('amount'))
+                            {
+                                $set('amount', null);
+                                Notification::make()
+                                    ->danger()
+                                    ->title('لا يمكن إتمام العملية')
+                                    ->body('عفواًٍ لا يمكن تنفيذ العملية حيث أن العضو ليس لديه رصيد كاف.')
+                                    ->send();
+                                return false;
+                            }
+                        }),
                     Textarea::make('notes')->label('ملاحظات')
                 ])
             ]);

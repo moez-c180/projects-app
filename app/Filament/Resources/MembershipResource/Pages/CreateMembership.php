@@ -14,7 +14,14 @@ class CreateMembership extends CreateRecord
     
     protected function handleRecordCreation(array $data): Model
     {
-        return (new CreateMembershipAction($data, approved: true))->execute();
-        // return static::getModel()::create($data);
+        return (new CreateMembershipAction(
+            data: $data, 
+            approved: true,
+        ))->execute();
     }
+
+    protected function getRedirectUrl(): string
+{
+    return $this->getResource()::getUrl('index');
+}
 }

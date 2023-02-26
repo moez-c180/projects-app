@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Membership;
 use App\Observers\MembershipSheetImportObserver;
 use Illuminate\Support\ServiceProvider;
 use Filament\Facades\Filament;
@@ -9,6 +10,11 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Navigation\NavigationGroup;
 use App\Models\MembershipSheetImport;
+use App\Models\MemberWallet;
+use App\Models\RefundForm;
+use App\Observers\MembershipObserver;
+use App\Observers\MemberWalletObserver;
+use App\Observers\RefundFormObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -68,6 +74,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Observers
         MembershipSheetImport::observe(MembershipSheetImportObserver::class);
+        MemberWallet::observe(MemberWalletObserver::class);
+        Membership::observe(MembershipObserver::class);
+        RefundForm::observe(RefundFormObserver::class);
 
     }
 }

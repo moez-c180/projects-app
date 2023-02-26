@@ -26,6 +26,8 @@ use App\Models\RelativeDeathForm;
 use app\Settings\SystemConstantsSettings;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Models\MemberWallet;
 
 class Member extends Model
 {
@@ -64,7 +66,8 @@ class Member extends Model
         'register_number',
         'file_number',
         'review',
-        'membership_start_date'
+        'membership_start_date',
+        'wallet'
     ];
 
     protected $casts = [
@@ -271,6 +274,16 @@ class Member extends Model
         return $this->hasMany(RelativeDeathForm::class);
     }
 
+    /**
+     * Get all of the memberWallets for the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function memberWallets(): HasMany
+    {
+        return $this->hasMany(MemberWallet::class);
+    }
+
     public function getIsSubscribedAttribute()
     {
         return !is_null($this->membership_start_date);
@@ -328,6 +341,12 @@ class Member extends Model
         $unpaidMonths = array_diff($totalMembershipMonths, $paidMembershipMonths);
         return array_reverse($unpaidMonths);
     }
-    
-    
+
+    protected function wallet(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value/100,
+            set: fn ($value) => $value * 100,
+        );
+    }
 }

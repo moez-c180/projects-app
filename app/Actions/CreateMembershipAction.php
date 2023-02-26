@@ -4,6 +4,8 @@ namespace App\Actions;
 use App\Models\Member;
 use App\Models\Membership;
 use App\Models\MembershipOverAmount;
+use App\Models\MemberWallet;
+use Illuminate\Support\Facades\DB;
 
 class CreateMembershipAction
 {
@@ -20,17 +22,27 @@ class CreateMembershipAction
     ) {
         $this->member = Member::findOrFail($data['member_id']);
         $this->memberUnpaidMonths = $this->member->getUnpaidMembershipMonths();
-        $this->populateMembershipArray();
         $this->membershipValue = $this->getSubscriptionValue();
     }
     
-    public function execute(): Membership
+    public function execute(): Membership | MemberWallet
     {
-        foreach($this->membershipEntries as $entry)
-        {
-            Membership::create($entry);
-        }
-        return Membership::query()->latest()->first();
+        // DB::beginTransaction();
+            MemberWallet::create([
+                'member_id' => $this->member->id,
+                'amount' => $this->data['paid_amount'],
+                'type' => MemberWallet::TYPE_DEPOSIT,
+                'membership_sheet_import_id' => $this->membershipSheetImportId
+            ]);
+            
+            $this->populateMembershipArray();
+
+            foreach($this->membershipEntries as $entry)
+            {
+                Membership::create($entry);
+            }
+            return Membership::query()->latest()->first() ?? MemberWallet::query()->latest()->first();
+        // DB::commit();
     }
 
     private function getSubscriptionValue(): int
@@ -40,10 +52,14 @@ class CreateMembershipAction
 
     private function populateMembershipArray()
     {
-        $paidAmount = $this->data['paid_amount'];
+        // Get Member Wallet
+        $memberWallet = $this->member->refresh()->wallet;
+        
+        // Iterate over unpaid months for member
         foreach($this->memberUnpaidMonths as $month)
         {
-            if ($paidAmount != 0 && $paidAmount >= $this->data['membership_value'])
+            // If the paid amount is not equal to zero and it's greater than
+            if ($memberWallet != 0 && $memberWallet >= $this->data['membership_value'])
             {
                 $amount = $this->data['membership_value'];
                 $this->membershipEntries[] = [
@@ -58,21 +74,21 @@ class CreateMembershipAction
                     'paid_amount' => $this->data['paid_amount'],
                     'membership_sheet_import_id' => $this->membershipSheetImportId
                 ];
-                $paidAmount -= $amount;
-
-                
+                $memberWallet -= $amount;
             }
             
         }
-
-        if ($paidAmount != 0)
-        {
-            MembershipOverAmount::create([
-                'member_id' => $this->member->id,
-                'amount' => $paidAmount,
-                'membership_sheet_import_id' => $this->membershipSheetImportId,
-            ]);
-        }
+        
+        // Add over amount
+        // if ($paidAmount != 0)
+        // {
+        //     MemberWallet::create([
+        //         'member_id' => $this->member->id,
+        //         'amount' => $paidAmount,
+        //         'type' => MemberWallet::TYPE_DEPOSIT,
+        //         'membership_sheet_import_id' => $this->membershipSheetImportId
+        //     ]);
+        // }
         
     }
 

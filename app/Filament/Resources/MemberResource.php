@@ -103,6 +103,7 @@ class MemberResource extends Resource
                     TextInput::make('register_number')->label('رقم السجل'),
                     TextInput::make('file_number')->label('رقم الملف'),
                     TextInput::make('review')->label('مراجعة'),
+                    TextInput::make('wallet')->label('الرصيد')->hiddenOn(['create', 'edit'])->disabled(),
                     DatePicker::make('membership_start_date')
                         ->setShouldCloseOnDateSelection(true)
                         ->label('تاريخ الاشتراك'),
@@ -137,6 +138,7 @@ class MemberResource extends Resource
                 TextColumn::make('home_phone_number')->label('رقم تليفون المنزل')->searchable(isIndividual: true, isGlobal: false),
                 TextColumn::make('mobile_phone_number')->label('رقم تليفون المحمول')->searchable(isIndividual: true, isGlobal: false),
                 TextColumn::make('address')->label('العنوان')->searchable(isIndividual: true, isGlobal: false),
+                TextColumn::make('wallet')->label('الرصيد')->description('جم'),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();

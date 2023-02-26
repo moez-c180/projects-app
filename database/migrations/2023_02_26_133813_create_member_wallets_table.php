@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('member_credits', function (Blueprint $table) {
+        Schema::create('member_wallets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('member_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('membership_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('member_id')->constrained();
             $table->integer('amount');
+            $table->enum('type', ['deposit', 'withdraw'])->index();
+            $table->foreignId('membership_sheet_import_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('member_credits');
+        Schema::dropIfExists('member_wallets');
     }
 };
