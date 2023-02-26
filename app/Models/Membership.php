@@ -11,6 +11,9 @@ use App\Traits\HasAmount;
 use App\Traits\HasMember;
 use App\Models\FinancialBranch;
 use App\Models\Unit;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Models\MembershipSheetImport;
 
 class Membership extends Model
 {
@@ -28,9 +31,14 @@ class Membership extends Model
         'member_id',
         'membership_date',
         'amount',
+        'unit_id',
         'financial_branch_id',
         'unit_id',
         'notes',
+        'membership_value',
+        'paid_amount',
+        'approved',
+        'membership_sheet_import_id',
     ];
 
     protected $casts = [
@@ -55,6 +63,37 @@ class Membership extends Model
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class)->withTrashed();
+    }
+
+    public function scopeOfApproved(Builder $builder): Builder
+    {
+        return $builder->whereApproved(true);
+    }
+
+    protected function paidAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value/100,
+            set: fn ($value) => $value * 100,
+        );
+    }
+    
+    protected function membershipValue(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value/100,
+            set: fn ($value) => $value * 100,
+        );
+    }
+
+    /**
+     * Get the membershipSheetImport that owns the Membership
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function membershipSheetImport(): BelongsTo
+    {
+        return $this->belongsTo(MembershipSheetImport::class);
     }
 
 }

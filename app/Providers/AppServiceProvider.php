@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Observers\MembershipSheetImportObserver;
 use Illuminate\Support\ServiceProvider;
 use Filament\Facades\Filament;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Navigation\NavigationGroup;
+use App\Models\MembershipSheetImport;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -63,6 +65,9 @@ class AppServiceProvider extends ServiceProvider
         Builder::macro('whereLike', function (string $column, string $search) {
             return $this->orWhere($column, 'LIKE', '%'.$search.'%');
         });
+
+        // Observers
+        MembershipSheetImport::observe(MembershipSheetImportObserver::class);
 
     }
 }

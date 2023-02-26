@@ -18,7 +18,8 @@ class CreateSystemConstantsSettings extends SettingsMigration
         $this->migrator->add('general.co_age_honor_65', 2000);
         $this->migrator->add('general.co_age_honor_70', 2000);
         $this->migrator->add('general.co_grant', 10000);
-        
+        $this->migrator->add('general.co_funeral_fees', 2000);
+
         $this->migrator->add('general.nco_death', 17000);
         $this->migrator->add('general.nco_relative_death', 1000);
         $this->migrator->add('general.nco_marriage', 1000);
@@ -26,5 +27,6 @@ class CreateSystemConstantsSettings extends SettingsMigration
         $this->migrator->add('general.nco_age_honor_65', 1000);
         $this->migrator->add('general.nco_age_honor_70', 1000);
         $this->migrator->add('general.nco_grant', 8000);
+        $this->migrator->add('general.nco_funeral_fees', 1000);
     }
 }

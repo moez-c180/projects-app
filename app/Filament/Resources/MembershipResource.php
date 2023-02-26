@@ -26,6 +26,7 @@ use Closure;
 use App\Models\Unit;
 use Carbon\Carbon;
 use App\Filament\Resources\MembershipResource\Pages\ImportMembershipsSheet;
+use Filament\Notifications\Notification;
 
 class MembershipResource extends Resource
 {
@@ -38,7 +39,7 @@ class MembershipResource extends Resource
     protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
-    {
+    {   
         return $form
             ->schema([
                 Card::make()->schema([
@@ -54,14 +55,31 @@ class MembershipResource extends Resource
                         ->reactive()
                         ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
                             $member = Member::findOrFail($get('member_id'));
-                            $financialBranchId = $member->getUnit()->financial_branch_id;
-                            $unitId = $member->getUnit()->id;
-                            $set('financial_branch_id', $financialBranchId);
-                            $set('unit_id', $unitId);
+                            if (!is_null($member->membership_start_date))
+                            {
+                                $financialBranchId = $member->getUnit()->financial_branch_id;
+                                $unitId = $member->getUnit()->id;
+                                $set('financial_branch_id', $financialBranchId);
+                                $set('unit_id', $unitId);
+                                $set('membership_value', $member->getSubscriptionValue());
+                            } else {
+                                
+                                Notification::make()
+                                    ->warning()
+                                    ->title('العضو غير مشترك')
+                                    ->body('هذا العضو غير مشترك و ليس له تاريخ بداية اشتراك.')
+                                    ->send();
+                                $set('member_id', null);
+                            }
                         })
+                        ->rules('exists:members,id')
                         ->required(),
-                    TextInput::make('amount')
-                        ->label('المبلغ')
+                    TextInput::make('membership_value')
+                        ->label('قيمة الاشتراك الفعلي')
+                        // ->disabled()
+                        ->visibleOn('create'),
+                    TextInput::make('paid_amount')
+                        ->label('المبلغ المدفوع')
                         ->minValue(1)
                         ->numeric()->required(),
                     DatePicker::make('membership_date')
@@ -79,7 +97,7 @@ class MembershipResource extends Resource
                         ->options(FinancialBranch::all()->pluck('name', 'id'))
                         ->required(),
                     Textarea::make('notes')->label('ملاحظات'),
-                ])
+                ])->columns(2)
             ]);
     }
 
@@ -92,16 +110,26 @@ class MembershipResource extends Resource
                 }),
                 TextColumn::make('member.name')->label('اسم العضو'),
                 TextColumn::make('member_unit')->label('وحدة العضو')->getStateUsing(function($record) {
-                    return $record->getUnit()?->name;
+                    return $record->member->getUnit()?->name;
                 }),
                 TextColumn::make('member_financial_branch')->label('الفرع المالي للعضو')->getStateUsing(function($record) {
-                    return $record->getUnit()?->financialBranch?->name;
+                    return $record->member->getUnit()?->financialBranch?->name;
                 }),
                 TextColumn::make('membership_date')->label('تاريخ القسط'),
-                TextColumn::make('amount')->label('المبلغ')->description('جم'),
+                TextColumn::make('amount')->label('المبلغ المدفوع للقسط')->description('جم'),
+                TextColumn::make('membership_value')->label('مبلغ القسط')->description('جم'),
+                TextColumn::make('paid_amount')->label('المبلغ المدفوع')->description('جم'),
                 TextColumn::make('unit.name')->label('الوحدة للقسط'),
                 TextColumn::make('financialBranch.name')->label('الفرع المالي للقسط'),
                 TextColumn::make('notes')->label('ملاحظات')->words(5),
+                TextColumn::make('membership_source')->label('جهة التحصيل')->getStateUsing(function($record) {
+                    if ($record->membershipSheetImport)
+                    {
+                        return $record->membershipSheetImport?->media->first()->file_name;
+                    } else {
+                        return "نقدي";
+                    }
+                }),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();

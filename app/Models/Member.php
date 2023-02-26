@@ -23,6 +23,9 @@ use App\Models\MemberForm;
 use App\Models\Membership;
 use App\Models\RefundForm;
 use App\Models\RelativeDeathForm;
+use app\Settings\SystemConstantsSettings;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class Member extends Model
 {
@@ -272,5 +275,59 @@ class Member extends Model
     {
         return !is_null($this->membership_start_date);
     }
+
+    public function getSubscriptionValue(): int
+    {
+        if ($this->is_nco)
+        {
+            if (is_null($this->pension_date)) {
+                return app(SystemConstantsSettings::class)->subscription_fees_nco_in_service;
+            } else {
+                return app(SystemConstantsSettings::class)->subscription_fees_nco_out_service;
+            }
+            
+        } else {
+            if (is_null($this->pension_date)) {
+                return app(SystemConstantsSettings::class)->subscription_fees_co_in_service;
+            } else {
+                return app(SystemConstantsSettings::class)->subscription_fees_co_out_service;
+            }
+        }
+    }
+
+    // public function getMembershipUnpaidMonths(Carbon $until): ?array
+    // {
+    //     $membershipDate = $this->membership_start_date;
+    // }
+
+    public function getTotalMembershipMonths(?Carbon $until = null): array
+    {
+        $monthDays = [];
+        $until = $until ?? now()->subMonth();
+        $diffInMonths = Carbon::parse($this->membership_start_date)
+            ->diffInMonths($until);
+        
+        $membershipDate = Carbon::parse($this->membership_start_date);
+        $period = $membershipDate->range($until, 1, 'month');
+        foreach($period as $date)
+        {
+            $monthDays[] = $date->format('Y-m-01');
+        }
+
+        return $monthDays;
+    }
+
+    public function getUnpaidMembershipMonths()
+    {
+        $paidMembershipMonths = Membership::where('member_id', 1)->pluck('membership_date')->toArray();
+        $paidMembershipMonths = array_map(function($record) {
+            return $record->format('Y-m-d');
+        }, $paidMembershipMonths);
+
+        $totalMembershipMonths = $this->getTotalMembershipMonths();
+        $unpaidMonths = array_diff($totalMembershipMonths, $paidMembershipMonths);
+        return array_reverse($unpaidMonths);
+    }
+    
     
 }
