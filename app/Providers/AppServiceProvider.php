@@ -71,6 +71,10 @@ class AppServiceProvider extends ServiceProvider
         Builder::macro('whereLike', function (string $column, string $search) {
             return $this->orWhere($column, 'LIKE', '%'.$search.'%');
         });
+        
+        Builder::macro('orWhereLike', function (string $column, string $search) {
+            return $this->orWhere($column, 'LIKE', '%'.$search.'%');
+        });
 
         // Observers
         MembershipSheetImport::observe(MembershipSheetImportObserver::class);

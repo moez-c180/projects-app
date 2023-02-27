@@ -87,26 +87,26 @@ class MemberResource extends Resource
                         ->label('السلاح')
                         ->required()
                         ->options(Department::all()->pluck('name', 'id')),
-                    DatePicker::make('graduation_date')->label('تاريخ التخرج')->setShouldCloseOnDateSelection(true),
-                    DatePicker::make('birth_date')->label('تاريخ الميلاد')->setShouldCloseOnDateSelection(true),
-                    DatePicker::make('travel_date')->label('تاريخ السفر')->setShouldCloseOnDateSelection(true),
-                    DatePicker::make('return_date')->label('تاريخ العودة')->setShouldCloseOnDateSelection(true),
+                    DatePicker::make('graduation_date')->label('تاريخ التخرج'),
+                    DatePicker::make('birth_date')->label('تاريخ الميلاد'),
+                    DatePicker::make('travel_date')->label('تاريخ السفر'),
+                    DatePicker::make('return_date')->label('تاريخ العودة'),
                     TextInput::make('national_id_number')->label('الرقم القومي')->maxLength(14),
                     Select::make('bank_name_id')
                         ->options(BankName::all()->pluck('name', 'id'))
                         ->label('البنك'),
                     TextInput::make('bank_branch_name')->label('اسم فرع البنك')->maxLength(255),
                     TextInput::make('bank_account_number')->label('رقم حساب البنك')->maxLength(255),
-                    DatePicker::make('pension_date')->label('تاريخ الإحالة للمعاش')->setShouldCloseOnDateSelection(true),
+                    DatePicker::make('pension_date')->label('تاريخ الإحالة للمعاش'),
                     Textarea::make('pension_reason')->label('سبب الإحالة للمعاش'),
-                    DatePicker::make('death_date')->label('تاريخ الوفاة')->setShouldCloseOnDateSelection(true),
+                    DatePicker::make('death_date')->label('تاريخ الوفاة'),
                     TextInput::make('register_number')->label('رقم السجل'),
                     TextInput::make('file_number')->label('رقم الملف'),
                     TextInput::make('review')->label('مراجعة'),
                     TextInput::make('wallet')->label('الرصيد')->hiddenOn(['create', 'edit'])->disabled(),
                     DatePicker::make('membership_start_date')
-                        ->setShouldCloseOnDateSelection(true)
-                        ->label('تاريخ الاشتراك'),
+                        ->label('تاريخ الاشتراك')
+                        ,
                     Textarea::make('notes')->label('ملاحظات')
                 ])->columns(2)
             ]);

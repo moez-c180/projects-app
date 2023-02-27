@@ -45,7 +45,7 @@ class DisabledFormResource extends Resource
                         ->searchable()
                         ->getSearchResultsUsing(function(string $search) {
                             return Member::query()
-                            ->whereLike('name', $search)
+                            ->search($search)
                             ->limit(50)->pluck('name', 'id');
                         })->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
                         ->required(),

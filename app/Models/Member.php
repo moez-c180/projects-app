@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Models\MemberWallet;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class Member extends Model
 {
@@ -330,7 +331,7 @@ class Member extends Model
         return $monthDays;
     }
 
-    public function getUnpaidMembershipMonths()
+    public function getUnpaidMembershipMonths(): array
     {
         $paidMembershipMonths = Membership::where('member_id', 1)->pluck('membership_date')->toArray();
         $paidMembershipMonths = array_map(function($record) {
@@ -348,5 +349,13 @@ class Member extends Model
             get: fn ($value) => $value/100,
             set: fn ($value) => $value * 100,
         );
+    }
+
+    public function scopeSearch(Builder $builder, $search): Builder
+    {
+        return $builder->whereLike('name', $search)
+            ->orWhereLike('address', $search)
+            ->orWhere('military_number', $search)
+            ->orWhere('seniority_number', $search);
     }
 }

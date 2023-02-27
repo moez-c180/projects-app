@@ -87,7 +87,7 @@ class SafeEntryResource extends Resource
                                 return Unit::query()->whereLike('name', $search)->limit(50)->pluck('name', 'id');
                             } elseif ($searchable == Member::class)
                             {
-                                return Member::query()->whereLike('name', $search)->limit(50)->pluck('name', 'id');
+                                return Member::query()->search($search)->limit(50)->pluck('name', 'id');
                             } else {
                                 return null;
                             }

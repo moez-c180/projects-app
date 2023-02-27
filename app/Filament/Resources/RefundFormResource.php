@@ -42,7 +42,7 @@ class RefundFormResource extends Resource
                         ->searchable()
                         ->getSearchResultsUsing(function(string $search) {
                             return Member::query()
-                            ->whereLike('name', $search)
+                            ->search($search)
                             ->limit(50)->pluck('name', 'id');
                         })->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
                         ->required()
@@ -60,6 +60,7 @@ class RefundFormResource extends Resource
                             {
                                 return false;
                             }
+
                             if ($member->wallet < $get('amount'))
                             {
                                 $set('amount', null);
@@ -67,6 +68,17 @@ class RefundFormResource extends Resource
                                     ->danger()
                                     ->title('لا يمكن إتمام العملية')
                                     ->body('عفواًٍ لا يمكن تنفيذ العملية حيث أن العضو ليس لديه رصيد كاف.')
+                                    ->send();
+                                return false;
+                            }
+
+                            if (count($member->getUnpaidMembershipMonths()) != 0)
+                            {
+                                $set('amount', null);
+                                Notification::make()
+                                    ->danger()
+                                    ->title('لا يمكن إتمام العملية')
+                                    ->body('عفواًٍ لا يمكن تنفيذ العملية حيث أن العضو عليه اشتراكات مستحقة.')
                                     ->send();
                                 return false;
                             }
