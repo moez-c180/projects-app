@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use app\Settings\SystemConstantsSettings;
+use App\Traits\HasFormTrait;
 use App\Traits\HasMember;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,7 @@ class AgeForm extends Model
     use HasFactory;
     use SoftDeletes;
     use HasMember;
+    use HasFormTrait;
 
     const AGE_SIXY_FIVE_VALUE = 65;
     const AGE_SEVENTY_VALUE = 70;

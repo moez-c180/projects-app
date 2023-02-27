@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UnitResource\Pages;
 use App\Filament\Resources\UnitResource\RelationManagers;
+use App\Filament\Resources\UnitResource\RelationManagers\MembersRelationManager;
 use App\Models\FinancialBranch;
 use App\Models\Unit;
 use Filament\Forms;
@@ -77,7 +78,7 @@ class UnitResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            MembersRelationManager::class
         ];
     }
     

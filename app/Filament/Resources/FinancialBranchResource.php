@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\FinancialBranchResource\Pages;
 use App\Filament\Resources\FinancialBranchResource\RelationManagers;
+use App\Filament\Resources\FinancialBranchResource\RelationManagers\MembersRelationManager;
 use App\Models\FinancialBranch;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
@@ -73,7 +74,7 @@ class FinancialBranchResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            MembersRelationManager::class,
         ];
     }
     

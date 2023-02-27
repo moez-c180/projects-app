@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Traits\HasFormTrait;
 
 class FellowshipGrantForm extends Model
 {
@@ -15,6 +16,7 @@ class FellowshipGrantForm extends Model
     use SoftDeletes;
     use HasMember;
     use HasAmount;
+    use HasFormTrait;
 
     protected $fillable = [
         'serial',

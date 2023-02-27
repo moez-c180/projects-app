@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BankNameResource\Pages;
 use App\Filament\Resources\BankNameResource\RelationManagers;
+use App\Filament\Resources\BankNameResource\RelationManagers\MembersRelationManager;
 use App\Models\BankName;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -68,7 +69,7 @@ class BankNameResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            MembersRelationManager::class,
         ];
     }
     

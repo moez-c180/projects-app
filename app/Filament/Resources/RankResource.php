@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RankResource\Pages;
 use App\Filament\Resources\RankResource\RelationManagers;
+use App\Filament\Resources\RankResource\RelationManagers\MembersRelationManager;
 use App\Models\Rank;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -68,7 +69,7 @@ class RankResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            MembersRelationManager::class
         ];
     }
     

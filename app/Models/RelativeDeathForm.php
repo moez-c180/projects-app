@@ -9,6 +9,7 @@ use App\Traits\HasAmount;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use app\Settings\SystemConstantsSettings;
 use App\Traits\HasMember;
+use App\Traits\HasFormTrait;
 
 class RelativeDeathForm extends Model
 {
@@ -16,6 +17,7 @@ class RelativeDeathForm extends Model
     use SoftDeletes;
     use HasAmount;
     use HasMember;
+    use HasFormTrait;
 
     protected $fillable = [
         'serial',

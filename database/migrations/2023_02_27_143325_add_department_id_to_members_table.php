@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('membership_over_amounts', function (Blueprint $table) {
-            $table->foreignId('membership_sheet_import_id')->nullable()->constrained()->cascadeOnDelete();
+        Schema::table('members', function (Blueprint $table) {
+            //
         });
     }
 
@@ -25,9 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('membership_over_amounts', function (Blueprint $table) {
-            $table->dropForeign(['membership_sheet_import_id']);
-            $table->dropColumn('membership_sheet_import_id');
+        Schema::table('members', function (Blueprint $table) {
+            //
         });
     }
 };

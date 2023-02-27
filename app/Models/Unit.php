@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\FinancialBranch;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Member;
 
 class Unit extends Model
 {
@@ -27,5 +29,15 @@ class Unit extends Model
     public function financialBranch(): BelongsTo
     {
         return $this->belongsTo(FinancialBranch::class);
+    }
+
+    /**
+     * Get all of the members for the FinancialBranch
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function members(): HasMany
+    {
+        return $this->hasMany(Member::class);
     }
 }

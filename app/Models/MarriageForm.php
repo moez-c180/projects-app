@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use app\Settings\SystemConstantsSettings;
+use App\Traits\HasFormTrait;
 
 class MarriageForm extends Model
 {
@@ -15,6 +16,7 @@ class MarriageForm extends Model
     use SoftDeletes;
     use HasAmount;
     use HasMember;
+    use HasFormTrait;
 
     protected $fillable = [
         'form_date',

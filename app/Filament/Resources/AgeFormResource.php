@@ -22,6 +22,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Filters\SelectFilter;
 use Closure;
+use Filament\Forms\Components\Card;
 
 class AgeFormResource extends Resource
 {
@@ -36,39 +37,41 @@ class AgeFormResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('serial')
-                    ->label('رقم المذكرة')->default(AgeForm::count() + 1)->required()->maxLength(255),
-                DatePicker::make('form_date')
-                    ->label('تاريخ المذكرة')->required()
-                    ->default(now())
-                    ->maxDate(now()),
-                Select::make('member_id')
-                        ->label(' العضو')
-                        ->searchable()
-                        ->getSearchResultsUsing(function(string $search) {
-                            return Member::query()
-                            ->search($search)
-                            ->limit(50)->pluck('name', 'id');
-                        })->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
+                Card::make([
+                    TextInput::make('serial')
+                        ->label('رقم المذكرة')->default(AgeForm::count() + 1)->required()->maxLength(255),
+                    DatePicker::make('form_date')
+                        ->label('تاريخ المذكرة')->required()
+                        ->default(now())
+                        ->maxDate(now()),
+                    Select::make('member_id')
+                            ->label(' العضو')
+                            ->searchable()
+                            ->getSearchResultsUsing(function(string $search) {
+                                return Member::query()
+                                ->search($search)
+                                ->limit(50)->pluck('name', 'id');
+                            })->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
+                            ->required()
+                            ->reactive(),
+                    Select::make('age_form_type')
+                        ->label('السن')
+                        ->options(AgeForm::AGE_FORM_VALUES)
                         ->required()
-                        ->reactive(),
-                Select::make('age_form_type')
-                    ->label('السن')
-                    ->options(AgeForm::AGE_FORM_VALUES)
-                    ->required()
-                    ->reactive()
-                    ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
-                        $member = Member::findOrFail($get('member_id'));
-                        $amount = AgeForm::getAmount($state, $member->category->is_nco);
-                        $set('amount', $amount);
-                    }),
-                TextInput::make('amount')
-                        ->label('المبلغ')
-                        ->numeric()
-                        ->minValue(1)
-                        ->required()
-                        ->disabled(),
-                Textarea::make('notes')->label('ملاحظات')
+                        ->reactive()
+                        ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
+                            $member = Member::findOrFail($get('member_id'));
+                            $amount = AgeForm::getAmount($state, $member->category->is_nco);
+                            $set('amount', $amount);
+                        }),
+                    TextInput::make('amount')
+                            ->label('المبلغ')
+                            ->numeric()
+                            ->minValue(1)
+                            ->required()
+                            ->disabled(),
+                    Textarea::make('notes')->label('ملاحظات')
+                ])
             ]);
     }
 

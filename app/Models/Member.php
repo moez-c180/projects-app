@@ -29,6 +29,7 @@ use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Models\MemberWallet;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use App\Models\FinancialBranch;
 
 class Member extends Model
 {
@@ -36,6 +37,9 @@ class Member extends Model
     use SoftDeletes;
     use CascadeSoftDeletes;
 
+    const IS_GENERAL_STAFF = 'أ ح';
+    const IS_NCO = 'شرفيين';
+    const NON_NCO = 'عاملين';
     protected $fillable = [
         'military_number',
         'seniority_number',
@@ -68,7 +72,9 @@ class Member extends Model
         'file_number',
         'review',
         'membership_start_date',
-        'wallet'
+        'wallet',
+        'unit_id',
+        'financial_branch_id',
     ];
 
     protected $casts = [
@@ -104,16 +110,6 @@ class Member extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
-    }
-
-    /**
-     * Get the department that owns the Member
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function department(): BelongsTo
-    {
-        return $this->belongsTo(Department::class);
     }
 
     /**
@@ -154,6 +150,36 @@ class Member extends Model
     public function bankName(): BelongsTo
     {
         return $this->belongsTo(BankName::class);
+    }
+    
+    /**
+     * Get the unit that owns the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function unit(): BelongsTo
+    {
+        return $this->belongsTo(Unit::class);
+    }
+    
+    /**
+     * Get the financialBranch that owns the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function financialBranch(): BelongsTo
+    {
+        return $this->belongsTo(FinancialBranch::class);
+    }
+    
+    /**
+     * Get the department that owns the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
     }
 
     public function getRankName()

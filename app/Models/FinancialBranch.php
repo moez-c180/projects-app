@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Unit;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
+use App\Models\Member;
 
 class FinancialBranch extends Model
 {
@@ -21,7 +22,8 @@ class FinancialBranch extends Model
     ];
     
     protected $cascadeDeletes = [
-        'units'
+        'units',
+        'members',
     ];
 
     /**
@@ -32,5 +34,15 @@ class FinancialBranch extends Model
     public function units(): HasMany
     {
         return $this->hasMany(Unit::class);
+    }
+    
+    /**
+     * Get all of the members for the FinancialBranch
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function members(): HasMany
+    {
+        return $this->hasMany(Member::class);
     }
 }

@@ -121,6 +121,7 @@ class MemberResource extends Resource
                 }),
                 TextColumn::make('military_number')->label('الرقم العسكري')->searchable(isIndividual: true, isGlobal: false),
                 TextColumn::make('seniority_number')->label('رقم الأقدمية')->searchable(isIndividual: true, isGlobal: false),
+                TextColumn::make('unit.name'),
                 TextColumn::make('rank.name')
                 ->getStateUsing(function($record) {
                     return $record->getRankName();

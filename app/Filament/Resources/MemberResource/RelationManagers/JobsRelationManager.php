@@ -56,14 +56,23 @@ class JobsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()->after(function($record) {
+                    $record->member()->update(['unit_id' => $record->unit_id]);
+                    $record->member()->update(['financial_branch_id' => $record->unit->financial_branch_id]);
+                }),
             ])
             ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()->after(function($record) {
+                    $record->member()->update(['unit_id' => $record->unit_id]);
+                    $record->member()->update(['financial_branch_id' => $record->unit->financial_branch_id]);
+                }),
+                DeleteAction::make()->after(function($record) {
+                    $record->member()->update(['unit_id' => null]);
+                    $record->member()->update(['financial_branch_id' => null]);
+                }),
             ])
             ->bulkActions([
-                DeleteBulkAction::make(),
+                // DeleteBulkAction::make(),
             ]);
     }    
 }
