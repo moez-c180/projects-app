@@ -19,6 +19,8 @@ use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use stdClass;
 use Filament\Forms\Components\Card;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class UnitResource extends Resource
 {
@@ -52,6 +54,7 @@ class UnitResource extends Resource
                 TextColumn::make('#')->getStateUsing(static function (stdClass $rowLoop): string {
                     return (string) $rowLoop->iteration;
                 }),
+                TextColumn::make('id'),
                 TextColumn::make('financialBranch.name')->label('الفرع المالي'),
                 TextColumn::make('code')->label('الكود'),
                 TextColumn::make('name')->label('الاسم'),
@@ -72,7 +75,14 @@ class UnitResource extends Resource
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->defaultSort('created_at', 'desc')
+            ->headerActions([
+                ExportAction::make()->exports([
+                    ExcelExport::make()->fromTable()->except([
+                        '#'
+                    ]),
+                ])
+            ]);
     }
     
     public static function getRelations(): array

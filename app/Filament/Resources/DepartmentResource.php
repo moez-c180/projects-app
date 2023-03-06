@@ -17,6 +17,8 @@ use Filament\Forms\Components\TextInput;
 use stdClass;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\Card;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class DepartmentResource extends Resource
 {
@@ -45,6 +47,7 @@ class DepartmentResource extends Resource
                 TextColumn::make('#')->getStateUsing(static function (stdClass $rowLoop): string {
                     return (string) $rowLoop->iteration;
                 }),
+                TextColumn::make('id'),
                 TextColumn::make('name')->label('الاسم'),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
@@ -63,7 +66,14 @@ class DepartmentResource extends Resource
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->defaultSort('created_at', 'desc')
+            ->headerActions([
+                ExportAction::make()->exports([
+                    ExcelExport::make()->fromTable()->except([
+                        '#'
+                    ]),
+                ])
+            ]);
     }
     
     public static function getRelations(): array

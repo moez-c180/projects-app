@@ -19,6 +19,8 @@ use Filament\Tables\Columns\ToggleColumn;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class CategoryResource extends Resource
 {
@@ -50,6 +52,7 @@ class CategoryResource extends Resource
                 TextColumn::make('#')->getStateUsing(static function (stdClass $rowLoop): string {
                     return (string) $rowLoop->iteration;
                 }),
+                TextColumn::make('id'),
                 TextColumn::make('name')->label('الاسم'),
                 ToggleColumn::make('is_nco')->label('شرفيين'),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
@@ -69,7 +72,14 @@ class CategoryResource extends Resource
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->defaultSort('created_at', 'desc')
+            ->headerActions([
+                ExportAction::make()->exports([
+                    ExcelExport::make()->fromTable()->except([
+                        '#'
+                    ]),
+                ])
+            ]);
     }
     
     public static function getRelations(): array
