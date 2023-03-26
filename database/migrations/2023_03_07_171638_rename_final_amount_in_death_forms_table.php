@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('member_forms', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('member_id')->constrained()->cascadeOnDelete();
-            $table->morphs('formable');
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::table('death_forms', function (Blueprint $table) {
+            $table->renameColumn('final_amount', 'original_amount');
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('member_forms');
+        Schema::table('death_forms', function (Blueprint $table) {
+            $table->renameColumn('original_amount', 'final_amount');
+        });
     }
 };

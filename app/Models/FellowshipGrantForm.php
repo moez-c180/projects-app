@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use App\Traits\HasFormTrait;
+use App\Traits\MemberFormTrait;
 
 class FellowshipGrantForm extends Model
 {
@@ -16,7 +16,7 @@ class FellowshipGrantForm extends Model
     use SoftDeletes;
     use HasMember;
     use HasAmount;
-    use HasFormTrait;
+    use MemberFormTrait;
 
     protected $fillable = [
         'serial',
@@ -24,6 +24,7 @@ class FellowshipGrantForm extends Model
         'member_id',
         'grant_amount',
         'amount',
+        'pending',
     ];
 
     protected function grantAmount(): Attribute

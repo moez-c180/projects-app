@@ -9,7 +9,7 @@ use App\Traits\HasAmount;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use app\Settings\SystemConstantsSettings;
 use App\Traits\HasMember;
-use App\Traits\HasFormTrait;
+use App\Traits\MemberFormTrait;
 
 class RelativeDeathForm extends Model
 {
@@ -17,7 +17,7 @@ class RelativeDeathForm extends Model
     use SoftDeletes;
     use HasAmount;
     use HasMember;
-    use HasFormTrait;
+    use MemberFormTrait;
 
     protected $fillable = [
         'serial',
@@ -31,6 +31,7 @@ class RelativeDeathForm extends Model
         'car_rent',
         'sub_amount',
         'notes',
+        'pending',
 
     ];
 

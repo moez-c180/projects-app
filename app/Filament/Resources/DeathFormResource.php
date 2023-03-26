@@ -19,6 +19,10 @@ use App\Models\Member;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\TextColumn;
 use stdClass;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\BooleanColumn;
+use Filament\Forms\Components\Toggle;
+use Closure;
 
 class DeathFormResource extends Resource
 {
@@ -39,11 +43,31 @@ class DeathFormResource extends Resource
                     Select::make('member_id')
                         ->label(' العضو')
                         ->searchable()
+                        ->reactive()
                         ->getSearchResultsUsing(function(string $search) {
                             return Member::query()
                             ->search($search)
                             ->limit(50)->pluck('name', 'id');
                         })->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
+                        ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
+                            $member = Member::findOrFail($state);
+                            $funeralFees = $member->getFuneralFeesValue();
+                            $latePaymentsAmount = $member->getUnpaidMembershipAmount();
+                            $totalFormPayments = $member->getMemberBenefitsAmount();
+                            $originalAmount = $member->getDeathFormValue();
+                            $refundForms = $member->refundForms->sum('amount');
+                            $otherLatePaymentsAmount = $get('other_late_payments_amount');
+                            $funeralFees = $get('funeral_fees');
+                            $amount = (
+                                $originalAmount - 
+                                ( $totalFormPayments + $latePaymentsAmount + $otherLatePaymentsAmount + $funeralFees)
+                                 + $refundForms);
+                            $set('funeral_fees', $funeralFees);
+                            $set('late_payments_amount', $latePaymentsAmount);
+                            $set('total_form_payments', $totalFormPayments);
+                            $set('original_amount', $originalAmount);
+                            $set('amount', $amount);
+                        })
                         ->required(),
                     DatePicker::make('form_date')
                         ->label('تاريخ المذكرة')->required()
@@ -55,29 +79,42 @@ class DeathFormResource extends Resource
                         ->maxDate(now()),
                     TextInput::make('late_payments_amount')
                         ->label('المتأخرات')
-                        ->required()
                         ->numeric()
-                        ->minValue(0),
+                        ->minValue(0)
+                        ->reactive()
+                        ->disabled(),
+                    TextInput::make('other_late_payments_amount')
+                        ->label('متأخرات أخرى')
+                        ->numeric()
+                        ->default(0),
                     TextInput::make('total_form_payments')
                         ->label('مجموع المنح')
                         ->required()
                         ->numeric()
-                        ->minValue(0),
+                        ->minValue(0)
+                        ->reactive()
+                        ->disabled(),
+                    Toggle::make('has_funeral_fees')->label('له مصاريف جنازة')->reactive(),
                     TextInput::make('funeral_fees')
                         ->label('مصاريف الجنازة')
                         ->required()
                         ->numeric()
-                        ->minValue(0),
-                    TextInput::make('final_amount')
-                        ->label('صافي المنحة')
-                        ->required()
-                        ->numeric()
-                        ->minValue(1),
+                        ->minValue(0)
+                        ->visible(function(Closure $get) {
+
+                            return $get('has_funeral_fees');
+                        })->disabled(),
                     TextInput::make('amount')
                         ->label('قيمة المنحة')
                         ->required()
                         ->numeric()
                         ->minValue(1),
+                    TextInput::make('original_amount')
+                        ->label('قيمة المنحة الابتدائية')
+                        ->required()
+                        ->numeric()
+                        ->minValue(1)
+                        ->disabled(),
                 ])
             ]);
     }
@@ -99,8 +136,9 @@ class DeathFormResource extends Resource
                 TextColumn::make('late_payments_amount')->label('المتأخرات'),
                 TextColumn::make('total_form_amounts')->label('مجموع المنح'),
                 TextColumn::make('funeral_fees')->label('مصاريف الجنازة'),
-                TextColumn::make('final_amount')->label('صافي المنحة'),
+                // TextColumn::make('original_amount')->label('صافي المنحة'),
                 TextColumn::make('amount')->label('المبلغ'),
+                BooleanColumn::make('pending')->getStateUsing(fn($record) => !$record->pending)->label('تمام الصرف'),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();
@@ -113,6 +151,13 @@ class DeathFormResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Action::make('approve')
+                    ->label('تم الصرف')
+                    ->action(function($record) {
+                    $record->update(['pending' => false]);
+                })
+                ->hidden(fn($record) => !$record->pending)
+                ->requiresConfirmation()
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -134,5 +179,5 @@ class DeathFormResource extends Resource
             'view' => Pages\ViewDeathForm::route('/{record}'),
             'edit' => Pages\EditDeathForm::route('/{record}/edit'),
         ];
-    }    
+    }
 }

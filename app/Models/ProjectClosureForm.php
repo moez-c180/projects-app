@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use App\Traits\HasFormTrait;
+use App\Traits\MemberFormTrait;
 
 class ProjectClosureForm extends Model
 {
@@ -16,7 +16,7 @@ class ProjectClosureForm extends Model
     use SoftDeletes;
     use HasAmount;
     use HasMember;
-    use HasFormTrait;
+    use MemberFormTrait;
 
     protected $fillable = [
         'serial',
@@ -27,6 +27,7 @@ class ProjectClosureForm extends Model
         'total_forms_amount',
         'amount',
         'project_closure_reason_id',
+        'pending',
     ];
 
     protected function totalSubscriptionPayments(): Attribute

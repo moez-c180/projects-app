@@ -1,6 +1,10 @@
 <?php
 
+use App\Models\AgeForm;
 use Illuminate\Support\Facades\Route;
+use App\Models\Member;
+use App\Models\MemberForm;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,3 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::redirect('/', 'admin');
+
+Route::get('member', function() {
+    dd(Member::find(1)?->getMemberBenefitsAmount());
+});

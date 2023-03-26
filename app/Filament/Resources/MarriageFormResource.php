@@ -24,6 +24,7 @@ use Filament\Tables\Columns\BooleanColumn;
 use Webbingbrasil\FilamentAdvancedFilter\Filters\BooleanFilter;
 use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Actions\Action;
 
 class MarriageFormResource extends Resource
 {
@@ -100,6 +101,7 @@ class MarriageFormResource extends Resource
                     ->url(fn ($record) => url('/admin/members/'.$record->member->id), true),
                 TextColumn::make('marriage_date')->label('تاريخ الزواج'),
                 TextColumn::make('amount')->label('المبلغ')->description('جم'),
+                BooleanColumn::make('pending')->getStateUsing(fn($record) => !$record->pending)->label('تمام الصرف'),
                 TextColumn::make('relative_type')->label('درجة القرابة'),
                 TextColumn::make('relative_name')->label('اسم المعول'),
                 TextColumn::make('form_date')->label('تاريخ المذكرة'),
@@ -122,6 +124,13 @@ class MarriageFormResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Action::make('approve')
+                    ->label('تم الصرف')
+                    ->action(function($record) {
+                    $record->update(['pending' => false]);
+                })
+                ->hidden(fn($record) => !$record->pending)
+                ->requiresConfirmation()
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

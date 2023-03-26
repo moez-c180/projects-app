@@ -22,6 +22,8 @@ use Filament\Forms\Components\DatePicker;
 use App\Models\RelativeDeathDegreeCarRent;
 use Filament\Tables\Columns\TextColumn;
 use stdClass;
+use Filament\Tables\Columns\BooleanColumn;
+use Filament\Tables\Actions\Action;
 
 class RelativeDeathFormResource extends Resource
 {
@@ -117,6 +119,7 @@ class RelativeDeathFormResource extends Resource
                 TextColumn::make('sub_amount')->label('صافي المنحة')->description('جم'),
                 TextColumn::make('car_rent')->label('إيجار سيارة')->description('جم'),
                 TextColumn::make('amount')->label('قيمة المنحة')->description('جم'),
+                BooleanColumn::make('pending')->getStateUsing(fn($record) => !$record->pending)->label('تمام الصرف'),
                 TextColumn::make('form_date')->label('تاريخ المذكرة'),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
@@ -130,6 +133,13 @@ class RelativeDeathFormResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Action::make('approve')
+                    ->label('تم الصرف')
+                    ->action(function($record) {
+                    $record->update(['pending' => false]);
+                })
+                ->hidden(fn($record) => !$record->pending)
+                ->requiresConfirmation()
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

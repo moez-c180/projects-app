@@ -22,18 +22,23 @@ class DeathForm extends Model
         'member_id',
         'death_date',
         'human_tribute_car',
-        'pall',
+        'pall', // كفن
         'total_form_amounts',
         'late_payments_amount',
+        'other_late_payments_amount', // متجمد
         'funeral_fees',
         'amount',
-        'final_amount',
+        'original_amount',
+        'pending',
+        'has_funeral_fees'
     ];
 
     protected $casts = [
         'death_date' => 'date',
         'pall' => 'boolean',
-        'human_tribute_car' => 'boolean'
+        'human_tribute_car' => 'boolean',
+        'pending' => 'boolean',
+        'has_funeral_fees' => 'boolean',
     ];
     
     protected function totalFormAmounts(): Attribute
@@ -52,7 +57,7 @@ class DeathForm extends Model
         );
     }
     
-    protected function latePayments(): Attribute
+    protected function latePaymentsAmount(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => $value/100,
@@ -60,7 +65,15 @@ class DeathForm extends Model
         );
     }
     
-    protected function finalAmount(): Attribute
+    protected function otherLatePaymentsAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value/100,
+            set: fn ($value) => $value * 100,
+        );
+    }
+    
+    protected function originalAmount(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => $value/100,

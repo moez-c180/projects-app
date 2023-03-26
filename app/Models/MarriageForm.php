@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use app\Settings\SystemConstantsSettings;
-use App\Traits\HasFormTrait;
+use App\Traits\MemberFormTrait;
 
 class MarriageForm extends Model
 {
@@ -16,7 +16,7 @@ class MarriageForm extends Model
     use SoftDeletes;
     use HasAmount;
     use HasMember;
-    use HasFormTrait;
+    use MemberFormTrait;
 
     protected $fillable = [
         'form_date',
@@ -28,6 +28,7 @@ class MarriageForm extends Model
         'relative_type',
         'relative_name',
         'notes',
+        'pending',
     ];
 
     public static function getAmount(?bool $isRelative, bool $isNco)

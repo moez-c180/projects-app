@@ -23,6 +23,9 @@ use Filament\Forms\Components\Select;
 use Filament\Tables\Filters\SelectFilter;
 use Closure;
 use Filament\Forms\Components\Card;
+use Filament\Tables\Actions\Action;
+use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\BooleanColumn;
 
 class AgeFormResource extends Resource
 {
@@ -91,6 +94,7 @@ class AgeFormResource extends Resource
                     ->url(fn ($record) => url('/admin/members/'.$record->member->id), true),
                 TextColumn::make('member.birth_date')->label('تاريخ الميلاد'),
                 TextColumn::make('amount')->label('المبلغ')->description('جم'),
+                BooleanColumn::make('pending')->getStateUsing(fn($record) => !$record->pending)->label('تمام الصرف'),
                 TextColumn::make('form_date')->label('تاريخ المذكرة'),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
@@ -109,6 +113,14 @@ class AgeFormResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Action::make('approve')
+                    ->label('تم الصرف')
+                    ->action(function($record) {
+                    $record->update(['pending' => false]);
+                })
+                ->hidden(fn($record) => !$record->pending)
+                ->requiresConfirmation()
+
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

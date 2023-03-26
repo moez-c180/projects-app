@@ -52,17 +52,6 @@ class MembershipSheetImport extends Model implements HasMedia
     {
         return $this->hasMany(Membership::class);
     }
-
-
-    /**
-     * Get all of the membershipOverAmounts for the MembershipSheetImport
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function membershipOverAmounts(): HasMany
-    {
-        return $this->hasMany(MembershipOverAmount::class);
-    }
     
     public function rollback()
     {

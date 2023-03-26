@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Models\MemberWallet;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use App\Models\FinancialBranch;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Member extends Model
 {
@@ -95,6 +97,7 @@ class Member extends Model
         'projectClosureForms',
         'memberships',
         'memberForms',
+        'forms',
         'marriageForms',
         'fellowshipGrantForms',
         'disabledForms',
@@ -256,7 +259,12 @@ class Member extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function memberForms(): HasMany
+    // public function memberForms(): HasMany
+    // {
+    //     return $this->hasMany(MemberForm::class);
+    // }
+
+    public function memberForms(): hasMany
     {
         return $this->hasMany(MemberForm::class);
     }
@@ -359,7 +367,7 @@ class Member extends Model
 
     public function getUnpaidMembershipMonths(): array
     {
-        $paidMembershipMonths = Membership::where('member_id', 1)->pluck('membership_date')->toArray();
+        $paidMembershipMonths = Membership::where('member_id', $this->id)->pluck('membership_date')->toArray();
         $paidMembershipMonths = array_map(function($record) {
             return $record->format('Y-m-d');
         }, $paidMembershipMonths);
@@ -367,6 +375,12 @@ class Member extends Model
         $totalMembershipMonths = $this->getTotalMembershipMonths();
         $unpaidMonths = array_diff($totalMembershipMonths, $paidMembershipMonths);
         return array_reverse($unpaidMonths);
+    }
+
+    public function getUnpaidMembershipAmount(): int
+    {
+        $months = $this->getUnpaidMembershipMonths();
+        return $this->getSubscriptionValue() * count($months);
     }
 
     protected function wallet(): Attribute
@@ -383,5 +397,41 @@ class Member extends Model
             ->orWhereLike('address', $search)
             ->orWhere('military_number', $search)
             ->orWhere('seniority_number', $search);
+    }
+
+    public function getMemberBenefitsAmount(): int
+    {
+        $total = 0;
+        $data = $this->memberForms()->whereIn('formable_type', [
+            AgeForm::class,
+            MarriageForm::class,
+            RelativeDeathForm::class,
+        ])->get();
+        foreach($data as $row)
+        {
+            if ($row->formable->pending == 0)
+                $total += $row->formable->amount;
+        }
+        return $total;
+    }
+
+    public function getFuneralFeesValue(): int
+    {
+        if ($this->is_nco)
+        {
+            return app(SystemConstantsSettings::class)->nco_funeral_fees;
+        } else {
+            return app(SystemConstantsSettings::class)->co_funeral_fees;
+        }
+    }
+
+    public function getDeathFormValue(): int
+    {
+        if ($this->is_nco)
+        {
+            return app(SystemConstantsSettings::class)->nco_death;
+        } else {
+            return app(SystemConstantsSettings::class)->co_death;
+        }
     }
 }

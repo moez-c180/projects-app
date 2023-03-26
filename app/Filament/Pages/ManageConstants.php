@@ -68,6 +68,10 @@ class ManageConstants extends SettingsPage
                     ->label('منحة الزمالة - عاملين')
                     ->numeric()->minValue(1)
                     ->required(), 
+                TextInput::make('co_funeral_fees')
+                    ->label(' مصاريف جنازة - عاملين')
+                    ->numeric()->minValue(1)
+                    ->required(), 
             ])->columns(4),
 
             Card::make([
@@ -97,6 +101,10 @@ class ManageConstants extends SettingsPage
                     ->required(), 
                 TextInput::make('nco_grant')
                     ->label('منحة الزمالة - شرفيين')
+                    ->numeric()->minValue(1)
+                    ->required(), 
+                TextInput::make('nco_funeral_fees')
+                    ->label(' مصاريف جنازة - شرفيين')
                     ->numeric()->minValue(1)
                     ->required(), 
             ])->columns(4)

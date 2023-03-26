@@ -3,18 +3,19 @@
 namespace App\Models;
 
 use app\Settings\SystemConstantsSettings;
-use App\Traits\HasFormTrait;
+use App\Traits\MemberFormTrait;
 use App\Traits\HasMember;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class AgeForm extends Model
 {
     use HasFactory;
     use SoftDeletes;
     use HasMember;
-    use HasFormTrait;
+    use MemberFormTrait;
 
     const AGE_SIXY_FIVE_VALUE = 65;
     const AGE_SEVENTY_VALUE = 70;
@@ -30,11 +31,14 @@ class AgeForm extends Model
         'member_id',
         'age_form_type',
         'amount',
-        'notes'
+        'notes',
+        'member_form_id',
+        'pending'
     ];
 
     protected $casts = [
-        'form_date' => 'date'
+        'form_date' => 'date',
+        'pending' => 'boolean'
     ];
 
     public static function getAmount(int $age, bool $is_nco)
@@ -58,5 +62,10 @@ class AgeForm extends Model
                 default => 0
             };
         }
+    }
+
+    public function formable(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

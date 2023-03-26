@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use App\Traits\HasFormTrait;
+use App\Traits\MemberFormTrait;
 
 class DisabledForm extends Model
 {
@@ -16,7 +16,7 @@ class DisabledForm extends Model
     use SoftDeletes;
     use HasMember;
     use HasAmount;
-    use HasFormTrait;
+    use MemberFormTrait;
 
     protected $fillable = [
         'serial',
@@ -25,6 +25,12 @@ class DisabledForm extends Model
         'form_amount',
         'total_form_amounts',
         'amount',
+        'pending',
+    ];
+
+    protected $casts = [
+        'form_date' => 'date',
+        'pending' => 'boolean'
     ];
 
     protected function totalFormAmounts(): Attribute

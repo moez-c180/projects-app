@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('members', function (Blueprint $table) {
-            //
+        Schema::table('relative_death_forms', function (Blueprint $table) {
+            $table->boolean('pending')->default(1);
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('members', function (Blueprint $table) {
-            //
+        Schema::table('relative_death_forms', function (Blueprint $table) {
+            $table->dropColumn('pending');
         });
     }
 };
