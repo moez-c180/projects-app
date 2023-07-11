@@ -35,6 +35,7 @@ class ListMembers extends ListRecords
     
     public function openImportExcel(array $data)
     {
+        ini_set('max_execution_time', '3600'); 
         $filePath = Storage::disk('public')->path($data['file']);
         try {
             $import = Excel::import(new MembersImport(), $filePath);
@@ -48,7 +49,6 @@ class ListMembers extends ListRecords
                 ->danger()
                 ->title('خطأ')
                 ->body($e->getMessage())
-                ->duration()
                 ->send();
         }
     }

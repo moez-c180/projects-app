@@ -9,6 +9,8 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use App\Models\Member;
+use Exception;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Validators\Failure;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -49,7 +51,7 @@ class MembersImport implements ToModel, WithHeadingRow, SkipsEmptyRows, WithVali
     public function rules(): array
     {
         return [
-            'military_number' => ['required'],
+            'military_number' => ['required'], //, 'unique:members,military_number'
             'rank_id' => ['required', 'exists:ranks,id'],
             'category_id' => ['required', 'exists:categories,id'],
             'is_general_staff' => ['in:0,1'],
@@ -58,8 +60,8 @@ class MembersImport implements ToModel, WithHeadingRow, SkipsEmptyRows, WithVali
             'graduation_date' => ['nullable', 'date_format:Y-m-d'],
             'birth_date' => ['nullable', 'date_format:Y-m-d'],
             'travel_date' => ['nullable', 'date_format:Y-m-d'],
-            'national_id_number' => ['nullable', 'digits'],
-            'bank_account_number' => ['nullable', 'digits'],
+            'national_id_number' => ['nullable', 'numeric'],
+            'bank_account_number' => ['nullable'],
             'pension_date' => ['nullable', 'date_format:Y-m-d'],
             'death_date' => ['nullable', 'date_format:Y-m-d'],
             'bank_name_id' => ['nullable', 'exists:bank_names,id'],
@@ -71,8 +73,16 @@ class MembersImport implements ToModel, WithHeadingRow, SkipsEmptyRows, WithVali
 
     public function onFailure(Failure ...$failures) 
     {
+        dd($failures);
         foreach($failures as $failure)
         {
+            // throw new ValidationException("Error with import row of members with military number: ".$failure->values()['military_number']." Attribute:".json_encode($failure->attribute()));
+            // dd([
+            //     $failure['row'],
+            //     $failure['attribute'],
+            //     $failure->['errors'],
+            //     // $failure->values(),
+            // ]);
             logger()->error($failure);
         }
     }

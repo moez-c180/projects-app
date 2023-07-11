@@ -121,7 +121,7 @@ class MemberResource extends Resource
                 }),
                 TextColumn::make('military_number')->label('الرقم العسكري')->searchable(isIndividual: true, isGlobal: false),
                 TextColumn::make('seniority_number')->label('رقم الأقدمية')->searchable(isIndividual: true, isGlobal: false),
-                TextColumn::make('unit.name'),
+                TextColumn::make('unit.name')->label('الوحدة'),
                 TextColumn::make('rank.name')
                 ->getStateUsing(function($record) {
                     return $record->getRankName();
@@ -148,14 +148,17 @@ class MemberResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('rank_id')
-                    ->label('السلاح')
-                    ->options(Rank::all()->pluck('name', 'id')),
+                    ->label('الرتبة')
+                    ->options(Rank::all()->pluck('name', 'id'))
+                    ->searchable(),
                 SelectFilter::make('department_id')
                     ->label('السلاح')
-                    ->options(Department::all()->pluck('name', 'id')),
+                    ->options(Department::all()->pluck('name', 'id'))
+                    ->searchable(),
                 SelectFilter::make('category_id')
                     ->label('الفئة')
-                    ->options(Category::all()->pluck('name', 'id')),
+                    ->options(Category::all()->pluck('name', 'id'))
+                    ->searchable(),
                 DateFilter::make('created_at')->label('تاريخ التسجيل')
 
             ])
