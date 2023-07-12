@@ -67,6 +67,7 @@ class MembersImport implements ToModel, WithHeadingRow, SkipsEmptyRows, WithVali
             'bank_name_id' => ['nullable', 'exists:bank_names,id'],
             'membership_start_date' => ['nullable', 'date_format:Y-m-d'],
             'unit_id' => ['nullable', 'exists:units,id'],
+            'financial_branch_id' => ['nullable', 'exists:financial_branches,id'],
             
         ];
     }

@@ -127,7 +127,11 @@ class MemberResource extends Resource
                     return $record->getRankName();
                 })
                 ->label('الرتبة / الدرجة'),
-                TextColumn::make('name')->label('الاسم')->searchable(isIndividual: true, isGlobal: false),
+                TextColumn::make('name')->label('الاسم')
+                    ->searchable(isIndividual: true, isGlobal: false, query: function (Builder $query, string $search): Builder {
+                        return $query
+                            ->where('name', 'like', "%".$search."%");
+                    }),
                 BooleanColumn::make('is_nco')
                     ->getStateUsing(function($record) {
                         return $record->category->is_nco;

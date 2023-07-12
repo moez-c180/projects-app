@@ -76,7 +76,7 @@ class Member extends Model
         'membership_start_date',
         'wallet',
         'unit_id',
-        'financial_branch_id',
+        // 'financial_branch_id',
     ];
 
     protected $casts = [
