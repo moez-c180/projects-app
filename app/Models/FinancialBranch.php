@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Unit;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 use App\Models\Member;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class FinancialBranch extends Model
 {
@@ -41,8 +42,8 @@ class FinancialBranch extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function members(): HasMany
+    public function members(): HasManyThrough
     {
-        return $this->hasMany(Member::class);
+        return $this->hasManyThrough(Member::class, Unit::class, 'financial_branch_id', 'unit_id', 'id');
     }
 }

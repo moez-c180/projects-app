@@ -32,6 +32,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use App\Models\FinancialBranch;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Facades\DB;
 
 class Member extends Model
 {
@@ -76,7 +77,6 @@ class Member extends Model
         'membership_start_date',
         'wallet',
         'unit_id',
-        'financial_branch_id',
     ];
 
     protected $casts = [
@@ -165,15 +165,6 @@ class Member extends Model
         return $this->belongsTo(Unit::class);
     }
     
-    /**
-     * Get the financialBranch that owns the Member
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function financialBranch(): BelongsTo
-    {
-        return $this->belongsTo(FinancialBranch::class);
-    }
     
     /**
      * Get the department that owns the Member
@@ -393,7 +384,8 @@ class Member extends Model
 
     public function scopeSearch(Builder $builder, $search): Builder
     {
-        return $builder->whereLike('name', $search)
+        return $builder
+            ->whereRaw("CONCAT(`name`, ' ') LIKE '%$search%'")
             ->orWhereLike('address', $search)
             ->orWhere('military_number', $search)
             ->orWhere('seniority_number', $search);

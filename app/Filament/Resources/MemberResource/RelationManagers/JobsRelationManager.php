@@ -50,6 +50,7 @@ class JobsRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('current_job')->label('الوظيفة الحالية'),
                 TextColumn::make('unit.name')->label('الوحدة'),
+                TextColumn::make('financialBranch.name')->label('الفرع المالي'),
                 TextColumn::make('job_filled_date')->label('تاريخ شغل الوظيفة'),
             ])
             ->filters([

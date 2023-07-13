@@ -51,8 +51,18 @@ class FinancialBranchResource extends Resource
                     return (string) $rowLoop->iteration;
                 }),
                 TextColumn::make('id'),
-                TextColumn::make('code')->label('الكود'),
-                TextColumn::make('name')->label('الاسم'),
+                TextColumn::make('code')
+                    ->searchable()
+                    ->sortable()
+                    ->label('الكود'),
+                TextColumn::make('name')
+                    ->searchable()
+                    ->sortable()
+                    ->label('الاسم'),
+                TextColumn::make('members_count')
+                    ->label('عدد الأعضاء')
+                    ->counts('members')
+                    ->sortable(),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();
