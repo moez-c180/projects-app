@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('memberships', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('member_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('member_id')->index()->constrained()->cascadeOnDelete();
             $table->char('year', 4);
             $table->char('month', 2);
             $table->integer('amount');

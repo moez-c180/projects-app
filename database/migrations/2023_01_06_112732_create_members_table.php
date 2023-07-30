@@ -17,8 +17,15 @@ return new class extends Migration
             $table->id();
             $table->string('military_number')->nullable();
             $table->string('seniority_number')->nullable();
-            $table->foreignId('rank_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('rank_id')
+                ->nullable()
+                ->index()
+                ->constrained()
+                ->cascadeOnDelete();
+            $table->foreignId('category_id')
+                ->index()
+                ->constrained()
+                ->cascadeOnDelete();
             $table->boolean('is_general_staff')->default(0);
             $table->string('name');
             $table->string('address')->nullable();
@@ -27,7 +34,10 @@ return new class extends Migration
             $table->string('beneficiary_name')->nullable();
             $table->string('beneficiary_title')->nullable();
             $table->string('class')->nullable();
-            $table->foreignId('department_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('department_id')
+                ->index()
+                ->constrained()
+                ->cascadeOnDelete();
             $table->date('graduation_date')->nullable();
             $table->date('birth_date')->nullable();
             $table->date('travel_date')->nullable();
@@ -38,7 +48,11 @@ return new class extends Migration
             $table->text('pension_reason')->nullable();
             $table->date('death_date')->nullable();
             $table->boolean('is_subscribed')->default(0);
-            $table->foreignId('bank_name_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('bank_name_id')
+                ->nullable()
+                ->index()
+                ->constrained()
+                ->cascadeOnDelete();
             $table->string('bank_branch_name')->nullable();
             $table->string('register_number')->nullable();
             $table->string('file_number')->nullable();

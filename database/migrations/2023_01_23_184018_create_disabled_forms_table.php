@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('serial');
             $table->date('form_date');
-            $table->foreignId('member_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('member_id')->index()->constrained()->cascadeOnDelete();
             $table->integer('form_amount');
             $table->integer('total_form_amounts')->default(0);
             $table->integer('amount');

@@ -17,14 +17,14 @@ return new class extends Migration
             $table->id();
             $table->string('serial');
             $table->date('form_date');
-            $table->foreignId('member_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('member_id')->index()->constrained()->cascadeOnDelete();
             $table->date('death_date');
             $table->boolean('human_tribute_car')->default(0);
             $table->boolean('pall')->default(0);
             
             $table->integer('total_form_amounts')->default(0);
             $table->integer('funeral_fees')->default(0);
-            $table->integer('late_payments')->default(0);
+            $table->integer('late_payments_amount')->default(0);
             $table->integer('amount');
             $table->integer('final_amount');
             $table->timestamps();

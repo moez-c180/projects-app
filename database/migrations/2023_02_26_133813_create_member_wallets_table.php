@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('member_wallets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('member_id')->constrained();
+            $table->foreignId('member_id')->index()->constrained()->cascadeOnDelete();
             $table->integer('amount');
             $table->enum('type', ['deposit', 'withdraw'])->index();
-            $table->foreignId('membership_sheet_import_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('membership_sheet_import_id')->nullable()->index()->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

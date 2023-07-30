@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('member_promotions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('member_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('rank_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('member_id')->index()->constrained()->cascadeOnDelete();
+            $table->foreignId('rank_id')->index()->constrained()->cascadeOnDelete();
             $table->date('promotion_date');
             $table->timestamps();
             $table->softDeletes();

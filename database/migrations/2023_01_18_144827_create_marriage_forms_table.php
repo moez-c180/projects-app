@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('form_date');
             $table->string('serial');
             $table->boolean('is_relative')->default(0);
-            $table->foreignId('member_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('member_id')->index()->constrained()->cascadeOnDelete();
             $table->integer('amount');
             $table->date('marriage_date');
             $table->string('relative_type')->nullable();

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('membership_sheet_imports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->index()->constrained()->cascadeOnDelete();
             $table->date('membership_date');
             $table->boolean('processed')->default(0);
             $table->datetime('processing_start_time')->nullable();

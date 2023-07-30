@@ -20,8 +20,8 @@ return new class extends Migration
             $table->date('death_date');
             $table->string('dead_name');
             $table->string('relative_type');
-            $table->foreignId('relative_death_degree_car_rent_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('member_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('relative_death_degree_car_rent_id')->index()->constrained()->cascadeOnDelete();
+            $table->foreignId('member_id')->index()->constrained()->cascadeOnDelete();
             $table->integer('amount');
             $table->integer('car_rent')->default(0);
             $table->integer('sub_amount');

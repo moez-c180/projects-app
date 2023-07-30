@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('memberships', function (Blueprint $table) {
-            $table->foreignId('membership_sheet_import_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('membership_sheet_import_id')->nullable()->index()->constrained()->cascadeOnDelete();
             $table->integer('paid_amount');
             $table->boolean('approved')->default(0);
             $table->integer('membership_value');

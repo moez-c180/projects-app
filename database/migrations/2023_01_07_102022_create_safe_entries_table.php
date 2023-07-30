@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('safe_entries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('safe_entry_category_id')->constrained();
+            $table->foreignId('safe_entry_category_id')->index()->constrained()->cascadeOnDelete();
             $table->morphs('payable');
             $table->integer('amount');
             $table->string('contact_name')->nullable();

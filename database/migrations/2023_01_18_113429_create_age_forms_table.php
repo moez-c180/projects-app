@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->string('serial');
             $table->enum('age_form_type', array_values(AgeForm::AGE_FORM_VALUES));
-            $table->foreignId('member_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('member_id')->index()->constrained()->cascadeOnDelete();
             $table->integer('amount');
             $table->date('form_date');
             $table->text('notes')->nullable();
