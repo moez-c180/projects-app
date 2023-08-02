@@ -18,24 +18,22 @@ use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
+use App\Models\Position;
 
-class JobsRelationManager extends RelationManager
+class MemberJobsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'jobs';
+    protected static string $relationship = 'memberJobs';
 
     protected static ?string $recordTitleAttribute = 'current_job';
-    protected static ?string $title = 'التنقلات و الوظائف ';
+    protected static ?string $title = 'الوظائف ';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('current_job')
-                    ->label('الوظيفة الحالية')
-                    ->maxLength(255),
-                Select::make('unit_id')
-                    ->label('الوحدة')
-                    ->options(Unit::all()->pluck('name', 'id'))
+                Select::make('position_id')
+                    ->options(Position::all()->pluck('name', 'id'))
+                    ->label('الوظيفة')
                     ->searchable()
                     ->required(),
                 DatePicker::make('job_filled_date')
@@ -48,9 +46,7 @@ class JobsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                TextColumn::make('current_job')->label('الوظيفة الحالية'),
-                TextColumn::make('unit.name')->label('الوحدة'),
-                TextColumn::make('financialBranch.name')->label('الفرع المالي'),
+                TextColumn::make('position.name')->label('الوظيفة'),
                 TextColumn::make('job_filled_date')->label('تاريخ شغل الوظيفة'),
             ])
             ->filters([

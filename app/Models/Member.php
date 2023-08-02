@@ -33,6 +33,7 @@ use App\Models\FinancialBranch;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\DB;
+use App\Models\MemberUnit;
 
 class Member extends Model
 {
@@ -92,6 +93,8 @@ class Member extends Model
     protected $cascadeDeletes = [
         'jobs',
         'promotions',
+        'memberJobs',
+        'member',
         'relativeDeathForms',
         'refundForms',
         'projectClosureForms',
@@ -130,7 +133,7 @@ class Member extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function jobs(): HasMany
+    public function memberJobs(): HasMany
     {
         return $this->hasMany(MemberJob::class);
     }
@@ -140,9 +143,19 @@ class Member extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function promotions(): HasMany
+    public function memberPromotions(): HasMany
     {
         return $this->hasMany(MemberPromotion::class);
+    }
+    
+    /**
+     * Get all of the memberUnits for the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function memberUnits(): HasMany
+    {
+        return $this->hasMany(MemberUnit::class);
     }
 
     /**

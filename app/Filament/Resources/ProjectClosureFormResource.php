@@ -89,6 +89,7 @@ class ProjectClosureFormResource extends Resource
                         ->label('تاريخ إنهاء الخدمة')->required()
                         ->default(now()),
                     Select::make('project_closure_reason_id')
+                        ->required()
                         ->label('سبب إنهاء الخدمة')
                         ->options(ProjectClosureReason::all()->pluck('reason', 'id'))
                 ])->columns(2)

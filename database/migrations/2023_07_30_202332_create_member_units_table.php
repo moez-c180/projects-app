@@ -13,18 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('fellowship_grant_forms', function (Blueprint $table) {
+        Schema::create('member_units', function (Blueprint $table) {
             $table->id();
-            $table->string('serial');
-            $table->date('form_date');
-            $table->foreignId('member_id')
-                ->index()
-                ->constrained()
-                ->cascadeOnDelete();
-            $table->integer('grant_amount');
-            $table->integer('amount');
-            $table->timestamps();
+            $table->foreignId('member_id')->nullable()->index()->constrained()->cascadeOnDelete();
+            $table->foreignId('unit_id')->nullable()->index()->constrained()->cascadeOnDelete();
             $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -35,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fellowship_grant_forms');
+        Schema::dropIfExists('member_units');
     }
 };

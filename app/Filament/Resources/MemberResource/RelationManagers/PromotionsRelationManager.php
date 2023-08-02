@@ -16,7 +16,7 @@ use Filament\Tables\Columns\TextColumn;
 
 class PromotionsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'promotions';
+    protected static string $relationship = 'memberPromotions';
     protected static ?string $title = 'الترقي ';
 
     public static function form(Form $form): Form
@@ -28,8 +28,7 @@ class PromotionsRelationManager extends RelationManager
                     ->options(Rank::all()->pluck('name', 'id'))
                     ->required(),
                 DatePicker::make('promotion_date')
-                    ->label('تاريخ الترقي')
-                    ->required(),
+                    ->label('تاريخ الترقي'),
             ]);
     }
 

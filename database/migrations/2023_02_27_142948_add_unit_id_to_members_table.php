@@ -14,8 +14,16 @@ return new class extends Migration
     public function up()
     {
         Schema::table('members', function (Blueprint $table) {
-            $table->foreignId('unit_id')->nullable()->index()->constrained()->cascadeOnDelete();
-            $table->foreignId('financial_branch_id')->nullable()->index()->constrained()->cascadeOnDelete();
+            $table->foreignId('unit_id')
+                ->nullable()
+                ->index()
+                ->constrained()
+                ->cascadeOnDelete();
+            $table->foreignId('financial_branch_id')
+                ->nullable()
+                ->index()
+                ->constrained()
+                ->cascadeOnDelete();
         });
     }
 

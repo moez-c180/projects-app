@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasMember;
-use App\Models\Position;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Unit;
 
-class MemberJob extends Model
+class MemberUnit extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -17,17 +17,22 @@ class MemberJob extends Model
 
     protected $fillable = [
         'member_id',
-        'job_filled_date',
-        'position_id'
+        'unit_id',
     ];
 
     /**
-     * Get the position that owns the MemberJob
+     * Get the unit that owns the MemberUnit
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function position(): BelongsTo
+    public function unit(): BelongsTo
     {
-        return $this->belongsTo(Position::class);
+        return $this->belongsTo(Unit::class);
     }
+
+    public function previous()
+    {
+        return $this->find(--$this->id);
+    }
+
 }

@@ -34,6 +34,13 @@ use Illuminate\Validation\Rule;
 use App\Models\BankName;
 use Closure;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Fieldset;
+use App\Filament\Resources\MemberResource\RelationManagers\MemberUnitsRelationManager;
+use App\Filament\Resources\MemberResource\RelationManagers\MemberJobsRelationManager;
+use App\Models\Unit;
+use App\Models\FinancialBranch;
+use App\Models\MemberUnit;
+use Filament\Tables\Filters\TernaryFilter;
 
 class MemberResource extends Resource
 {
@@ -48,16 +55,25 @@ class MemberResource extends Resource
         return $form
             ->schema([
                 Card::make()->schema([
-                    Hidden::make('id'),
                     TextInput::make('military_number')
                         // ->rules(Rule::unique('members', 'military_number'))
                         ->label('الرقم العسكري')->maxLength(255),
                     TextInput::make('seniority_number')
                     // ->unique()
                         ->label('رقم الأقدمية')->maxLength(255),
+                    Select::make('category_id')
+                        ->label('الفئة')
+                        ->options(Category::all()->pluck('name', 'id'))
+                        ->reactive()
+                        ->required(),
                     Select::make('rank_id')
                         ->label('الرتبة / الدرجة')
-                        ->options(Rank::all()->pluck('name', 'id'))
+                        ->options(function(Closure $get) {
+                            $categoryId = $get('category_id');
+                            return Rank::whereHas('categories', function($query) use ($categoryId){
+                                $query->where('category_id', $categoryId);
+                            })->pluck('name', 'id');
+                        })
                         ->required()
                         ->disabled(function(Closure $get) {
                             if ( is_null($get('id')))
@@ -65,18 +81,22 @@ class MemberResource extends Resource
                                 return false;
                             }
                             $member = Member::findOrFail($get('id'));
-                            if ($member->promotions()->count() > 0)
+                            if ($member->memberPromotions()->count() > 0)
                             {
                                 return true;
                             }
                             return false;
                         }),
-                    Select::make('category_id')
-                        ->label('الفئة')
-                        ->options(Category::all()->pluck('name', 'id'))
-                        ->required(),
+                    
                     Toggle::make('is_general_staff')->label('أ ح'),
                     TextInput::make('name')->label('الاسم')->required()->maxLength(255),
+                    Select::make('rank_id')
+                        ->label('الرتبة / الدرجة')
+                        ->options(Rank::all()->pluck('name', 'id')),
+                    Select::make('unit_id')
+                        ->label('الوحدة')
+                        ->options(Unit::all()->pluck('name', 'id'))
+                        ->visibleOn(['view']),
                     TextInput::make('address')->label('العنوان')->maxLength(255),
                     TextInput::make('home_phone_number')->label('رقم تليفون المنزل')->maxLength(255),
                     TextInput::make('mobile_phone_number')->label('رقم تليفون المحمول')->maxLength(255),
@@ -92,13 +112,7 @@ class MemberResource extends Resource
                     DatePicker::make('travel_date')->label('تاريخ السفر'),
                     DatePicker::make('return_date')->label('تاريخ العودة'),
                     TextInput::make('national_id_number')->label('الرقم القومي')->maxLength(14),
-                    Select::make('bank_name_id')
-                        ->options(BankName::all()->pluck('name', 'id'))
-                        ->label('البنك'),
-                    TextInput::make('bank_branch_name')->label('اسم فرع البنك')->maxLength(255),
-                    TextInput::make('bank_account_number')->label('رقم حساب البنك')->maxLength(255),
-                    DatePicker::make('pension_date')->label('تاريخ الإحالة للمعاش'),
-                    Textarea::make('pension_reason')->label('سبب الإحالة للمعاش'),
+                    
                     DatePicker::make('death_date')->label('تاريخ الوفاة'),
                     TextInput::make('register_number')->label('رقم السجل'),
                     TextInput::make('file_number')->label('رقم الملف'),
@@ -107,8 +121,21 @@ class MemberResource extends Resource
                     DatePicker::make('membership_start_date')
                         ->label('تاريخ الاشتراك')
                         ,
-                    Textarea::make('notes')->label('ملاحظات')
-                ])->columns(2)
+                    Textarea::make('notes')->label('ملاحظات'),
+                ])->columns(2),
+                
+                Card::make()->schema([
+                    Select::make('bank_name_id')
+                        ->options(BankName::all()->pluck('name', 'id'))
+                        ->label('البنك'),
+                    TextInput::make('bank_branch_name')->label('اسم فرع البنك')->maxLength(255),
+                    TextInput::make('bank_account_number')->label('رقم حساب البنك')->maxLength(255),
+                ])->columns(2),
+                
+                Card::make()->schema([
+                    DatePicker::make('pension_date')->label('تاريخ الإحالة للمعاش'),
+                    TextInput::make('pension_reason')->label('سبب الإحالة للمعاش'),
+                ])->columns(2),
             ]);
     }
 
@@ -119,35 +146,88 @@ class MemberResource extends Resource
                 TextColumn::make('#')->getStateUsing(static function (stdClass $rowLoop): string {
                     return (string) $rowLoop->iteration;
                 }),
-                TextColumn::make('military_number')->label('الرقم العسكري')->searchable(isIndividual: true, isGlobal: false),
-                TextColumn::make('seniority_number')->label('رقم الأقدمية')->searchable(isIndividual: true, isGlobal: false),
-                TextColumn::make('unit.name')->label('الوحدة'),
+                TextColumn::make('military_number')
+                    ->label('الرقم العسكري')
+                    ->sortable()
+                    ->searchable(isIndividual: true, isGlobal: true)
+                    ->toggleable(),
+                TextColumn::make('seniority_number')
+                    ->label('رقم الأقدمية')
+                    ->sortable()
+                    ->searchable(isIndividual: true, isGlobal: true)
+                    ->toggleable(),
+                TextColumn::make('unit.name')->label('الوحدة')
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('previous_unit')->label('الوحدة السابقة')
+                    ->getStateUsing(function($record) {
+                        $memberUnit = MemberUnit::where(['member_id' => $record->id])->first()?->unit?->name;
+                        return $memberUnit;
+                    })
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('unit.financialBranch.name')->label('الفرع المالي')
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('rank.name')
-                ->getStateUsing(function($record) {
-                    return $record->getRankName();
-                })
-                ->label('الرتبة / الدرجة'),
+                    ->sortable()
+                    ->getStateUsing(function($record) {
+                        return $record->getRankName();
+                    })
+                    ->label('الرتبة / الدرجة')
+                    ->toggleable(),
                 TextColumn::make('name')->label('الاسم')
-                    ->searchable(isIndividual: true, isGlobal: false, query: function (Builder $query, string $search): Builder {
+                    ->sortable()
+                    ->searchable(isIndividual: true, isGlobal: true, query: function (Builder $query, string $search): Builder {
                         return $query->search($search);
-                    }),
+                    })
+                    ->toggleable(),
                 BooleanColumn::make('is_nco')
                     ->getStateUsing(function($record) {
                         return $record->category->is_nco;
-                    })->label('شرفيين'),
-                TextColumn::make('category.name')->label('الفئة'),
-                TextColumn::make('class')->label('الدفعة'),
-                TextColumn::make('department.name')->label('السلاح'),
-                TextColumn::make('membership_start_date')->label('تاريخ الاشتراك'),
-                TextColumn::make('home_phone_number')->label('رقم تليفون المنزل')->searchable(isIndividual: true, isGlobal: false),
-                TextColumn::make('mobile_phone_number')->label('رقم تليفون المحمول')->searchable(isIndividual: true, isGlobal: false),
-                TextColumn::make('address')->label('العنوان')->searchable(isIndividual: true, isGlobal: false),
-                TextColumn::make('wallet')->label('الرصيد')->description('جم'),
-                TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
+                    })
+                    ->label('شرفيين')
+                    ->toggleable(),
+                TextColumn::make('category.name')
+                    ->sortable()
+                    ->label('الفئة')
+                    ->toggleable(),
+                TextColumn::make('class')
+                    ->sortable()
+                    ->label('الدفعة')
+                    ->toggleable(),
+                TextColumn::make('department.name')
+                    ->sortable()
+                    ->label('السلاح')
+                    ->toggleable(),
+                TextColumn::make('membership_start_date')
+                    ->label('تاريخ الاشتراك')
+                    ->toggleable(),
+                TextColumn::make('home_phone_number')
+                    ->label('رقم تليفون المنزل')
+                    ->searchable(isIndividual: true, isGlobal: false)
+                    ->toggleable(),
+                TextColumn::make('mobile_phone_number')
+                    ->label('رقم تليفون المحمول')
+                    ->searchable(isIndividual: true, isGlobal: false)
+                    ->toggleable(),
+                TextColumn::make('address')
+                    ->label('العنوان')
+                    ->searchable(isIndividual: true, isGlobal: false)
+                    ->toggleable(),
+                TextColumn::make('wallet')
+                    ->label('الرصيد')
+                    ->description('جم')
+                    ->toggleable(),
+                TextColumn::make('created_at')
+                    ->label('تاريخ التسجيل')
+                    ->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();
                         return $state->since();
-                    })->sortable(),
+                    })
+                    ->sortable()
+                    ->toggleable(),
             ])
             ->filters([
                 SelectFilter::make('rank_id')
@@ -158,10 +238,37 @@ class MemberResource extends Resource
                     ->label('السلاح')
                     ->options(Department::all()->pluck('name', 'id'))
                     ->searchable(),
+                
                 SelectFilter::make('category_id')
                     ->label('الفئة')
                     ->options(Category::all()->pluck('name', 'id'))
                     ->searchable(),
+                SelectFilter::make('unit_id')
+                    ->label('الوحدة')
+                    ->options(Unit::all()->pluck('name', 'id'))
+                    ->searchable(),
+                SelectFilter::make('financial_branch_id')
+                    ->label('الفرع المالي')
+                    ->options(FinancialBranch::all()->pluck('name', 'id'))
+                    ->searchable(),
+                TernaryFilter::make('work_pension')
+                    ->label('خدمة / معاش')
+                    ->trueLabel('خدمة')
+                    ->falseLabel('معاش')
+                    ->queries(
+                            true: fn (Builder $query) => $query->whereNull('pension_date'),
+                            false: fn (Builder $query) => $query->whereNotNull('pension_date'),
+                            blank: fn (Builder $query) => $query->withoutTrashed(),
+                    ),
+                TernaryFilter::make('nco_co')
+                    ->label('عاملين / شرفيين')
+                    ->trueLabel('شرفيين')
+                    ->falseLabel('عاملين')
+                    ->queries(
+                            true: fn (Builder $query) => $query->whereHas('category', fn($query) => $query->whereIsNco(true)),
+                            false: fn (Builder $query) => $query->whereHas('category', fn($query) => $query->whereIsNco(false)),
+                            blank: fn (Builder $query) => $query->withoutTrashed(),
+                    ),
                 DateFilter::make('created_at')->label('تاريخ التسجيل')
 
             ])
@@ -179,8 +286,9 @@ class MemberResource extends Resource
     public static function getRelations(): array
     {
         return [
-            JobsRelationManager::class,
+            MemberJobsRelationManager::class,
             PromotionsRelationManager::class,
+            MemberUnitsRelationManager::class,
         ];
     }
     

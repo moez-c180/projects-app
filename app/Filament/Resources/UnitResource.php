@@ -42,6 +42,7 @@ class UnitResource extends Resource
                     Select::make('financial_branch_id')
                         ->label('الفرع المالي')
                         ->options(FinancialBranch::all()->pluck('name', 'id'))
+                        ->searchable()
                         ->required()
                 ])
             ]);

@@ -2,10 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryResource\Pages;
-use App\Filament\Resources\CategoryResource\RelationManagers;
-use App\Filament\Resources\CategoryResource\RelationManagers\MembersRelationManager;
-use App\Models\Category;
+use App\Filament\Resources\PositionResource\Pages;
+use App\Filament\Resources\PositionResource\RelationManagers;
+use App\Models\Position;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -13,35 +12,31 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Tables\Columns\TextColumn;
-use stdClass;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use stdClass;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
-use App\Filament\Resources\CategoryResource\RelationManagers\RanksRelationManager;
 
-class CategoryResource extends Resource
+class PositionResource extends Resource
 {
-    protected static ?string $model = Category::class;
+    protected static ?string $model = Position::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
-    protected static ?string $navigationGroup = 'البيانات الأساسية';
-    protected static ?string $navigationLabel = 'الفئات ';
-    protected static ?string $label = 'الفئات ';
 
+    protected static ?string $navigationGroup = 'البيانات الأساسية';
+    protected static ?string $navigationLabel = 'الوظائف ';
+    protected static ?string $label = 'الوظائف ';
+    
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Card::make()->schema([
                     TextInput::make('name')
-                        ->label('الاسم')
-                        ->required()->maxLength(255),
-                    Toggle::make('is_nco')
-                        ->label('شرفيين')
+                        ->label('الوظيفة')->required()->maxLength(255),
                 ])
             ]);
     }
@@ -54,8 +49,10 @@ class CategoryResource extends Resource
                     return (string) $rowLoop->iteration;
                 }),
                 TextColumn::make('id'),
-                TextColumn::make('name')->label('الاسم'),
-                ToggleColumn::make('is_nco')->label('شرفيين'),
+                TextColumn::make('name')
+                    ->searchable()
+                    ->sortable()
+                    ->label('الوظيفة'),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();
@@ -86,18 +83,17 @@ class CategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            MembersRelationManager::class,
-            RanksRelationManager::class
+            //
         ];
     }
     
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'view' => Pages\ViewCategory::route('/{record}'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => Pages\ListPositions::route('/'),
+            'create' => Pages\CreatePosition::route('/create'),
+            'view' => Pages\ViewPosition::route('/{record}'),
+            'edit' => Pages\EditPosition::route('/{record}/edit'),
         ];
     }    
 }

@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Member;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Rank;
+use App\Models\CategoryRank;
 
 class Category extends Model
 {
@@ -26,5 +29,11 @@ class Category extends Model
     public function members(): HasMany
     {
         return $this->hasMany(Member::class);
+    }
+    
+    public function ranks(): BelongsToMany
+    {
+        return $this->belongsToMany(Rank::class)
+            ->using(CategoryRank::class);
     }
 }

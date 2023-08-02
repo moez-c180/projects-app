@@ -30,15 +30,12 @@ class MembersImport implements ToModel, WithHeadingRow, SkipsEmptyRows, WithVali
     public function model(array $row)
     {
         $member = Member::create($row);
-        // Check if promotion data is existing
-        if (!empty($row['promotion_date']) and !empty($row['rank_id']) )
-        {
-            $member->promotions()->create([
-                'rank_id' => $row['rank_id'],
-                'promotion_date' => $row['promotion_date'],
-            ]);
-        }
-        
+
+        $member->promotions()->create([
+            'rank_id' => $row['rank_id'],
+            'promotion_date' => $row['promotion_date'] ?? null,
+        ]);
+
         return $member;
     }
 
@@ -68,6 +65,7 @@ class MembersImport implements ToModel, WithHeadingRow, SkipsEmptyRows, WithVali
             'membership_start_date' => ['nullable', 'date_format:Y-m-d'],
             'unit_id' => ['nullable', 'exists:units,id'],
             'financial_branch_id' => ['nullable', 'exists:financial_branches,id'],
+            'promotion_date' => ['nullable', 'date_format:Y-m-d']
             
         ];
     }
