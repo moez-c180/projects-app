@@ -21,6 +21,8 @@ class MemberUnitResource extends Resource
     protected static ?string $model = MemberUnit::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationLabel = 'تنقلات الأعضاء ';
+    protected static ?string $label = 'تنقلات الأعضاء ';
 
     public static function form(Form $form): Form
     {
