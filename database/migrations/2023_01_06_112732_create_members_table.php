@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('mobile_phone_number')->nullable();
             $table->string('beneficiary_name')->nullable();
             $table->string('beneficiary_title')->nullable();
+            $table->string('beneficiary_phone_number')->nullable();
             $table->string('class')->nullable();
             $table->foreignId('department_id')
                 ->index()
@@ -46,6 +47,7 @@ return new class extends Migration
             $table->string('bank_account_number')->nullable();
             $table->date('pension_date')->nullable();
             $table->text('pension_reason')->nullable();
+            $table->boolean('on_pension')->default(0);
             $table->date('death_date')->nullable();
             $table->boolean('is_subscribed')->default(0);
             $table->foreignId('bank_name_id')
@@ -60,7 +62,7 @@ return new class extends Migration
             $table->longText('notes')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->fullText(['military_number', 'seniority_number']);
+            $table->fullText(['military_number', 'seniority_number', 'name']);
         });
     }
 

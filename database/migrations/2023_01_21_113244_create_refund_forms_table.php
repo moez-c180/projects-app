@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('refund_forms', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('member_form_id')->index()->constrained()->cascadeOnDelete();
             $table->foreignId('member_id')->index()->constrained()->cascadeOnDelete();
             $table->integer('amount');
             $table->text('notes')->nullable();

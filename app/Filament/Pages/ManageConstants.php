@@ -7,6 +7,8 @@ use Filament\Pages\SettingsPage;
 use app\Settings\SystemConstantsSettings;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Select;
+use App\Models\Unit;
 
 class ManageConstants extends SettingsPage
 {
@@ -107,7 +109,13 @@ class ManageConstants extends SettingsPage
                     ->label(' مصاريف جنازة - شرفيين')
                     ->numeric()->minValue(1)
                     ->required(), 
-            ])->columns(4)
+            ])->columns(4),
+            Card::make([
+                Select::make('pension_unit_id')
+                    ->label('وحدة المعاش')
+                    ->options(Unit::all()->pluck('name', 'id'))
+                    ->required()
+            ])
 
         ];
     }

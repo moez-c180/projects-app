@@ -13,8 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('member_jobs', function (Blueprint $table) {
-            $table->string('current_job')->nullable()->change();
+        Schema::create('reviews', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('member_jobs', function (Blueprint $table) {
-            $table->string('current_job')->change();
-        });
+        Schema::dropIfExists('reviews');
     }
 };

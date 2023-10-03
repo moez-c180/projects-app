@@ -17,7 +17,7 @@ class MemberForm extends Model
     use HasFactory;
     use SoftDeletes;
     use HasMember;
-    use HasAmount;
+    // use HasAmount;
 
     protected $fillable = [
         'member_id',
@@ -33,6 +33,6 @@ class MemberForm extends Model
 
     public function scopeOfApproved(Builder $builder): Builder
     {
-        return $builder->where('pending', 0);
+        return $builder->formable->where('pending', 0);
     }
 }

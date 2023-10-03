@@ -18,7 +18,7 @@ class SafeEntry extends Model implements HasMedia
     use HasFactory;
     use SoftDeletes;
     use InteractsWithMedia;
-    use HasAmount;
+    // use HasAmount;
 
     protected $fillable = [
         'safe_entry_category_id',

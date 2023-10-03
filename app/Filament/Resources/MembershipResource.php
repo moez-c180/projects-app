@@ -57,6 +57,15 @@ class MembershipResource extends Resource
                             $member = Member::findOrFail($get('member_id'));
                             if (!is_null($member->membership_start_date))
                             {
+                                if (!$member->unit)
+                                {
+                                    Notification::make()
+                                    ->warning()
+                                    ->title('العضو ليس له وحدة')
+                                    ->body('هذا العضو ليس له وحدة.')
+                                    ->send();   
+                                    return false;
+                                }
                                 $financialBranchId = $member->getUnit()->financial_branch_id;
                                 $unitId = $member->getUnit()->id;
                                 $set('financial_branch_id', $financialBranchId);
@@ -82,15 +91,16 @@ class MembershipResource extends Resource
                         ->label('المبلغ المدفوع')
                         ->minValue(1)
                         ->numeric()->required(),
-                    DatePicker::make('membership_date')
-                        ->default(Carbon::now()->startOfMonth())
-                        ->label('تاريخ القسط')
-                        ->required(),
+                    // DatePicker::make('membership_date')
+                    //     ->default(Carbon::now()->startOfMonth())
+                    //     ->label('تاريخ القسط')
+                    //     ->required(),
                     Select::make('unit_id')
                         ->label('الوحدة')
                         ->searchable()
                         ->options(Unit::all()->pluck('name', 'id'))
-                        ->required(),
+                        ->required()
+                        ->disabled(),
                     Select::make('financial_branch_id')
                         ->label('الفرع المالي')
                         ->searchable()

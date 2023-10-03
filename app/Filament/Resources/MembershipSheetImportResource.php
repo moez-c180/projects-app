@@ -26,6 +26,7 @@ use Filament\Notifications\Notification;
 use Filament\Tables\Actions\DeleteAction;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\MembershipsImport;
+use Filament\Forms\Components\Toggle;
 
 class MembershipSheetImportResource extends Resource
 {
@@ -54,6 +55,9 @@ class MembershipSheetImportResource extends Resource
                     })
                     ->required(),
                 DatePicker::make('membership_date')->default(Carbon::now()->startOfMonth())
+                    ->rules(['required']),
+                Toggle::make('on_pension')
+                    ->label('معاش')
                     ->rules(['required']),
                 
             ]);

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->boolean('processed')->default(0);
             $table->datetime('processing_start_time')->nullable();
             $table->datetime('processing_finish_time')->nullable();
+            $table->boolean('on_pension');
             $table->timestamps();
         });
     }

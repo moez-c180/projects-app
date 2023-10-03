@@ -15,56 +15,13 @@ class MemberWalletObserver
      */
     public function created(MemberWallet $memberWallet)
     {
+        $currentMemberWallet = $memberWallet->member->wallet;
         if ($memberWallet->type == MemberWallet::TYPE_DEPOSIT)
         {
-            $memberWallet->member->increment('wallet', $memberWallet->amount * 100);
-            
+            $newWalletValue = $currentMemberWallet + $memberWallet->amount;
         } else {
-            $memberWallet->member->decrement('wallet', $memberWallet->amount * 100);
+            $newWalletValue = $currentMemberWallet - $memberWallet->amount;
         }
-    }
-
-    /**
-     * Handle the MemberWallet "updated" event.
-     *
-     * @param  \App\Models\MemberWallet  $memberWallet
-     * @return void
-     */
-    public function updated(MemberWallet $memberWallet)
-    {
-        //
-    }
-
-    /**
-     * Handle the MemberWallet "deleted" event.
-     *
-     * @param  \App\Models\MemberWallet  $memberWallet
-     * @return void
-     */
-    public function deleted(MemberWallet $memberWallet)
-    {
-        //
-    }
-
-    /**
-     * Handle the MemberWallet "restored" event.
-     *
-     * @param  \App\Models\MemberWallet  $memberWallet
-     * @return void
-     */
-    public function restored(MemberWallet $memberWallet)
-    {
-        //
-    }
-
-    /**
-     * Handle the MemberWallet "force deleted" event.
-     *
-     * @param  \App\Models\MemberWallet  $memberWallet
-     * @return void
-     */
-    public function forceDeleted(MemberWallet $memberWallet)
-    {
-        //
+        $memberWallet->member()->update(['wallet' => $newWalletValue]);
     }
 }

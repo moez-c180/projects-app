@@ -15,6 +15,7 @@ use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use App\Models\Member;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\SelectFilter;
+use Carbon\Carbon;
 
 class AgeForm65Report extends Page implements HasTable
 {
@@ -43,7 +44,11 @@ class AgeForm65Report extends Page implements HasTable
             TextColumn::make('#')->getStateUsing(static function (stdClass $rowLoop): string {
                 return (string) $rowLoop->iteration;
             }),
-            TextColumn::make('age_form_type')->label('السن'),
+            TextColumn::make('age_form_type')
+                ->getStateUsing(function($record) {
+                    return Carbon::parse($record->birth_date)->age;
+                })
+                ->label('السن'),
             TextColumn::make('is_nco')->label('عاملين / شرفيين')
                 ->getStateUsing(function($record) {
                     return $record->category->is_nco ? 'شرفيين' : 'عاملين';
@@ -51,21 +56,32 @@ class AgeForm65Report extends Page implements HasTable
             TextColumn::make('military_number')->label('الرقم العسكري'),
             TextColumn::make('seniority_number')->label('رقم الأقدمية'),
             TextColumn::make('rank.name')->label('الرتبة'),
-            TextColumn::make('category.name')->label('الفئة'),
             TextColumn::make('is_general_staff')
                     ->getStateUsing(function($record) {
                         return $record->is_general_staff ? Member::IS_GENERAL_STAFF : '';
                     })->label('أ ح'),
             TextColumn::make('name')->label('الاسم'),
             TextColumn::make('department.name')->label('السلاح'),
-            TextColumn::make('file_number')->label('رقم الملف'),
-            TextColumn::make('national_id_number')->label('الرقم القومي'),
-            TextColumn::make('register_number')->label('رقم السجل'),
-            TextColumn::make('review')->label('مراجعة'),
-            TextColumn::make('birth_date')->label('تاريخ الميلاد')->getStateUsing(fn($record) => $record->birth_date->format('d-m-Y')),
-            TextColumn::make('pension_reason')->label('قرار السببية'),
-            TextColumn::make('pension_date')->label('تاريخ نهاية الخدمة'),
-            TextColumn::make('mobile_phone_number')->label('رقم التليفون'),
+            TextColumn::make('birth_date')->label('تاريخ الميلاد'),
+            TextColumn::make('pension_date')
+                ->label('تاريخ الإحالة للمعاش')
+                ->toggleable(),
+            TextColumn::make('pension_reason')
+                ->label('سبب الإحالة للمعاش')
+                ->toggleable(),
+            TextColumn::make('address')
+                ->label('العنوان')
+                ->searchable(isIndividual: true, isGlobal: false)
+                ->toggleable(),
+            TextColumn::make('mobile_phone_number')
+                ->label('رقم تليفون المحمول')
+                ->searchable(isIndividual: true, isGlobal: false)
+                ->toggleable(),
+            TextColumn::make('review')
+                ->label('مراجعة')
+                ->toggleable(),
+            
+                
             
         ];
     }
@@ -74,21 +90,17 @@ class AgeForm65Report extends Page implements HasTable
     {
         return [
             DateFilter::make('created_at')->label('تاريخ التسجيل'),
-            SelectFilter::make('age_form_type')
+            TernaryFilter::make('age_form_type')
                 ->label('السن')
-                ->options([
-                '65' => '65',
-                '70' => '70',
-                ]),
+                ->queries(
+                    true: fn (Builder $query) => $query->whereRaw("TIMESTAMPDIFF(year,birth_date, now() ) = 65"),
+                    false: fn (Builder $query) => $query->whereRaw("TIMESTAMPDIFF(year,birth_date, now() ) = 70"),
+                    blank: fn (Builder $query) => $query,
+                )
+                ->trueLabel('65')
+                ->falseLabel('70'),
+            
             TernaryFilter::make('category.is_nco'),
-            // ->queries(
-            //     true: fn (Builder $query) => $query->whereHas('member', fn($query) => $query->member()->where('is_nco', 1)),
-            //     false: fn (Builder $query) => $query->whereHas('member', fn($query) => $query->member()->where('is_nco', 0)),
-            //     blank: fn (Builder $query) => $query->whereHas('member', fn($query) => $query->member()->where('is_nco', 0)),
-            //     // false: fn (Builder $query) => $query->member()->where('is_nco', 0),
-            //     // blank: fn (Builder $query) => $query->member()->where('is_nco', 0),
-            // )
-
         ];
     }
 

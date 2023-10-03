@@ -25,7 +25,8 @@ class MembershipSheetImport extends Model implements HasMedia
         'processed' => 'boolean',
         'processing_start_time' => 'datetime',
         'processing_finish_time' => 'datetime',
-        'membership_date' => 'date'
+        'membership_date' => 'date',
+        'on_pension' => 'boolean',
     ];
 
     protected $fillable = [
@@ -33,7 +34,8 @@ class MembershipSheetImport extends Model implements HasMedia
         'processed',
         'processing_start_time',
         'processing_finish_time',
-        'membership_date'
+        'membership_date',
+        'on_pension'
     ];
 
     protected $with = ['media'];

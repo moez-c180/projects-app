@@ -18,6 +18,11 @@ class MemberUnit extends Model
     protected $fillable = [
         'member_id',
         'unit_id',
+        'movement_date'
+    ];
+
+    protected $casts = [
+        'movement_date' => 'date'
     ];
 
     /**

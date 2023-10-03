@@ -4,6 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RefundFormResource\Pages;
 use App\Filament\Resources\RefundFormResource\RelationManagers;
+use App\Models\AgeForm;
+use App\Models\DeathForm;
+use App\Models\FellowshipGrantForm;
 use App\Models\RefundForm;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -21,6 +24,13 @@ use stdClass;
 use Filament\Forms\Components\Card;
 use Closure;
 use Filament\Notifications\Notification;
+use App\Models\MemberForm;
+use Filament\Forms\Components\MorphToSelect;
+use Filament\Forms\Components\MorphToSelect\Type;
+use App\Models\MarriageForm;
+use App\Models\ProjectClosureForm;
+use App\Models\DisabledForm;
+use App\Models\RelativeDeathForm;
 
 class RefundFormResource extends Resource
 {
@@ -47,6 +57,34 @@ class RefundFormResource extends Resource
                         })->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
                         ->required()
                         ->reactive(),
+                    MorphToSelect::make('formable')
+                        ->label('المذكرة')
+                        ->types([
+                            Type::make(AgeForm::class)
+                                ->titleColumnName('serial')
+                                ->label('مذكرة تكريم السن'),
+                            Type::make(DeathForm::class)
+                                ->titleColumnName('serial')
+                                ->label('مذكرة وفاة عضو'),
+                            Type::make(DisabledForm::class)
+                                ->titleColumnName('serial')
+                                ->label('مذكرة عجز كلي'),
+                            Type::make(FellowshipGrantForm::class)
+                                ->titleColumnName('serial')
+                                ->label('مذكرة منحة زمالة'),
+                            Type::make(MarriageForm::class)
+                                ->titleColumnName('serial')
+                                ->label('مذكرة هدية زواج '),
+                            Type::make(ProjectClosureForm::class)
+                                ->titleColumnName('serial')
+                                ->label('مذكرة تصفية مشروع'),
+                            Type::make(RelativeDeathForm::class)
+                                ->titleColumnName('serial')
+                                ->label('مذكرة وفاة أحد المعولين'),
+                        ])
+                    ,
+                    // Select::make('member_form_id')
+                    //     ->relationship('formable', 'formable.serial'),
                     TextInput::make('amount')
                         ->label('المبلغ')
                         ->numeric()

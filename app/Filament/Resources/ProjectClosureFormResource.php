@@ -23,6 +23,7 @@ use Closure;
 use App\Models\ProjectClosureReason;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\BooleanColumn;
+use App\Models\Membership;
 
 class ProjectClosureFormResource extends Resource
 {
@@ -52,7 +53,12 @@ class ProjectClosureFormResource extends Resource
                         ->required()
                         ->reactive()
                         ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
-                            $set('unit_name', Member::find($state)?->getUnit()?->name );
+                            $member = Member::find($state);
+                            $set('unit_name', $member?->getUnit()?->name );
+                            $set('total_subscription_payments', Membership::where('member_id', $state)->sum('amount') );
+                            $set('total_forms_amount', $member->getMemberBenefitsAmount() );
+                            $amount = $get('total_subscription_payments') - $get('total_forms_amount');
+                            $set('amount', $amount);
                         }),
                     TextInput::make('unit_name')
                         ->visibleOn('create')
@@ -70,6 +76,7 @@ class ProjectClosureFormResource extends Resource
                         ->label('جملة المزايا الإضافية')
                         ->required()
                         ->reactive()
+                        ->disabled()
                         ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
                             $set('amount', ( $get('total_subscription_payments') - $state ));
                         })

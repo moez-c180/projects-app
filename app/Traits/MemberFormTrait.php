@@ -28,4 +28,10 @@ trait MemberFormTrait
             ])->delete();
         });
     }
+
+    public function forms()
+    {
+        return $this->morphToMany(MemberForm::class, 'formable', 'member_forms', 'formable_id', 'id');
+    }
+
 }

@@ -24,7 +24,7 @@ class Membership extends Model
 
     use HasFactory;
     use SoftDeletes;
-    use HasAmount;
+    // use HasAmount;
     use HasMember;
 
     protected $fillable = [
@@ -70,21 +70,21 @@ class Membership extends Model
         return $builder->whereApproved(true);
     }
 
-    protected function paidAmount(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value/100,
-            set: fn ($value) => $value * 100,
-        );
-    }
+    // protected function paidAmount(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => $value/100,
+    //         set: fn ($value) => $value * 100,
+    //     );
+    // }
     
-    protected function membershipValue(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value/100,
-            set: fn ($value) => $value * 100,
-        );
-    }
+    // protected function membershipValue(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => $value/100,
+    //         set: fn ($value) => $value * 100,
+    //     );
+    // }
 
     /**
      * Get the membershipSheetImport that owns the Membership

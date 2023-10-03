@@ -17,6 +17,7 @@ class ImportMembershipSheetJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $membershipSheetImport;
+    public $onPension;
 
     /**
      * Create a new job instance.
@@ -45,7 +46,8 @@ class ImportMembershipSheetJob implements ShouldQueue
 
         Excel::import(new MembershipsImport(
             membershipDate: $this->membershipSheetImport->membership_date, 
-            membershipSheetImportId: $this->membershipSheetImport->id
+            membershipSheetImportId: $this->membershipSheetImport->id,
+            onPension: $this->membershipSheetImport->on_pension
         ), $file);
         
         $this->membershipSheetImport->update([

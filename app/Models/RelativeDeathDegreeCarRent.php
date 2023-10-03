@@ -12,7 +12,7 @@ class RelativeDeathDegreeCarRent extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use HasAmount;
+    // use HasAmount;
 
     protected $append = ['nameIsInCairo'];
 

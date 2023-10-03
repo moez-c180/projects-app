@@ -28,5 +28,6 @@ class CreateSystemConstantsSettings extends SettingsMigration
         $this->migrator->add('general.nco_age_honor_70', 1000);
         $this->migrator->add('general.nco_grant', 8000);
         $this->migrator->add('general.nco_funeral_fees', 1000);
+        $this->migrator->add('general.pension_unit_id');
     }
 }

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class MemberWallet extends Model
 {
     use HasFactory;
-    use HasAmount;
+    // use HasAmount;
     use HasMember;
 
     const TYPE_DEPOSIT = 'deposit';

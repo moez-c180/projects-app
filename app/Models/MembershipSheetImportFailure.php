@@ -11,5 +11,5 @@ class MembershipSheetImportFailure extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use HasAmount;
+    // use HasAmount;
 }

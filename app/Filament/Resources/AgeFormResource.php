@@ -33,8 +33,8 @@ class AgeFormResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
     protected static ?string $navigationGroup = 'المذكرات';
-    protected static ?string $navigationLabel = 'مذكرة تكريم بلوغ السن  ';
-    protected static ?string $label = 'مذكرة تكريم بلوغ السن ';
+    protected static ?string $navigationLabel = 'مذكرة تكريم السن  ';
+    protected static ?string $label = 'مذكرة تكريم السن ';
     
     public static function form(Form $form): Form
     {

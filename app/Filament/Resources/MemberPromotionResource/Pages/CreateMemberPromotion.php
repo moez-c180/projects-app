@@ -12,6 +12,11 @@ class CreateMemberPromotion extends CreateRecord
 
     protected function afterCreate(): void
     {
+        if ($this->data['is_general_staff'])
+        {
+            $this->record->update(['is_general_staff' => true]);
+        }
+        
         $this->record->member->update(['rank_id' => $this->record->rank_id]);
     }
 }

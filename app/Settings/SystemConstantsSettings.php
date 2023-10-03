@@ -29,6 +29,7 @@ class SystemConstantsSettings extends Settings
     public string $nco_age_honor_70;
     public string $nco_grant;
     public string $nco_funeral_fees; // 1000
+    public ?int $pension_unit_id;
 
     public static function group(): string
     {

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('member_id')->nullable()->index()->constrained()->cascadeOnDelete();
             $table->foreignId('unit_id')->nullable()->index()->constrained()->cascadeOnDelete();
+            $table->date('movement_date');
             $table->softDeletes();
             $table->timestamps();
         });

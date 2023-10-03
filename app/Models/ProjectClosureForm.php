@@ -14,7 +14,7 @@ class ProjectClosureForm extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use HasAmount;
+    // use HasAmount;
     use HasMember;
     use MemberFormTrait;
 
@@ -30,19 +30,19 @@ class ProjectClosureForm extends Model
         'pending',
     ];
 
-    protected function totalSubscriptionPayments(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value/100,
-            set: fn ($value) => $value * 100,
-        );
-    }
+    // protected function totalSubscriptionPayments(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => $value/100,
+    //         set: fn ($value) => $value * 100,
+    //     );
+    // }
     
-    protected function totalFormsAmount(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value/100,
-            set: fn ($value) => $value * 100,
-        );
-    }
+    // protected function totalFormsAmount(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => $value/100,
+    //         set: fn ($value) => $value * 100,
+    //     );
+    // }
 }

@@ -15,7 +15,7 @@ class RelativeDeathForm extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use HasAmount;
+    // use HasAmount;
     use HasMember;
     use MemberFormTrait;
 
@@ -35,21 +35,21 @@ class RelativeDeathForm extends Model
 
     ];
 
-    protected function subAmount(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value/100,
-            set: fn ($value) => $value * 100,
-        );
-    }
+    // protected function subAmount(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => $value/100,
+    //         set: fn ($value) => $value * 100,
+    //     );
+    // }
     
-    protected function carRent(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value/100,
-            set: fn ($value) => $value * 100,
-        );
-    }
+    // protected function carRent(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => $value/100,
+    //         set: fn ($value) => $value * 100,
+    //     );
+    // }
 
     public static function getAmount(bool $is_nco)
     {

@@ -20,6 +20,10 @@ use Filament\Forms\Components\DatePicker;
 use stdClass;
 use Filament\Tables\Columns\TextColumn;
 use Closure;
+use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Forms\Components\Toggle;
+use Filament\Pages\Actions\Action;
 
 class MemberPromotionResource extends Resource
 {
@@ -37,7 +41,7 @@ class MemberPromotionResource extends Resource
             ->schema([
                 Card::make()->schema([
                     Select::make('member_id')
-                        ->label('اسم العضو')
+                        ->label('العضو')
                         ->searchable()
                         ->getSearchResultsUsing(function(string $search) {
                             return Member::query()
@@ -52,6 +56,7 @@ class MemberPromotionResource extends Resource
                     DatePicker::make('promotion_date')
                         ->label('تاريخ الترقي')
                         ->required(),
+                    Toggle::make('is_general_staff')->label('أ ح'),
                 ])
             ]);
     }
@@ -63,12 +68,30 @@ class MemberPromotionResource extends Resource
                 TextColumn::make('#')->getStateUsing(static function (stdClass $rowLoop): string {
                     return (string) $rowLoop->iteration;
                 }),
+                TextColumn::make('member.rank.name')->label('الرتبة'),
+                TextColumn::make('member.seniority_number')->label('رقم الأقدمية'),
+                TextColumn::make('member.military_number')->label('رقم العسكري'),
                 TextColumn::make('member.name')->label('اسم العضو'),
                 TextColumn::make('rank.name')->label('الرتبة'),
                 TextColumn::make('promotion_date')->label('تاريخ الترقي'),
+                TextColumn::make('created_at')
+                    ->label('تاريخ التسجيل')
+                    ->dateTime('d-m-Y, H:i a')
+                    ->tooltip(function(TextColumn $column): ?string {
+                        $state = $column->getState();
+                        return $state->since();
+                    })
+                    ->sortable()
             ])
             ->filters([
-                //
+                SelectFilter::make('rank_id')
+                    ->label('الرتبة')
+                    ->options(Rank::all()->pluck('name', 'id'))
+                    ->searchable(),
+                DateFilter::make('created_at')
+                    ->label('تاريخ التسجيل'),
+                DateFilter::make('promotion_date')
+                    ->label('تاريخ الترقي')
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

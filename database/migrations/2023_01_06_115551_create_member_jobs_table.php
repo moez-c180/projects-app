@@ -16,9 +16,11 @@ return new class extends Migration
         Schema::create('member_jobs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('member_id')->index()->constrained()->cascadeOnDelete();
-            $table->foreignId('unit_id')->index()->constrained()->cascadeOnDelete();
             $table->date('job_filled_date');
-            $table->string('current_job');
+            $table->foreignId('position_id')
+                ->index()
+                ->constrained()
+                ->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

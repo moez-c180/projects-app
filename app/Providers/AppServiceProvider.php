@@ -15,6 +15,8 @@ use App\Models\RefundForm;
 use App\Observers\MembershipObserver;
 use App\Observers\MemberWalletObserver;
 use App\Observers\RefundFormObserver;
+use App\Models\Member;
+use App\Observers\MemberObserver;
 
 class AppServiceProvider extends ServiceProvider
 {

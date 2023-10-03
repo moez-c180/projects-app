@@ -23,6 +23,10 @@ class MemberPromotion extends Model
         'promotion_date',
     ];
 
+    protected $casts = [
+        'promotion_date' => 'date'
+    ];
+
     /**
      * Get the unit that owns the MemberPromotion
      *

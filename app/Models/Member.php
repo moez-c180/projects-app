@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\DB;
 use App\Models\MemberUnit;
+use App\Models\Review;
 
 class Member extends Model
 {
@@ -68,13 +69,14 @@ class Member extends Model
         'bank_account_number',
         'pension_date',
         'pension_reason',
+        'on_pension',
         'death_date',
         'notes',
         'bank_name_id',
         'bank_branch_name',
         'register_number',
         'file_number',
-        'review',
+        'review_id',
         'membership_start_date',
         'wallet',
         'unit_id',
@@ -88,13 +90,13 @@ class Member extends Model
         'pension_date' => 'date',
         'death_date' => 'date',
         'membership_start_date' => 'date',
+        'on_pension' => 'boolean',
     ];
 
     protected $cascadeDeletes = [
-        'jobs',
-        'promotions',
+        'memberPromotions',
         'memberJobs',
-        'member',
+        'memberUnits',
         'relativeDeathForms',
         'refundForms',
         'projectClosureForms',
@@ -107,6 +109,33 @@ class Member extends Model
         'deathForms',
         'ageForms',
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+        static::updating(function(Member $member) {
+            if ($member->isDirty('pension_date'))
+            {
+                if (!is_null($member->pension_date))
+                {
+                    $member->on_pension = 1;
+                } else {
+                    $member->on_pension = 0;
+                }
+            }
+        }); 
+        static::creating(function(Member $member) {
+            if ($member->isDirty('pension_date'))
+            {
+                if (!is_null($member->pension_date))
+                {
+                    $member->on_pension = 1;
+                } else {
+                    $member->on_pension = 0;
+                }
+            }
+        }); 
+    }
 
     /**
      * Get the category that owns the Member
@@ -178,6 +207,16 @@ class Member extends Model
         return $this->belongsTo(Unit::class);
     }
     
+    /**
+     * Get the financialBranch that owns the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function financialBranch(): BelongsTo
+    {
+        return $this->belongsTo(FinancialBranch::class);
+    }
+    
     
     /**
      * Get the department that owns the Member
@@ -187,6 +226,11 @@ class Member extends Model
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class);
+    }
+    
+    public function review(): BelongsTo
+    {
+        return $this->belongsTo(Review::class);
     }
 
     public function getRankName()
@@ -205,7 +249,7 @@ class Member extends Model
 
     public function getUnit(): Unit
     {
-        return $this->jobs()->orderByDesc('created_at')->first()?->unit;
+        return $this->memberUnits()->orderByDesc('created_at')->first()?->unit;
     }
 
     /**
@@ -355,7 +399,7 @@ class Member extends Model
     public function getTotalMembershipMonths(?Carbon $until = null): array
     {
         $monthDays = [];
-        $until = $until ?? now()->subMonth();
+        $until = $until ?? now();
         $diffInMonths = Carbon::parse($this->membership_start_date)
             ->diffInMonths($until);
         
@@ -369,16 +413,17 @@ class Member extends Model
         return $monthDays;
     }
 
-    public function getUnpaidMembershipMonths(): array
+    public function getUnpaidMembershipMonths(?Carbon $until = null): array
     {
         $paidMembershipMonths = Membership::where('member_id', $this->id)->pluck('membership_date')->toArray();
         $paidMembershipMonths = array_map(function($record) {
             return $record->format('Y-m-d');
         }, $paidMembershipMonths);
 
-        $totalMembershipMonths = $this->getTotalMembershipMonths();
+        $totalMembershipMonths = $this->getTotalMembershipMonths($until);
         $unpaidMonths = array_diff($totalMembershipMonths, $paidMembershipMonths);
-        return array_reverse($unpaidMonths);
+        // return array_reverse($unpaidMonths);
+        return $unpaidMonths;
     }
 
     public function getUnpaidMembershipAmount(): int
@@ -387,13 +432,13 @@ class Member extends Model
         return $this->getSubscriptionValue() * count($months);
     }
 
-    protected function wallet(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value/100,
-            set: fn ($value) => $value * 100,
-        );
-    }
+    // protected function wallet(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => $value/100,
+    //         set: fn ($value) => $value * 100,
+    //     );
+    // }
 
     public function scopeSearch(Builder $builder, $search): Builder
     {
@@ -401,7 +446,8 @@ class Member extends Model
             ->whereRaw("CONCAT(`name`, ' ') LIKE '%$search%'")
             ->orWhereLike('address', $search)
             ->orWhere('military_number', $search)
-            ->orWhere('seniority_number', $search);
+            ->orWhere('seniority_number', $search)
+            ->orWhere('national_id_number', $search);
     }
 
     public function getMemberBenefitsAmount(): int
@@ -438,5 +484,22 @@ class Member extends Model
         } else {
             return app(SystemConstantsSettings::class)->co_death;
         }
+    }
+
+    public function getFellowshipGrantValue(): int
+    {
+        if ($this->is_nco)
+        {
+            return app(SystemConstantsSettings::class)->nco_grant;
+        } else {
+            return app(SystemConstantsSettings::class)->co_grant;
+        }
+    }
+
+    public function scopeOfNco(Builder $builder, $isNco): Builder
+    {
+        return $builder->whereBelongsTo('category', function($query) use ($isNco) {
+            $query->whereIsNco($isNco);
+        });
     }
 }

@@ -14,7 +14,7 @@ class MarriageForm extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use HasAmount;
+    // use HasAmount;
     use HasMember;
     use MemberFormTrait;
 

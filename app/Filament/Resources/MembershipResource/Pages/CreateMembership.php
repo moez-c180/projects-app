@@ -7,6 +7,7 @@ use Filament\Pages\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 use App\Actions\CreateMembershipAction;
+use App\Models\Membership;
 
 class CreateMembership extends CreateRecord
 {
@@ -14,14 +15,15 @@ class CreateMembership extends CreateRecord
     
     protected function handleRecordCreation(array $data): Model
     {
-        return (new CreateMembershipAction(
+        (new CreateMembershipAction(
             data: $data, 
             approved: true,
         ))->execute();
+        return Membership::latest()->first();
     }
 
     protected function getRedirectUrl(): string
-{
-    return $this->getResource()::getUrl('index');
-}
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

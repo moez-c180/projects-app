@@ -21,6 +21,10 @@ use stdClass;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\BooleanColumn;
+use Closure;
+use App\Models\Membership;
+use Carbon\Carbon;
+use Filament\Forms\Components\Fieldset;
 
 class FellowshipGrantFormResource extends Resource
 {
@@ -38,6 +42,9 @@ class FellowshipGrantFormResource extends Resource
                 Card::make([
                     TextInput::make('serial')
                         ->label('رقم المذكرة')->default(FellowshipGrantForm::count() + 1)->required()->maxLength(255),
+                    DatePicker::make('calc_date')
+                        ->label('تاريخ حساب المنحة')
+                        ->visibleOn(['create']),
                     Select::make('member_id')
                         ->label(' العضو')
                         ->searchable()
@@ -45,7 +52,21 @@ class FellowshipGrantFormResource extends Resource
                             return Member::query()
                             ->search($search)
                             ->limit(50)->pluck('name', 'id');
-                        })->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
+                        })
+                        ->reactive()
+                        ->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
+                        ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
+                            $member = Member::findOrFail($get('member_id'));
+                            if ($member->death_date && !$member->pension_date)
+                            {
+                                $set('grant_amount', $member->getFellowshipGrantValue());
+                            } else {
+                                $numberOfMembershipMonths = count($member->getTotalMembershipMonths(Carbon::parse($get('calc_date'))));
+                                $fellowshipGrantValue = $member->getFellowshipGrantValue();
+                                $grant_amount = ($numberOfMembershipMonths / 300) * $fellowshipGrantValue;
+                                $set('grant_amount', ceil(($grant_amount * 10) / 10));
+                            }
+                        })
                         ->required(),
                     DatePicker::make('form_date')
                         ->label('تاريخ المذكرة')->required()
@@ -55,13 +76,9 @@ class FellowshipGrantFormResource extends Resource
                         ->label('قيمة المنحة')
                         ->required()
                         ->numeric()
-                        ->minValue(1),
-                    TextInput::make('amount')
-                        ->label('قيمة المنحة النهائية')
-                        ->required()
-                        ->numeric()
-                        ->minValue(1),
-                ])
+                        ->minValue(1)
+                        ->disabled(),
+                    ]),
             ]);
     }
 

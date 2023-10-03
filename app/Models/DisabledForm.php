@@ -15,7 +15,7 @@ class DisabledForm extends Model
     use HasFactory;
     use SoftDeletes;
     use HasMember;
-    use HasAmount;
+    // use HasAmount;
     use MemberFormTrait;
 
     protected $fillable = [
@@ -24,6 +24,8 @@ class DisabledForm extends Model
         'member_id',
         'form_amount',
         'total_form_amounts',
+        'late_payments_amount',
+        'other_late_payments',
         'amount',
         'pending',
     ];
@@ -33,11 +35,11 @@ class DisabledForm extends Model
         'pending' => 'boolean'
     ];
 
-    protected function totalFormAmounts(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value/100,
-            set: fn ($value) => $value * 100,
-        );
-    }
+    // protected function totalFormAmounts(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => $value/100,
+    //         set: fn ($value) => $value * 100,
+    //     );
+    // }
 }

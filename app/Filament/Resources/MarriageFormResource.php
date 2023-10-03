@@ -25,6 +25,7 @@ use Webbingbrasil\FilamentAdvancedFilter\Filters\BooleanFilter;
 use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Actions\Action;
+use Filament\Forms\Components\Card;
 
 class MarriageFormResource extends Resource
 {
@@ -39,49 +40,51 @@ class MarriageFormResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('serial')
-                    ->label('رقم المذكرة')->default(MarriageForm::count() + 1)->required()->maxLength(255),
-                DatePicker::make('form_date')
-                    ->label('تاريخ المذكرة')->required()
-                    ->default(now())
-                    ->maxDate(now()),
-                DatePicker::make('marriage_date')
-                    ->label('تاريخ الزواج')->required(),
-                Select::make('member_id')
-                        ->label(' العضو')
-                        ->searchable()
-                        ->getSearchResultsUsing(function(string $search) {
-                            return Member::query()
-                            ->search($search)
-                            ->limit(50)->pluck('name', 'id');
-                        })->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
+                Card::make([
+                    TextInput::make('serial')
+                        ->label('رقم المذكرة')->default(MarriageForm::count() + 1)->required()->maxLength(255),
+                    DatePicker::make('form_date')
+                        ->label('تاريخ المذكرة')->required()
+                        ->default(now())
+                        ->maxDate(now()),
+                    DatePicker::make('marriage_date')
+                        ->label('تاريخ الزواج')->required(),
+                    Select::make('member_id')
+                            ->label(' العضو')
+                            ->searchable()
+                            ->getSearchResultsUsing(function(string $search) {
+                                return Member::query()
+                                ->search($search)
+                                ->limit(50)->pluck('name', 'id');
+                            })->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
+                            ->required()
+                            ->reactive(),
+                    Select::make('is_relative')
+                        ->label('نوع المذكرة')
+                        ->options([
+                            '0' => 'العضو نفسه',
+                            '1' => 'احد الأقارب',
+                        ])
                         ->required()
-                        ->reactive(),
-                Select::make('is_relative')
-                    ->label('نوع المذكرة')
-                    ->options([
-                        '0' => 'العضو نفسه',
-                        '1' => 'احد الأقارب',
-                    ])
-                    ->required()
-                    ->reactive()
-                    ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
-                        $member = Member::findOrFail($get('member_id'));
-                        $amount = MarriageForm::getAmount($state, $member->category->is_nco);
-                        $set('amount', $amount);
-                    })->visible(fn(Closure $get) => !is_null($get('member_id')) ),
-                TextInput::make('relative_type')
-                    ->label('درجة القرابة')
-                    ->required()->visible(fn(Closure $get) => $get('is_relative') == true),
-                TextInput::make('relative_name')->label('اسم المعول')->required()->visible(fn(Closure $get) => $get('is_relative') == true),
-                TextInput::make('amount')
-                        ->label('المبلغ')
-                        ->numeric()
-                        ->minValue(1)
-                        ->required()
-                        ->disabled()
-                        ->visible(fn(Closure $get) => !is_null($get('is_relative')) ),
-                Textarea::make('notes')->label('ملاحظات')
+                        ->reactive()
+                        ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
+                            $member = Member::findOrFail($get('member_id'));
+                            $amount = MarriageForm::getAmount($state, $member->category->is_nco);
+                            $set('amount', $amount);
+                        })->visible(fn(Closure $get) => !is_null($get('member_id')) ),
+                    TextInput::make('relative_type')
+                        ->label('درجة القرابة')
+                        ->required()->visible(fn(Closure $get) => $get('is_relative') == true),
+                    TextInput::make('relative_name')->label('اسم المعول')->required()->visible(fn(Closure $get) => $get('is_relative') == true),
+                    TextInput::make('amount')
+                            ->label('المبلغ')
+                            ->numeric()
+                            ->minValue(1)
+                            ->required()
+                            ->disabled()
+                            ->visible(fn(Closure $get) => !is_null($get('is_relative')) ),
+                    Textarea::make('notes')->label('ملاحظات')
+                ])->columns(2)
             ]);
     }
 

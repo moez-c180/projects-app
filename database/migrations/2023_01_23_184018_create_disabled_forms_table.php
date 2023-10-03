@@ -21,9 +21,11 @@ return new class extends Migration
                 ->index()
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->integer('form_amount');
-            $table->integer('total_form_amounts')->default(0);
-            $table->integer('amount');
+            $table->float('form_amount');
+            $table->float('total_form_amounts')->default(0);
+            $table->float('amount');
+            $table->float('late_payments_amount')->nullable();
+            $table->float('other_late_payments')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

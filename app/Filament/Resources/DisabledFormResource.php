@@ -21,6 +21,7 @@ use Filament\Tables\Columns\TextColumn;
 use stdClass;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Actions\Action;
+use Closure;
 
 class DisabledFormResource extends Resource
 {
@@ -50,22 +51,85 @@ class DisabledFormResource extends Resource
                             ->search($search)
                             ->limit(50)->pluck('name', 'id');
                         })->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
-                        ->required(),
+                        ->required()
+                        ->reactive()
+                        ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
+                            $member = Member::findOrFail($get('member_id'));
+                            $formAmount = $member->getDeathFormValue();
+                            $totalFormAmounts = $member->getMemberBenefitsAmount();
+                            $latePaymentsAmount = $member->getUnpaidMembershipAmount();
+                            $otherLatePaymentsAmount = $get('other_late_payments');
+                            $set('form_amount', $formAmount);
+                            $set('total_form_amounts', $totalFormAmounts);
+                            $set('late_payments_amount', $latePaymentsAmount);
+                            $set('other_late_payments', $otherLatePaymentsAmount);
+                            $originalAmount = $get('form_amount');
+                            $amount = (
+                                $originalAmount - 
+                                ( floatVal($totalFormAmounts) + floatVal($latePaymentsAmount) + floatVal($otherLatePaymentsAmount) ));
+                            $set('amount', $amount);
+                        }),
                     TextInput::make('form_amount')
                         ->label('قيمة المنحة')
                         ->required()
+                        ->disabled()
                         ->numeric()
-                        ->minValue(1),
+                        ->reactive(),
+                    TextInput::make('late_payments_amount')
+                        ->label('المتأخرات')
+                        ->disabled()
+                        ->numeric()
+                        ->reactive()
+                        ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
+                            $member = Member::findOrFail($get('member_id'));
+                            $formAmount = $member->getDeathFormValue();
+                            $totalFormAmounts = $member->getMemberBenefitsAmount();
+                            $latePaymentsAmount = $member->getUnpaidMembershipAmount();
+                            $otherLatePaymentsAmount = $get('other_late_payments');
+                            $set('form_amount', $formAmount);
+                            $set('total_form_amounts', $totalFormAmounts);
+                            $set('late_payments_amount', $latePaymentsAmount);
+                            $set('other_late_payments', $otherLatePaymentsAmount);
+                            $originalAmount = $get('form_amount');
+                            $amount = (
+                                $originalAmount - 
+                                ( floatVal($totalFormAmounts) + floatVal($latePaymentsAmount) + floatVal($otherLatePaymentsAmount) ));
+                            $set('amount', $amount);
+                        }),
+                    TextInput::make('other_late_payments')
+                        ->label('متأخرات أخرى')
+                        ->reactive()
+                        ->numeric()
+                        ->default(0)
+                        ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
+                            $member = Member::findOrFail($get('member_id'));
+                            $formAmount = $member->getDeathFormValue();
+                            $totalFormAmounts = $member->getMemberBenefitsAmount();
+                            $latePaymentsAmount = $member->getUnpaidMembershipAmount();
+                            $otherLatePaymentsAmount = $get('other_late_payments');
+                            $set('form_amount', $formAmount);
+                            $set('total_form_amounts', $totalFormAmounts);
+                            $set('late_payments_amount', $latePaymentsAmount);
+                            $set('other_late_payments', $otherLatePaymentsAmount);
+                            $originalAmount = $get('form_amount');
+                            $amount = (
+                                $originalAmount - 
+                                ( floatVal($totalFormAmounts) + floatVal($latePaymentsAmount) + floatVal($otherLatePaymentsAmount) ));
+                            $set('amount', $amount);
+                        }),
                     TextInput::make('total_form_amounts')
                         ->label('منح تم صرفها')
-                        ->required()
                         ->numeric()
-                        ->minValue(0),
+                        ->disabled()
+                        ->minValue(0)
+                        ->reactive(),
                     TextInput::make('amount')
                         ->label('صافي المستحق')
                         ->required()
                         ->numeric()
-                        ->minValue(0),
+                        ->minValue(0)
+                        ->reactive()
+                        ->disabled(),
                 ])
             ]);
     }
@@ -84,6 +148,8 @@ class DisabledFormResource extends Resource
                     ->url(fn ($record) => url('/admin/members/'.$record->member->id), true),
                 TextColumn::make('form_amount')->label('قيمة المنحة'),
                 TextColumn::make('total_form_amounts')->label('منح تم صرفها'),
+                TextColumn::make('late_payments_amount')->label('المتأخرات'),
+                TextColumn::make('other_late_payments')->label('متأخرات أخرى'),
                 TextColumn::make('amount')->label('المبلغ'),
                 BooleanColumn::make('pending')->getStateUsing(fn($record) => !$record->pending)->label('تمام الصرف'),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')

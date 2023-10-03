@@ -29,6 +29,9 @@ class Age56NcoReport extends Page implements HasTable
     protected function getTableQuery(): Builder 
     {
         return Member::query()
+            ->whereHas('category', function($query) {
+                $query->where('is_nco', true);
+            })
             ->whereRaw("TIMESTAMPDIFF(year,birth_date, now() ) = 56");
         
     }

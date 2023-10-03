@@ -15,6 +15,12 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Select;
 use App\Models\Member;
 use App\Models\Unit;
+use Filament\Tables\Columns\TextColumn;
+use stdClass;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Forms\Components\Card;
+use Filament\Forms\Components\DatePicker;
 
 class MemberUnitResource extends Resource
 {
@@ -28,8 +34,9 @@ class MemberUnitResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('member_id')
-                        ->label('اسم العضو')
+                Card::make([
+                    Select::make('member_id')
+                        ->label('العضو')
                         ->searchable()
                         ->getSearchResultsUsing(function(string $search) {
                             return Member::query()
@@ -40,11 +47,15 @@ class MemberUnitResource extends Resource
                         ->reactive()
                         ->rules('exists:members,id')
                         ->required(),
-                Select::make('unit_id')
-                    ->label('الوحدة')
-                    ->options(Unit::all()->pluck('name', 'id'))
-                    ->searchable()
-                    ->required(),
+                    Select::make('unit_id')
+                        ->label('الوحدة')
+                        ->options(Unit::all()->pluck('name', 'id'))
+                        ->searchable()
+                        ->required(),
+                    DatePicker::make('movement_date')
+                        ->label('تاريخ النقل')
+                        ->required()
+                ])
             ]);
     }
 
@@ -52,18 +63,39 @@ class MemberUnitResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('#')->getStateUsing(static function (stdClass $rowLoop): string {
+                    return (string) $rowLoop->iteration;
+                }),
+                TextColumn::make('member.rank.name')->label('الرتبة'),
+                TextColumn::make('member.seniority_number')->label('رقم الأقدمية'),
+                TextColumn::make('member.military_number')->label('رقم العسكري'),
+                TextColumn::make('member.name')->label('اسم العضو')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('unit.name')->label('الوحدة')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('movement_date')->label('تاريخ النقل')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
+                    ->tooltip(function(TextColumn $column): ?string {
+                        $state = $column->getState();
+                        return $state->since();
+                    })->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('movement_date')
+                    ->label('تاريخ النقل')
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-            ]);
+                // Tables\Actions\DeleteBulkAction::make(),
+            ])->defaultSort('created_at', 'desc');
     }
     
     public static function getRelations(): array

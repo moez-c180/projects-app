@@ -24,6 +24,7 @@ class MembershipsImport implements ToModel, WithStartRow, WithValidation, SkipsE
     public function __construct(
         public readonly string $membershipDate,
         public readonly int $membershipSheetImportId,
+        public readonly bool $onPension
     ){}
     /**
     * @param array $row
@@ -93,7 +94,8 @@ class MembershipsImport implements ToModel, WithStartRow, WithValidation, SkipsE
     
     private function getMember(string $militaryNumber)
     {
-        return Member::whereMilitaryNumber($militaryNumber)->first();
+        return Member::whereMilitaryNumber($militaryNumber)
+            ->whereOnPension($this->onPension)->first();
     }
 
     public function onFailure(Failure ...$failures)

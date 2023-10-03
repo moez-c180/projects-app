@@ -55,16 +55,16 @@ class DeathFormResource extends Resource
                             $latePaymentsAmount = $member->getUnpaidMembershipAmount();
                             $totalFormPayments = $member->getMemberBenefitsAmount();
                             $originalAmount = $member->getDeathFormValue();
-                            $refundForms = $member->refundForms->sum('amount');
+                            // $refundForms = $member->refundForms->sum('amount');
                             $otherLatePaymentsAmount = $get('other_late_payments_amount');
                             $funeralFees = $get('funeral_fees');
                             $amount = (
                                 $originalAmount - 
-                                ( $totalFormPayments + $latePaymentsAmount + $otherLatePaymentsAmount + $funeralFees)
-                                 + $refundForms);
+                                ( floatVal($totalFormPayments) + floatVal($latePaymentsAmount) + floatVal($otherLatePaymentsAmount) + floatVal($funeralFees) )
+                                );
                             $set('funeral_fees', $funeralFees);
                             $set('late_payments_amount', $latePaymentsAmount);
-                            $set('total_form_payments', $totalFormPayments);
+                            $set('total_form_amounts', $totalFormPayments);
                             $set('original_amount', $originalAmount);
                             $set('amount', $amount);
                         })
@@ -85,25 +85,65 @@ class DeathFormResource extends Resource
                         ->disabled(),
                     TextInput::make('other_late_payments_amount')
                         ->label('متأخرات أخرى')
+                        ->reactive()
                         ->numeric()
-                        ->default(0),
-                    TextInput::make('total_form_payments')
+                        ->default(0)
+                        ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
+                            $member = Member::findOrFail($get('member_id'));
+                            $otherLatePaymentsAmount = $get('other_late_payments_amount');
+                            $funeralFees = $get('funeral_fees');
+                            $funeralFees = $get('funeral_fees');
+                            $latePaymentsAmount = $get('late_payments_amount');
+                            $totalFormPayments = $get('total_form_amounts');
+                            $originalAmount = $get('original_amount');
+                            $amount = (
+                                $originalAmount - 
+                                ( floatVal($totalFormPayments) + floatVal($latePaymentsAmount) + floatVal($otherLatePaymentsAmount) + floatVal($funeralFees) )
+                                );
+                            
+                            $set('amount', $amount);
+                        }),
+                    TextInput::make('total_form_amounts')
                         ->label('مجموع المنح')
                         ->required()
                         ->numeric()
                         ->minValue(0)
                         ->reactive()
                         ->disabled(),
-                    Toggle::make('has_funeral_fees')->label('له مصاريف جنازة')->reactive(),
+                    Toggle::make('has_funeral_fees')->label('له مصاريف جنازة')->reactive()
+                        ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
+                            $member = Member::findOrFail($get('member_id'));
+                            if ($state == true) {
+                                $set('funeral_fees', $member->getFuneralFeesValue());
+                                // $refundForms = $member->refundForms->sum('amount');
+                                $otherLatePaymentsAmount = $get('other_late_payments_amount');
+                                $funeralFees = $get('funeral_fees');
+                                $latePaymentsAmount = $get('late_payments_amount');
+                                $totalFormPayments = $get('total_form_amounts');
+                                $originalAmount = $get('original_amount');
+                                $amount = (
+                                    $originalAmount - 
+                                    ( floatVal($totalFormPayments) + floatVal($latePaymentsAmount) + floatVal($otherLatePaymentsAmount) + floatVal($funeralFees) )
+                                );
+                                
+                                $set('amount', $amount);
+                            } else {
+                                $set('funeral_fees', null);
+                                $amount = $get('amount') + $member->getFuneralFeesValue();
+                                $set('amount',  $amount);
+                            }
+                            
+                        }),
                     TextInput::make('funeral_fees')
                         ->label('مصاريف الجنازة')
                         ->required()
                         ->numeric()
                         ->minValue(0)
                         ->visible(function(Closure $get) {
-
                             return $get('has_funeral_fees');
-                        })->disabled(),
+                        })
+                        ->reactive()
+                        ->disabled(),
                     TextInput::make('amount')
                         ->label('قيمة المنحة')
                         ->required()
@@ -134,6 +174,7 @@ class DeathFormResource extends Resource
                 TextColumn::make('form_date')->label('تاريخ المذكرة'),
                 TextColumn::make('death_date')->label('تاريخ الوفاة'),
                 TextColumn::make('late_payments_amount')->label('المتأخرات'),
+                TextColumn::make('other_late_payments_amount')->label('متأخرات أخرى'),
                 TextColumn::make('total_form_amounts')->label('مجموع المنح'),
                 TextColumn::make('funeral_fees')->label('مصاريف الجنازة'),
                 // TextColumn::make('original_amount')->label('صافي المنحة'),

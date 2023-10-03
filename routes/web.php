@@ -4,6 +4,8 @@ use App\Models\AgeForm;
 use Illuminate\Support\Facades\Route;
 use App\Models\Member;
 use App\Models\MemberForm;
+use App\Models\Membership;
+use App\Models\MemberWallet;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /*
@@ -20,5 +22,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 Route::redirect('/', 'admin');
 
 Route::get('member', function() {
-    dd(Member::find(1)?->getMemberBenefitsAmount());
+    Member::query()->update(['wallet' => null]);
+    Membership::truncate();
+    MemberWallet::truncate();
 });
