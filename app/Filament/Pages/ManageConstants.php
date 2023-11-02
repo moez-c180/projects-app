@@ -78,7 +78,7 @@ class ManageConstants extends SettingsPage
 
             Card::make([
                 TextInput::make('nco_death')
-                    ->label('وفاة أحد المعولين - شرفيين')
+                    ->label('وفاة العضو - شرفيين')
                     ->numeric()->minValue(1)
                     ->required(),
                 TextInput::make('nco_relative_death')

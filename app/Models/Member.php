@@ -496,10 +496,17 @@ class Member extends Model
         }
     }
 
-    public function scopeOfNco(Builder $builder, $isNco): Builder
+    public function scopeOfNco(Builder $builder, bool $isNco): Builder
     {
-        return $builder->whereBelongsTo('category', function($query) use ($isNco) {
+        return $builder->whereHas('category', function($query) use ($isNco) {
             $query->whereIsNco($isNco);
         });
+    }
+    
+    public function scopeOnPension(Builder $builder, bool $onPension): Builder
+    {
+        if ($onPension === true)
+            return $builder->whereNotNull('pension_date');
+        return $builder->whereNull('pension_date');
     }
 }

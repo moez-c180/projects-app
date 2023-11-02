@@ -14,15 +14,22 @@ use Maatwebsite\Excel\Events\AfterSheet;
 class FinancialBranchVsDepartmentReportExport implements FromArray, WithEvents
 {
     public $data;
-    public $isNco;
     
+    
+    public function __construct(
+        public readonly bool $isNco,
+        public readonly bool $onPension,
+    )
+    {
+        
+    }
     /**
     * @return \Illuminate\Support\Collection
     */
     public function array(): array
     {
-        $data = (new GetFinancialBranchVsDepartmentExportAction(isNco: $this->isNco))->execute();
-        return $this->data;
+        $data = (new GetFinancialBranchVsDepartmentExportAction(isNco: $this->isNco, onPension: $this->onPension))->execute();
+        return $data;
     }
 
     /**
