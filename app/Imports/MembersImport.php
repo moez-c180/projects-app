@@ -31,7 +31,7 @@ class MembersImport implements ToModel, WithHeadingRow, SkipsEmptyRows, WithVali
     {
         $member = Member::create($row);
 
-        $member->promotions()->create([
+        $member->memberPromotions()->create([
             'rank_id' => $row['rank_id'],
             'promotion_date' => $row['promotion_date'] ?? null,
         ]);
