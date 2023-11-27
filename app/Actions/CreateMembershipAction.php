@@ -35,7 +35,7 @@ class CreateMembershipAction
             approved: $this->approved,
             membershipSheetImportId: $this->membershipSheetImportId,
             membershipValue: $this->data['membership_value'],
-            notes: $this->data['notes'],
+            notes: $this->data['notes'] ?? null,
             financialBranchId: $this->data['financial_branch_id'],
             unitId: $this->data['unit_id'],
             paidAmount: $this->data['paid_amount'],
