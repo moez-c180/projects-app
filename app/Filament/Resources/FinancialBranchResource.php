@@ -61,11 +61,11 @@ class FinancialBranchResource extends Resource
                     ->label('الاسم'),
                     TextColumn::make('nco_members_count')
                     ->label('# الشرفيين')
-                    ->getStateUsing(fn($record) => $record->members()->ofNco(true)->count())
+                    ->getStateUsing(fn($record) => $record->members()->whereNull('death_date')->ofNco(true)->count())
                     ->sortable(),
                 TextColumn::make('co_members_count')
                     ->label('# العامليين')
-                    ->getStateUsing(fn($record) => $record->members()->ofNco(false)->count())
+                    ->getStateUsing(fn($record) => $record->members()->whereNull('death_date')->ofNco(false)->count())
                     ->sortable(),
                 TextColumn::make('members_count')
                     ->label('الإجمالي')

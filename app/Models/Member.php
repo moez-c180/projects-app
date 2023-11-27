@@ -35,6 +35,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\DB;
 use App\Models\MemberUnit;
 use App\Models\Review;
+use App\Observers\MemberObserver;
 
 class Member extends Model
 {
@@ -113,29 +114,36 @@ class Member extends Model
     public static function boot()
     {
         parent::boot();
-        static::updating(function(Member $member) {
-            if ($member->isDirty('pension_date'))
-            {
-                if (!is_null($member->pension_date))
-                {
-                    $member->on_pension = 1;
-                } else {
-                    $member->on_pension = 0;
-                }
-            }
-        }); 
-        static::creating(function(Member $member) {
-            if ($member->isDirty('pension_date'))
-            {
-                if (!is_null($member->pension_date))
-                {
-                    $member->on_pension = 1;
-                } else {
-                    $member->on_pension = 0;
-                }
-            }
-        }); 
+
+        static::observe(MemberObserver::class);
     }
+
+    // public static function boot()
+    // {
+    //     parent::boot();
+    //     static::updating(function(Member $member) {
+    //         if ($member->isDirty('pension_date'))
+    //         {
+    //             if (!is_null($member->pension_date))
+    //             {
+    //                 $member->on_pension = 1;
+    //             } else {
+    //                 $member->on_pension = 0;
+    //             }
+    //         }
+    //     }); 
+    //     static::creating(function(Member $member) {
+    //         if ($member->isDirty('pension_date'))
+    //         {
+    //             if (!is_null($member->pension_date))
+    //             {
+    //                 $member->on_pension = 1;
+    //             } else {
+    //                 $member->on_pension = 0;
+    //             }
+    //         }
+    //     }); 
+    // }
 
     /**
      * Get the category that owns the Member

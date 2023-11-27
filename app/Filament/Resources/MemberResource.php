@@ -83,7 +83,7 @@ class MemberResource extends Resource
                                 return true;
                             }
                             return false;
-                        }),
+                        })->visibleOn(['view']),
                     // Select::make('rank_id')
                     //     ->label('الرتبة / الدرجة')
                     //     ->options(Rank::all()->pluck('name', 'id')),
@@ -101,15 +101,18 @@ class MemberResource extends Resource
                         ->label('السلاح')
                         ->required()
                         ->options(Department::all()->pluck('name', 'id')),
-                    Select::make('unit_id')
+                ])->columns(3),
+
+                Card::make()->schema([Select::make('unit_id')
                         ->label('الوحدة')
                         ->options(Unit::all()->pluck('name', 'id'))
                         ->visibleOn(['view']),
                     Select::make('financial_branch_id')
+                        ->relationship('financialBranch', 'name')
                         ->label('الفرع المالي')
                         ->options(FinancialBranch::all()->pluck('name', 'id'))
                         ->visibleOn(['view']),
-                ])->columns(3),
+                ])->columns(1),
                 Card::make()->schema([
                     DatePicker::make('graduation_date')->label('تاريخ التخرج'),
                     TextInput::make('class')->maxLength(255)->label('الدفعة'),
