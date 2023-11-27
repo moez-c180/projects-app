@@ -13,6 +13,7 @@ use Filament\Forms\Components\Select;
 use App\Models\Unit;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Forms\Components\DatePicker;
 
 class MemberUnitsRelationManager extends RelationManager
 {
@@ -30,6 +31,9 @@ class MemberUnitsRelationManager extends RelationManager
                     ->options(Unit::all()->pluck('name', 'id'))
                     ->searchable()
                     ->required(),
+                DatePicker::make('movement_date')
+                    ->label('تاريخ النقل')
+                    ->required()
             ]);
     }
 
