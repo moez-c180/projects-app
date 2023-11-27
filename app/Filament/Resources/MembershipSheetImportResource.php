@@ -106,16 +106,16 @@ class MembershipSheetImportResource extends Resource
                     }
                     // 
 
-                    if ($record->membershipOverAmounts()->whereNotNull('refund_time')->count() !== 0)
-                    {
-                        Notification::make()
-                            ->danger()
-                            ->title('لا يمكن الحذف')
-                            ->body('لا يمكن حذف القصاصة حيث أنها تحتوي على زيادات اشتراكات تم استرجاعها.')
-                            ->send();
+                    // if ($record->membershipOverAmounts()->whereNotNull('refund_time')->count() !== 0)
+                    // {
+                    //     Notification::make()
+                    //         ->danger()
+                    //         ->title('لا يمكن الحذف')
+                    //         ->body('لا يمكن حذف القصاصة حيث أنها تحتوي على زيادات اشتراكات تم استرجاعها.')
+                    //         ->send();
                 
-                        $action->cancel();
-                    }
+                    //     $action->cancel();
+                    // }
                 })
 
                 ->after(function($record) {
