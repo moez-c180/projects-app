@@ -39,6 +39,8 @@ class MemberUnitsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('unit.name')
                     ->label('الوحدة'),
+                Tables\Columns\TextColumn::make('movement_date')
+                    ->label('تاريخ النقل'),
                 Tables\Columns\TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {
                         $state = $column->getState();
