@@ -18,6 +18,9 @@ use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
 use Filament\Tables\Filters\SelectFilter;
 use App\Models\Position;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Forms\Components\Select;
+use App\Models\Member;
+use Filament\Forms\Components\DatePicker;
 
 class MemberJobResource extends Resource
 {
@@ -31,7 +34,32 @@ class MemberJobResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Select::make('member_id')
+                    ->searchable()
+                    ->relationship('member', 'name')
+                    ->required()
+                    ->label('اسم العضو')
+                    ->visibleOn(['view']),
+                Select::make('member_id')
+                    ->label(' العضو')
+                    ->searchable()
+                    ->label('اسم العضو')
+                    ->getSearchResultsUsing(function(string $search) {
+                        return Member::query()
+                        ->search($search)
+                        ->limit(50)->pluck('name', 'id');
+                    })->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
+                    ->required()
+                    ->reactive()
+                    ->visibleOn(['edit']),
+                Select::make('position_id')
+                    ->label('الوظيفة')
+                    ->searchable()
+                    ->relationship('position', 'name')
+                    ->required(),
+                DatePicker::make('job_filled_date')
+                    ->label('تاريخ شغل الوظيفة')
+                    ->required()
             ]);
     }
 
@@ -71,6 +99,7 @@ class MemberJobResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
