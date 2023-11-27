@@ -26,6 +26,10 @@ class MemberUnit extends Model
         'movement_date' => 'date'
     ];
 
+    protected $with = [
+        'unit'
+    ];
+
     public static function boot()
     {
         parent::boot();
