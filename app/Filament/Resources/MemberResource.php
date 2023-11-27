@@ -258,13 +258,13 @@ class MemberResource extends Resource
                     ->label('رقم الملف')
                     ->toggleable(),
                 
-                TextColumn::make('previous_unit')->label('الوحدة السابقة')
-                    ->getStateUsing(function($record) {
-                        $memberUnit = MemberUnit::where(['member_id' => $record->id])->first()?->unit?->name;
-                        return $memberUnit;
-                    })
-                    ->sortable()
-                    ->toggleable(),
+                // TextColumn::make('previous_unit')->label('الوحدة السابقة')
+                //     ->getStateUsing(function($record) {
+                //         $memberUnit = MemberUnit::where(['member_id' => $record->id])->first()?->unit?->name;
+                //         return $memberUnit;
+                //     })
+                //     ->sortable()
+                //     ->toggleable(),
                 
                 TextColumn::make('class')
                     ->sortable()
