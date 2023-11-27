@@ -60,7 +60,7 @@ class MembershipSheetImport extends Model implements HasMedia
         $membershipSheetImport = $this;
         DB::transaction(function () use ($membershipSheetImport) {
             $membershipSheetImport->memberships->each(fn($record) => $record->delete());
-            $membershipSheetImport->membershipOverAmounts()->delete();
+            // $membershipSheetImport->membershipOverAmounts()->delete();
             $membershipSheetImport->update([
                 'processing_start_time' => NULL,
                 'processing_finish_time' => NULL,
