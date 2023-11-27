@@ -185,7 +185,7 @@ class MemberResource extends Resource
                 TextColumn::make('name')->label('الاسم')
                     ->sortable()
                     ->searchable(isIndividual: true, isGlobal: true, query: function (Builder $query, string $search): Builder {
-                        return $query->search($search);
+                        return $query->searchName($search);
                     })
                     ->toggleable(),
                 TextColumn::make('department.name')

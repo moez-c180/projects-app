@@ -449,6 +449,12 @@ class Member extends Model
             ->orWhere('seniority_number', $search)
             ->orWhere('national_id_number', $search);
     }
+    
+    public function scopeName(Builder $builder, $search): Builder
+    {
+        return $builder
+            ->whereRaw("CONCAT(`name`, ' ') LIKE '%$search%'");
+    }
 
     public function getMemberBenefitsAmount(): int
     {
