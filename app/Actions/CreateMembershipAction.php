@@ -22,7 +22,7 @@ class CreateMembershipAction
         $this->member = Member::find($data['member_id']);
     }
     
-    public function execute(): void
+    public function execute(): Model
     {
         MemberWallet::create([
             'member_id' => $this->member->id,
@@ -30,7 +30,7 @@ class CreateMembershipAction
             'type' => MemberWallet::TYPE_DEPOSIT,
             'membership_sheet_import_id' => $this->membershipSheetImportId
         ]);
-        (new AddMembershipAction(
+        return (new AddMembershipAction(
             memberId: $this->member->id,
             approved: $this->approved,
             membershipSheetImportId: $this->membershipSheetImportId,

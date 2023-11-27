@@ -17,6 +17,7 @@ use Maatwebsite\Excel\Validators\Failure;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Illuminate\Database\Eloquent\Model;
 
 class MembershipsImport implements ToModel, WithStartRow, WithValidation, SkipsEmptyRows, SkipsOnFailure
 {
@@ -31,7 +32,7 @@ class MembershipsImport implements ToModel, WithStartRow, WithValidation, SkipsE
     *
     * @return \Illuminate\Database\Eloquent\Model|null
     */
-    public function model(array $row)
+    public function model(array $row): Model
     {
         $row['membership_date'] = $this->membershipDate;
         $row['paid_amount'] = $row[3];
