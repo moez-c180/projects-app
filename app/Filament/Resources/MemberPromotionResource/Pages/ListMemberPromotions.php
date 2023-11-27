@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Filament\Notifications\Notification;
 use App\Models\Unit;
 use app\Settings\SystemConstantsSettings;
+use App\Models\FinancialBranch;
 
 class ListMemberPromotions extends ListRecords
 {
@@ -55,6 +56,7 @@ class ListMemberPromotions extends ListRecords
                     }
 
                     $transaction = DB::transaction(function () use ($data, &$member) {    
+                        $unit = Unit::find(app(SystemConstantsSettings::class)->pension_unit_id);
                         $member->memberPromotions()->create([
                             'rank_id' => $data['rank_id'],
                             'promotion_date' => $data['promotion_date'],
@@ -65,7 +67,9 @@ class ListMemberPromotions extends ListRecords
                         ]);
                         $member->update([
                             'pension_date' => $data['pension_date'],
-                            'pension_reason' => $data['pension_reason']
+                            'pension_reason' => $data['pension_reason'],
+                            'unit_id' => $unit->id,
+                            'financial_branch_id' => $unit->financial_branch_id
                         ]);
                         return true;
                     });
