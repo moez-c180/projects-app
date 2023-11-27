@@ -53,20 +53,11 @@ class MemberJobsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                CreateAction::make()->after(function($record) {
-                    $record->member()->update(['unit_id' => $record->unit_id]);
-                    $record->member()->update(['financial_branch_id' => $record->unit->financial_branch_id]);
-                }),
+                CreateAction::make(),
             ])
             ->actions([
-                EditAction::make()->after(function($record) {
-                    $record->member()->update(['unit_id' => $record->unit_id]);
-                    $record->member()->update(['financial_branch_id' => $record->unit->financial_branch_id]);
-                }),
-                DeleteAction::make()->after(function($record) {
-                    $record->member()->update(['unit_id' => null]);
-                    $record->member()->update(['financial_branch_id' => null]);
-                }),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
                 // DeleteBulkAction::make(),

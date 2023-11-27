@@ -91,22 +91,7 @@ class MemberUnitResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
-                    ->after(function($record) {
-                        $member = $record->member;
-                        $previousUnit = $record->member->memberUnits()->latest()->first();
-                        if ($previousUnit)
-                        {
-                            $unitId = $previousUnit->id;
-                            $financialBranchId = $previousUnit->financial_branch_id;
-                        } else {
-                            $unitId = $financialBranchId = null;
-                        }
-                        $member->update([
-                            'unit_id' => $unitId,
-                            'financial_branch_id' => $financialBranchId,
-                        ]);
-                    }),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 // Tables\Actions\DeleteBulkAction::make(),
