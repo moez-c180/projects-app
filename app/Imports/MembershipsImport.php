@@ -59,12 +59,12 @@ class MembershipsImport implements ToModel, WithStartRow, WithValidation, SkipsE
     {
         return [];
         // financial_code	unit_code	miliraty_number	amount
-        // return [
-        //     0 => ['required', Rule::exists('financial_branches,id')],
-        //     1 => ['required', Rule::exists('units,id')],
-        //     2 => ['required', Rule::exists('members.id')],
-        //     3 => ['required', 'numeric', 'gt:0'],
-        // ];
+        return [
+            0 => ['required', Rule::exists('financial_branches,id')],
+            1 => ['required', Rule::exists('units,id')],
+            2 => ['required', Rule::exists('members.id')],
+            3 => ['required', 'numeric', 'gt:0'],
+        ];
     }
 
     public function prepareForValidation($data, $index)
