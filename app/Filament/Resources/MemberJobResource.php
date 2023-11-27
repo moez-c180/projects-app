@@ -17,6 +17,7 @@ use stdClass;
 use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
 use Filament\Tables\Filters\SelectFilter;
 use App\Models\Position;
+use Illuminate\Database\Eloquent\Model;
 
 class MemberJobResource extends Resource
 {
@@ -47,7 +48,7 @@ class MemberJobResource extends Resource
                 TextColumn::make('member.name')->label('اسم العضو')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('position.name')->label('الوحدة')
+                TextColumn::make('position.name')->label('الوظيفة')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('job_filled_date')->label('تاريخ شغل الوظيفة')
@@ -94,6 +95,11 @@ class MemberJobResource extends Resource
     }    
 
     public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canView(Model $record): bool
     {
         return false;
     }
