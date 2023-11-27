@@ -19,7 +19,7 @@ class CreateMembershipAction
         public readonly ?bool $approved = true,
         public readonly ?int $membershipSheetImportId = null
     ) {
-        $this->member = Member::findOrFail($data['member_id']);
+        $this->member = Member::find($data['member_id']);
     }
     
     public function execute(): void
