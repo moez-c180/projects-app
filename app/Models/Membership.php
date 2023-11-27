@@ -33,7 +33,6 @@ class Membership extends Model
         'amount',
         'unit_id',
         'financial_branch_id',
-        'unit_id',
         'notes',
         'membership_value',
         'paid_amount',

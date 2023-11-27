@@ -25,7 +25,6 @@ use stdClass;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\DeleteAction;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\MembershipsImport;
 use Filament\Forms\Components\Toggle;
 
 class MembershipSheetImportResource extends Resource
@@ -91,8 +90,10 @@ class MembershipSheetImportResource extends Resource
                 ->before(function (DeleteAction $action, $record) {
                     if (
                         $record->memberships()->count() !== 0 
-                        ||
-                        ( is_null($record->processing_finish_time) && !is_null($record->processing_start_time))
+                        && 
+                        is_null($record->processing_finish_time) 
+                        && 
+                        !is_null($record->processing_start_time)
                     )
                     {
                         Notification::make()

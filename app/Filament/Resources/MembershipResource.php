@@ -66,8 +66,8 @@ class MembershipResource extends Resource
                                     ->send();   
                                     return false;
                                 }
-                                $financialBranchId = $member->getUnit()->financial_branch_id;
-                                $unitId = $member->getUnit()->id;
+                                $financialBranchId = $member->unit->financial_branch_id;
+                                $unitId = $member->unit->id;
                                 $set('financial_branch_id', $financialBranchId);
                                 $set('unit_id', $unitId);
                                 $set('membership_value', $member->getSubscriptionValue());
@@ -120,10 +120,10 @@ class MembershipResource extends Resource
                 }),
                 TextColumn::make('member.name')->label('اسم العضو'),
                 TextColumn::make('member_unit')->label('وحدة العضو')->getStateUsing(function($record) {
-                    return $record->member->getUnit()?->name;
+                    return $record->member->unit->name;
                 }),
                 TextColumn::make('member_financial_branch')->label('الفرع المالي للعضو')->getStateUsing(function($record) {
-                    return $record->member->getUnit()?->financialBranch?->name;
+                    return $record->member->unit->financialBranch?->name;
                 }),
                 TextColumn::make('membership_date')->label('تاريخ القسط'),
                 TextColumn::make('amount')->label('المبلغ المدفوع للقسط')->description('جم'),

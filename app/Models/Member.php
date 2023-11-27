@@ -247,10 +247,10 @@ class Member extends Model
         return $this->rank->name;
     }
 
-    public function getUnit(): Unit
-    {
-        return $this->memberUnits()->orderByDesc('created_at')->first()?->unit;
-    }
+    // public function getUnit(): Unit
+    // {
+    //     return $this->memberUnits()->orderByDesc('created_at')->first()?->unit;
+    // }
 
     /**
      * Get all of the ageForms for the Member

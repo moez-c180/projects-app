@@ -54,7 +54,7 @@ class ProjectClosureFormResource extends Resource
                         ->reactive()
                         ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
                             $member = Member::find($state);
-                            $set('unit_name', $member?->getUnit()?->name );
+                            $set('unit_name', $member->unit->name );
                             $set('total_subscription_payments', Membership::where('member_id', $state)->sum('amount') );
                             $set('total_forms_amount', $member->getMemberBenefitsAmount() );
                             $amount = $get('total_subscription_payments') - $get('total_forms_amount');
@@ -118,7 +118,7 @@ class ProjectClosureFormResource extends Resource
                 TextColumn::make('member.name')->label('اسم العضو')
                     ->url(fn ($record) => url('/admin/members/'.$record->member->id), true),
                 TextColumn::make('member_unit_name')->label('اسم الوحدة')
-                    ->getStateUsing(fn($record) => $record->member->getUnit()->name),
+                    ->getStateUsing(fn($record) => $record->member->unit->name),
                 TextColumn::make('total_subscription_payments')
                     ->label('جملة المدفوعات')
                     ->description('جم'),

@@ -40,8 +40,8 @@ class CheckUnpaidMembershipsCommand extends Command
                     membershipSheetImportId: null,
                     membershipValue: $membershipValue,
                     notes: null,
-                    financialBranchId: $member->getUnit()->financial_branch_id,
-                    unitId: $member->getUnit()->id,
+                    financialBranchId: $member->unit->financial_branch_id,
+                    unitId: $member->unit->id,
                     paidAmount: $member->wallet,
                 ))->execute();
             }
