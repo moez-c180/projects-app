@@ -450,7 +450,7 @@ class Member extends Model
             ->orWhere('national_id_number', $search);
     }
     
-    public function scopeName(Builder $builder, $search): Builder
+    public function scopeSearchName(Builder $builder, $search): Builder
     {
         return $builder
             ->whereRaw("CONCAT(`name`, ' ') LIKE '%$search%'");
