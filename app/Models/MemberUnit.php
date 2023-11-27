@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasMember;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Unit;
+use App\Observers\MemberUnitObserver;
 
 class MemberUnit extends Model
 {
@@ -24,6 +25,14 @@ class MemberUnit extends Model
     protected $casts = [
         'movement_date' => 'date'
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::observe(MemberUnitObserver::class);
+    }
+
 
     /**
      * Get the unit that owns the MemberUnit
