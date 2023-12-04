@@ -6,6 +6,8 @@ use App\Models\FinancialBranch;
 use App\Models\MemberUnit;
 use App\Models\Unit;
 use App\Models\Member;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class MemberUnitObserver
 {
@@ -31,10 +33,18 @@ class MemberUnitObserver
      */
     public function updated(MemberUnit $memberUnit)
     {
-        $memberUnit->member()->update([
-            'unit_id' => $memberUnit->unit_id,
-            'financial_branch_id' => $memberUnit->unit->financial_branch_id,
-        ]);
+        $member = Member::find($memberUnit->member_id);
+        $member->unit_id = $memberUnit->unit_id;
+        $member->financial_branch_id = $memberUnit->unit->financialBranch->id;
+        $member->save();
+
+        // $memberUnit->member()->update([
+        //     'unit_id' => $memberUnit->unit_id,
+        //     'financial_branch_id' => $memberUnit->unit->financialBranch->id,
+        // ]);
+
+        // Log::info(['unit_id' => $memberUnit->unit_id,
+        // 'financial_branch_id' => $memberUnit->unit->financialBranch->id]);
     }
 
     /**
@@ -45,7 +55,7 @@ class MemberUnitObserver
      */
     public function deleted(MemberUnit $memberUnit)
     {
-        $member = $memberUnit->member;
+        // $member = $memberUnit->member->refresh();
         $previousMemberUnit = $memberUnit->member->memberUnits()->latest()->first();
         if ($previousMemberUnit)
         {
@@ -56,15 +66,12 @@ class MemberUnitObserver
             $unitId = $financialBranchId = null;
         }
 
-        $memberUnit->member()->update([
-            'unit_id' => $unitId,
-            'financial_branch_id' => $financialBranchId,
-        ]);
-        // Member::where([
-        //     'id' => $memberUnit->member_id
-        // ])->update([
-            
-        // ]);
+        DB::table('members')
+            ->where('id', $memberUnit->member_id)
+            ->update([
+                'unit_id' => $unitId,
+                'financial_branch_id' => $financialBranchId,
+            ]);
     }
 
     /**

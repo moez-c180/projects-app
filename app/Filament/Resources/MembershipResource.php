@@ -54,7 +54,9 @@ class MembershipResource extends Resource
                         ->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
                         ->reactive()
                         ->afterStateUpdated(function (Closure $set, $state, $context, Closure $get) {
-                            $member = Member::findOrFail($get('member_id'));
+                            $member = Member::query()
+                                ->where('membership_enabled', 1)
+                                ->whereId($get('member_id'));
                             if (!is_null($member->membership_start_date))
                             {
                                 if (!$member->unit)

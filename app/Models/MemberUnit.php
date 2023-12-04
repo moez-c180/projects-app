@@ -50,7 +50,7 @@ class MemberUnit extends Model
 
     public function previous()
     {
-        return $this->find(--$this->id);
+        return $this->find(--$this->id)->where('member_id', $this->member_id);
     }
 
 }

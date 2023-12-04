@@ -103,12 +103,12 @@ class MemberResource extends Resource
                         ->options(Department::all()->pluck('name', 'id')),
                 ])->columns(3),
 
-                Card::make()->schema([Select::make('unit_id')
+                Card::make()->schema(
+                    [Select::make('unit_id')
                         ->label('الوحدة')
                         ->options(Unit::all()->pluck('name', 'id'))
                         ->visibleOn(['view']),
                     Select::make('financial_branch_id')
-                        ->relationship('financialBranch', 'name')
                         ->label('الفرع المالي')
                         ->options(FinancialBranch::all()->pluck('name', 'id'))
                         ->visibleOn(['view']),
@@ -146,6 +146,8 @@ class MemberResource extends Resource
                     DatePicker::make('membership_start_date')
                         ->label('تاريخ الاشتراك')
                         ,
+                    Toggle::make('membership_enabled')
+                            ->label("تحصيل القسط"),
                     Textarea::make('notes')->label('ملاحظات'),
                 ])->columns(3),
                 
@@ -335,6 +337,15 @@ class MemberResource extends Resource
                             true: fn (Builder $query) => $query->whereHas('category', fn($query) => $query->whereIsNco(true)),
                             false: fn (Builder $query) => $query->whereHas('category', fn($query) => $query->whereIsNco(false)),
                             blank: fn (Builder $query) => $query->withoutTrashed(),
+                    ),
+                TernaryFilter::make('is_dead')
+                    ->label('متوفي')
+                    ->trueLabel('متوفي')
+                    ->falseLabel('غير متوفي')
+                    ->queries(
+                        true: fn (Builder $query) => $query->whereNotNull('death_date'),
+                        false: fn (Builder $query) => $query->whereNull('death_date'),
+                        blank: fn (Builder $query) => $query,
                     ),
                 DateFilter::make('created_at')->label('تاريخ التسجيل')
 

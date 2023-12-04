@@ -26,6 +26,7 @@ use Filament\Forms\Components\Card;
 use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\BooleanColumn;
+use Filament\Notifications\Notification;
 
 class AgeFormResource extends Resource
 {
@@ -50,11 +51,25 @@ class AgeFormResource extends Resource
                     Select::make('member_id')
                             ->label(' العضو')
                             ->searchable()
+                            ->afterStateUpdated(function (Select $component, string $state, Closure $set) {
+                                $member = Member::find($state);
+                                if ($member->ageForms()->count() > 0)
+                                {
+                                    Notification::make()
+                                        ->danger()
+                                        ->title('لا يمكن اضافة المذكرة للعضو')
+                                        // ->body('لا يمكن حذف القصاصة حيث أنها تحتوي على زيادات اشتراكات تم استرجاعها.')
+                                        ->send();
+                                    $set('member_id', null);
+                                    $component->state(null);
+                                }
+                            })
                             ->getSearchResultsUsing(function(string $search) {
                                 return Member::query()
                                 ->search($search)
                                 ->limit(50)->pluck('name', 'id');
-                            })->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
+                            })
+                            ->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
                             ->required()
                             ->reactive(),
                     Select::make('age_form_type')

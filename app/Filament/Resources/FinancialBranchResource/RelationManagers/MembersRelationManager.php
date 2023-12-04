@@ -97,6 +97,16 @@ class MembersRelationManager extends RelationManager
                     ->options(Category::all()->pluck('name', 'id'))
                     ->searchable()
                     ->multiple(),
+                TernaryFilter::make('is_dead')
+                    ->label('متوفي')
+                    ->trueLabel('متوفي')
+                    ->falseLabel('غير متوفي')
+                    ->default(false)
+                    ->queries(
+                        true: fn (Builder $query) => $query->whereNotNull('death_date'),
+                        false: fn (Builder $query) => $query->whereNull('death_date'),
+                        blank: fn (Builder $query) => $query,
+                    )
             ])
             ->headerActions([
                 

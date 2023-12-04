@@ -16,6 +16,7 @@ use App\Models\Unit;
 use App\Models\Rank;
 use Filament\Tables\Actions\Action;
 use stdClass;
+use Filament\Tables\Filters\TernaryFilter;
 
 class MembersRelationManager extends RelationManager
 {
@@ -68,6 +69,16 @@ class MembersRelationManager extends RelationManager
                 SelectFilter::make('rank_id')
                     ->label('الرتبة / الدرجة')
                     ->options(Rank::all()->pluck('name', 'id')),
+                TernaryFilter::make('is_dead')
+                    ->label('متوفي')
+                    ->trueLabel('متوفي')
+                    ->falseLabel('غير متوفي')
+                    ->default(false)
+                    ->queries(
+                        true: fn (Builder $query) => $query->whereNotNull('death_date'),
+                        false: fn (Builder $query) => $query->whereNull('death_date'),
+                        blank: fn (Builder $query) => $query,
+                    )
             ])
             ->headerActions([
                 

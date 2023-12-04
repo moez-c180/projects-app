@@ -43,6 +43,8 @@ class MemberUnitsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('unit.name')
                     ->label('الوحدة'),
+                Tables\Columns\TextColumn::make('member.financialBranch.name')
+                    ->label('الفرع المالي'),
                 Tables\Columns\TextColumn::make('movement_date')
                     ->label('تاريخ النقل'),
                 Tables\Columns\TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
@@ -56,28 +58,10 @@ class MemberUnitsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->after(function(Model $record) {
-                        $record->member()->update([
-                            'unit_id' => $record->unit_id,
-                            'financial_branch_id' => $record->unit->financial_branch_id,
-                        ]);
-                    })
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                ->after(function(Model $record) {
-                    $record->member()->update([
-                        'unit_id' => $record->unit_id,
-                        'financial_branch_id' => $record->unit->financial_branch_id,
-                    ]);
-                }),
+                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                    ->after(function(Model $record) {
-                        $record->member()->update([
-                            'unit_id' => null,
-                            'financial_branch_id' => null,
-                        ]);
-                    })
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
