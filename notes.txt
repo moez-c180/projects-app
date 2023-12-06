@@ -1,0 +1,13 @@
+Prevent adding same member unit with member
+Set current financial branch id after updating the unit
+Add filter to 56 report by year
+Prevent adding membership from members who has membership_enabled to false
+
+DONE 
+    = Set previous unit after deleting member unit
+    = Add toggle to members to allow membership collection by default is true
+
+
+=======
+Death
+ProjectClosure

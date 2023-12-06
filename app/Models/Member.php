@@ -254,7 +254,7 @@ class Member extends Model
         {
             return implode(" ", [$this->rank->name, "معهد فني"]);
         }
-        return $this->rank->name;
+        return $this->rank?->name;
     }
 
     // public function getUnit(): Unit
