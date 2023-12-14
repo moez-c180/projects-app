@@ -21,6 +21,7 @@ use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
+use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
 
 class MemberUnitResource extends Resource
 {
@@ -89,7 +90,7 @@ class MemberUnitResource extends Resource
                     })->sortable(),
             ])
             ->filters([
-                DatePicker::make('movement_date')
+                DateFilter::make('movement_date')
                     ->label('تاريخ النقل'),
                 SelectFilter::make('unit_id')
                     ->label("الوحدة")
