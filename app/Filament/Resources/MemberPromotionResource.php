@@ -24,6 +24,7 @@ use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\Toggle;
 use Filament\Pages\Actions\Action;
+use App\Models\Category;
 
 class MemberPromotionResource extends Resource
 {
@@ -40,12 +41,19 @@ class MemberPromotionResource extends Resource
         return $form
             ->schema([
                 Card::make()->schema([
+                    Select::make('category_id')
+                        ->label("الفئة")
+                        ->searchable()
+                        ->options(Category::all()->pluck('name', 'id'))
+                        ->visibleOn('create'),
                     Select::make('member_id')
                         ->label('العضو')
                         ->searchable()
                         ->getSearchResultsUsing(function(string $search) {
                             return Member::query()
                             ->search($search)
+                            ->whereNull('death_date')
+                            ->whereNull('pension_date')
                             ->limit(50)->pluck('name', 'id');
                         })->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
                         ->required(),
@@ -68,11 +76,14 @@ class MemberPromotionResource extends Resource
                 TextColumn::make('#')->getStateUsing(static function (stdClass $rowLoop): string {
                     return (string) $rowLoop->iteration;
                 }),
-                TextColumn::make('member.rank.name')->label('الرتبة'),
-                TextColumn::make('member.seniority_number')->label('رقم الأقدمية'),
-                TextColumn::make('member.military_number')->label('رقم العسكري'),
-                TextColumn::make('member.name')->label('اسم العضو'),
-                TextColumn::make('rank.name')->label('الرتبة'),
+                TextColumn::make('member.rank.name')->label('الرتبة الحالية'),
+                TextColumn::make('member.seniority_number')->label('رقم الأقدمية')
+                    ->searchable(isIndividual: true, isGlobal: true),
+                TextColumn::make('member.military_number')->label('رقم العسكري')
+                    ->searchable(isIndividual: true, isGlobal: true),
+                TextColumn::make('member.name')->label('اسم العضو')
+                    ->searchable(isIndividual: true, isGlobal: true),
+                // TextColumn::make('rank.name')->label('رتبة الترقي'),
                 TextColumn::make('promotion_date')->label('تاريخ الترقي'),
                 TextColumn::make('created_at')
                     ->label('تاريخ التسجيل')

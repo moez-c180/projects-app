@@ -455,9 +455,9 @@ class Member extends Model
         return $builder
             ->whereRaw("CONCAT(`name`, ' ') LIKE '%$search%'")
             ->orWhereLike('address', $search)
-            ->orWhere('military_number', $search)
-            ->orWhere('seniority_number', $search)
-            ->orWhere('national_id_number', $search);
+            ->orWhereLike('military_number', $search)
+            ->orWhereLike('seniority_number', $search)
+            ->orWhereLike('national_id_number', $search);
     }
     
     public function scopeSearchName(Builder $builder, $search): Builder
@@ -484,7 +484,7 @@ class Member extends Model
 
     public function getFuneralFeesValue(): int
     {
-        if ($this->is_nco)
+        if ($this->category->is_nco)
         {
             return app(SystemConstantsSettings::class)->nco_funeral_fees;
         } else {
@@ -494,7 +494,7 @@ class Member extends Model
 
     public function getDeathFormValue(): int
     {
-        if ($this->is_nco)
+        if ($this->category->is_nco)
         {
             return app(SystemConstantsSettings::class)->nco_death;
         } else {
@@ -504,7 +504,7 @@ class Member extends Model
 
     public function getFellowshipGrantValue(): int
     {
-        if ($this->is_nco)
+        if ($this->category->is_nco)
         {
             return app(SystemConstantsSettings::class)->nco_grant;
         } else {

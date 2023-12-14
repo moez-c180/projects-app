@@ -18,5 +18,9 @@ class CreateMemberPromotion extends CreateRecord
         }
         
         $this->record->member->update(['rank_id' => $this->record->rank_id]);
+        if (!is_null($this->data['category_id']))
+        {
+            $this->record->member->update(['category_id' => $this->data['category_id']]);
+        }
     }
 }

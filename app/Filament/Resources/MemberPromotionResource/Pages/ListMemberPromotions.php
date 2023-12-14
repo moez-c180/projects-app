@@ -17,6 +17,7 @@ use Filament\Notifications\Notification;
 use App\Models\Unit;
 use app\Settings\SystemConstantsSettings;
 use App\Models\FinancialBranch;
+use App\Models\Category;
 
 class ListMemberPromotions extends ListRecords
 {
@@ -56,6 +57,7 @@ class ListMemberPromotions extends ListRecords
                     }
 
                     $transaction = DB::transaction(function () use ($data, &$member) {    
+                        $categoryId = $data['category_id'] ? $data['category_id'] : $member->category_id;
                         $unit = Unit::find(app(SystemConstantsSettings::class)->pension_unit_id);
                         $member->memberPromotions()->create([
                             'rank_id' => $data['rank_id'],
@@ -69,7 +71,9 @@ class ListMemberPromotions extends ListRecords
                             'pension_date' => $data['pension_date'],
                             'pension_reason' => $data['pension_reason'],
                             'unit_id' => $unit->id,
-                            'financial_branch_id' => $unit->financial_branch_id
+                            'financial_branch_id' => $unit->financial_branch_id,
+                            'on_pension' => true,
+                            'category_id' => $categoryId
                         ]);
                         return true;
                     });
@@ -101,6 +105,10 @@ class ListMemberPromotions extends ListRecords
                             ->limit(50)->pluck('name', 'id');
                         })->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
                         ->required(),
+                    Select::make('category_id')
+                        ->label("الفئة")
+                        ->searchable()
+                        ->options(Category::all()->pluck('name', 'id')),
                     Select::make('rank_id')
                         ->label('الرتبة الحالية')
                         ->options(Rank::all()->pluck('name', 'id'))

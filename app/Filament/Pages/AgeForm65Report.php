@@ -53,14 +53,17 @@ class AgeForm65Report extends Page implements HasTable
                 ->getStateUsing(function($record) {
                     return $record->category->is_nco ? 'شرفيين' : 'عاملين';
                 }),
-            TextColumn::make('military_number')->label('الرقم العسكري'),
-            TextColumn::make('seniority_number')->label('رقم الأقدمية'),
+            TextColumn::make('military_number')->label('الرقم العسكري')
+                ->searchable(),
+            TextColumn::make('seniority_number')->label('رقم الأقدمية')
+                ->searchable(),
             TextColumn::make('rank.name')->label('الرتبة'),
             TextColumn::make('is_general_staff')
                     ->getStateUsing(function($record) {
                         return $record->is_general_staff ? Member::IS_GENERAL_STAFF : '';
                     })->label('أ ح'),
-            TextColumn::make('name')->label('الاسم'),
+            TextColumn::make('name')->label('الاسم')
+                ->searchable(),
             TextColumn::make('department.name')->label('السلاح'),
             TextColumn::make('birth_date')->label('تاريخ الميلاد'),
             TextColumn::make('pension_date')

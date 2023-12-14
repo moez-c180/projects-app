@@ -131,8 +131,10 @@ class MemberResource extends Resource
 
                 ])->columns(3),
                 Card::make()->schema([
-                    DatePicker::make('pension_date')->label('تاريخ الإحالة للمعاش'),
-                    TextInput::make('pension_reason')->label('سبب الإحالة للمعاش'),
+                    DatePicker::make('pension_date')->label('تاريخ الإحالة للمعاش')
+                        ->hiddenOn(['edit']),
+                    TextInput::make('pension_reason')->label('سبب الإحالة للمعاش')
+                        ->hiddenOn(['edit']),
                     DatePicker::make('death_date')->label('تاريخ الوفاة'),
                 ])->columns(3),
                 Card::make()->schema([
@@ -190,7 +192,7 @@ class MemberResource extends Resource
                 TextColumn::make('name')->label('الاسم')
                     ->sortable()
                     ->searchable(isIndividual: true, isGlobal: true, query: function (Builder $query, string $search): Builder {
-                        return $query->searchName($search);
+                        return $query->search($search);
                     })
                     ->toggleable(),
                 TextColumn::make('department.name')
@@ -212,6 +214,11 @@ class MemberResource extends Resource
                     ->label('خدمة')
                     ->getStateUsing(function($record) {
                         return is_null($record->pension_date) ? 'خدمة' : 'معاش';
+                    }),
+                BooleanColumn::make('dead')
+                    ->label('متوفي')
+                    ->getStateUsing(function($record) {
+                        return !is_null($record->death_date) ? true : false;
                     }),
                 TextColumn::make('pension_date')
                     ->label('تاريخ الإحالة للمعاش')
@@ -318,6 +325,11 @@ class MemberResource extends Resource
                 SelectFilter::make('financial_branch_id')
                     ->label('الفرع المالي')
                     ->options(FinancialBranch::all()->pluck('name', 'id'))
+                    ->searchable()
+                    ->multiple(),
+                SelectFilter::make('review_id')
+                    ->label('المراجعة')
+                    ->options(Review::all()->pluck('name', 'id'))
                     ->searchable()
                     ->multiple(),
                 TernaryFilter::make('work_pension')

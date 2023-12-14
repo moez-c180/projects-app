@@ -69,7 +69,7 @@ class FinancialBranchResource extends Resource
                     ->sortable(),
                 TextColumn::make('members_count')
                     ->label('الإجمالي')
-                    ->counts('members')
+                    ->getStateUsing(fn($record) => $record->members()->whereNull('death_date')->count())
                     ->sortable(),
                 TextColumn::make('created_at')->label('تاريخ التسجيل')->dateTime('d-m-Y, H:i a')
                     ->tooltip(function(TextColumn $column): ?string {

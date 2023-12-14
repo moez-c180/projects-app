@@ -77,9 +77,9 @@ class MembersRelationManager extends RelationManager
                 SelectFilter::make('unit_id')
                     ->label('الوحدة')
                     ->options(Unit::all()->pluck('name', 'id')),
-                SelectFilter::make('financial_branch_id')
-                    ->label('الفرع المالي')
-                    ->options(Unit::all()->pluck('name', 'id')),
+                // SelectFilter::make('financial_branch_id')
+                //     ->label('الفرع المالي')
+                //     ->options(Unit::all()->pluck('name', 'id')),
                 SelectFilter::make('rank_id')
                     ->label('الرتبة / الدرجة')
                     ->options(Rank::all()->pluck('name', 'id')),

@@ -51,6 +51,8 @@ class FellowshipGrantFormResource extends Resource
                         ->getSearchResultsUsing(function(string $search) {
                             return Member::query()
                             ->search($search)
+                            ->whereNull('pension_date')
+                            ->whereNull('death_date')
                             ->limit(50)->pluck('name', 'id');
                         })
                         ->reactive()

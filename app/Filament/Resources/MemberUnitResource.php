@@ -41,6 +41,8 @@ class MemberUnitResource extends Resource
                         ->getSearchResultsUsing(function(string $search) {
                             return Member::query()
                             ->search($search)
+                            ->whereNull('death_date')
+                            ->whereNull('pension_date')
                             ->limit(50)->pluck('name', 'id');
                         })
                         ->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->name)
@@ -67,10 +69,12 @@ class MemberUnitResource extends Resource
                     return (string) $rowLoop->iteration;
                 }),
                 TextColumn::make('member.rank.name')->label('الرتبة'),
-                TextColumn::make('member.seniority_number')->label('رقم الأقدمية'),
-                TextColumn::make('member.military_number')->label('رقم العسكري'),
+                TextColumn::make('member.seniority_number')->label('رقم الأقدمية')
+                    ->searchable(isIndividual: false, isGlobal: true),
+                TextColumn::make('member.military_number')->label('رقم العسكري')
+                    ->searchable(isIndividual: false, isGlobal: true),
                 TextColumn::make('member.name')->label('اسم العضو')
-                    ->searchable()
+                    ->searchable(isIndividual: false, isGlobal: true)
                     ->sortable(),
                 TextColumn::make('unit.name')->label('الوحدة')
                     ->searchable()
@@ -85,8 +89,12 @@ class MemberUnitResource extends Resource
                     })->sortable(),
             ])
             ->filters([
-                SelectFilter::make('movement_date')
-                    ->label('تاريخ النقل')
+                DatePicker::make('movement_date')
+                    ->label('تاريخ النقل'),
+                SelectFilter::make('unit_id')
+                    ->label("الوحدة")
+                    ->options(Unit::all()->pluck('name', 'id'))
+                    ->searchable()
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
