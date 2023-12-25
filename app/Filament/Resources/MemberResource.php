@@ -131,10 +131,8 @@ class MemberResource extends Resource
 
                 ])->columns(3),
                 Card::make()->schema([
-                    DatePicker::make('pension_date')->label('تاريخ الإحالة للمعاش')
-                        ->hiddenOn(['edit']),
-                    TextInput::make('pension_reason')->label('سبب الإحالة للمعاش')
-                        ->hiddenOn(['edit']),
+                    DatePicker::make('pension_date')->label('تاريخ الإحالة للمعاش'),
+                    TextInput::make('pension_reason')->label('سبب الإحالة للمعاش'),
                     DatePicker::make('death_date')->label('تاريخ الوفاة'),
                 ])->columns(3),
                 Card::make()->schema([
