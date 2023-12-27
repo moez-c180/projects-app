@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\ReviewSeeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\AdminSeeder;
+use Database\Seeders\PermissionSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(ReviewSeeder::class);
         $this->call(RoleSeeder::class);
+        $this->call(PermissionSeeder::class);
         $this->call(AdminSeeder::class);
         // \App\Models\User::factory(10)->create();
 
