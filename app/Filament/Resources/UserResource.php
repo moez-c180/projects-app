@@ -56,12 +56,14 @@ class UserResource extends Resource
                             ->maxLength(255)
                             ->label("كلمة السر")
                             ->required(fn ($component, $get, $livewire, $model, $record, $set, $state) => $record === null)
-                            ->dehydrateStateUsing(fn ($state) => ! empty($state) ? Hash::make($state) : ''),
+                            ->dehydrateStateUsing(fn ($state) => ! empty($state) ? Hash::make($state) : '')
+                            ->visibleOn('create'),
                         TextInput::make('passwordConfirmation')
                             ->label("تأكيد كلمة السر")
                             ->password()
                             ->dehydrated(false)
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->visibleOn('create'),
                         Select::make('roles')
                             ->multiple()
                             ->relationship('roles', 'name', function($query) {
