@@ -86,6 +86,7 @@ class MembersRelationManager extends RelationManager
                 //     ->label('الفرع المالي')
                 //     ->options(Unit::all()->pluck('name', 'id')),
                 SelectFilter::make('rank_id')
+                    ->searchable()
                     ->label('الرتبة / الدرجة')
                     ->options(Rank::all()->pluck('name', 'id')),
                 TernaryFilter::make('nco_co')

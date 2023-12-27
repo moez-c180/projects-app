@@ -359,6 +359,7 @@ class MemberResource extends Resource
                         false: fn (Builder $query) => $query->whereNull('death_date'),
                         blank: fn (Builder $query) => $query,
                     ),
+                DateFilter::make('death_date')->label('تاريخ الوفاة'),
                 DateFilter::make('created_at')->label('تاريخ التسجيل')
 
             ])
