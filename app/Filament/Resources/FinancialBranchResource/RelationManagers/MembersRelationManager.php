@@ -78,6 +78,7 @@ class MembersRelationManager extends RelationManager
             ->filters([
                 SelectFilter::make('unit_id')
                     ->label('الوحدة')
+                    ->searchable()
                     ->options(function (Livewire $livewire) {
                         return ($livewire->ownerRecord->units()->pluck('name', 'id'));
                     }),
