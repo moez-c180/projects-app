@@ -18,6 +18,8 @@ use Filament\Tables\Actions\Action;
 use stdClass;
 use Filament\Tables\Filters\TernaryFilter;
 use App\Models\Category;
+use Illuminate\Database\Eloquent\Model;
+use Livewire\Component as Livewire;
 
 class MembersRelationManager extends RelationManager
 {
@@ -25,7 +27,7 @@ class MembersRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'id';
     protected static ?string $title = 'الأعضاء';
-
+    public Model $ownerRecord;
     public static function form(Form $form): Form
     {
         return $form
@@ -76,7 +78,9 @@ class MembersRelationManager extends RelationManager
             ->filters([
                 SelectFilter::make('unit_id')
                     ->label('الوحدة')
-                    ->options(Unit::all()->pluck('name', 'id')),
+                    ->options(function (Livewire $livewire) {
+                        return ($livewire->ownerRecord->units()->pluck('name', 'id'));
+                    }),
                 // SelectFilter::make('financial_branch_id')
                 //     ->label('الفرع المالي')
                 //     ->options(Unit::all()->pluck('name', 'id')),
