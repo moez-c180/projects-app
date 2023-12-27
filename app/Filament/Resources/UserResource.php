@@ -59,7 +59,7 @@ class UserResource extends Resource
                         Select::make('roles')
                             ->multiple()
                             ->relationship('roles', 'name', function($query) {
-                                return $query->whereNotIn('id', [777,999]);
+                                return $query->whereNotIn('id', [777]);
                             })
                             ->preload(config('filament-authentication.preload_roles'))
                             ->label("Roles"),
