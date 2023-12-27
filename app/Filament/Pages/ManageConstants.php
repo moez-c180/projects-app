@@ -9,6 +9,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Select;
 use App\Models\Unit;
+use App\Models\Permission;
 
 class ManageConstants extends SettingsPage
 {
@@ -18,6 +19,12 @@ class ManageConstants extends SettingsPage
     protected static ?int $navigationSort = 2;
     protected static ?string $label = 'قيم ثوابت المنظومة ';
     protected static string $settings = SystemConstantsSettings::class;
+    protected static string | array $middlewares = ['can:'.Permission::CAN_ACCESS_SYSTEM_CORE_VALUES];
+    
+    public static function canView(): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
 
     protected function getFormSchema(): array
     {
@@ -119,4 +126,5 @@ class ManageConstants extends SettingsPage
 
         ];
     }
+    
 }

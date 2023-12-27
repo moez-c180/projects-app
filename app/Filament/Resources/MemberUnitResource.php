@@ -22,6 +22,8 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
 use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Model;
 
 class MemberUnitResource extends Resource
 {
@@ -123,4 +125,30 @@ class MemberUnitResource extends Resource
             'edit' => Pages\EditMemberUnit::route('/{record}/edit'),
         ];
     }    
+
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_MEMBER_UNITS);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_MEMBER_UNITS);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_CREATE_MEMBER_UNIT);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_EDIT_MEMBER_UNIT);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_DELETE_MEMBER_UNIT);
+    }
 }

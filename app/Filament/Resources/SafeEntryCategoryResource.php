@@ -17,6 +17,8 @@ use stdClass;
 use App\Models\SafeEntryCategory;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Card;
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Model;
 
 class SafeEntryCategoryResource extends Resource
 {
@@ -89,4 +91,30 @@ class SafeEntryCategoryResource extends Resource
             'edit' => Pages\EditSafeEntryCategory::route('/{record}/edit'),
         ];
     }    
+
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
 }

@@ -21,6 +21,7 @@ use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\DatePicker;
+use App\Models\Permission;
 
 class MembersDidnotPayMembershipReport extends Page implements HasTable
 {
@@ -33,6 +34,13 @@ class MembersDidnotPayMembershipReport extends Page implements HasTable
         'tableSearchQuery' => ['except' => ''],
         'tableColumnSearchQueries',
     ];
+
+    protected static array | string $middlewares = ['can:'.Permission::CAN_SEE_MEMBERS_WITH_LATE_PAYMENTS_REPORT];
+
+    public static function canView(): bool
+    {
+        return false;
+    }
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 

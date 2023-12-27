@@ -22,6 +22,8 @@ use Filament\Forms\Components\Toggle;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use App\Filament\Resources\CategoryResource\RelationManagers\RanksRelationManager;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Permission;
 
 class CategoryResource extends Resource
 {
@@ -100,4 +102,29 @@ class CategoryResource extends Resource
             'edit' => Pages\EditCategory::route('/{record}/edit'),
         ];
     }    
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
 }

@@ -25,6 +25,8 @@ use Closure;
 use App\Models\Membership;
 use Carbon\Carbon;
 use Filament\Forms\Components\Fieldset;
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Model;
 
 class FellowshipGrantFormResource extends Resource
 {
@@ -141,4 +143,29 @@ class FellowshipGrantFormResource extends Resource
             'edit' => Pages\EditFellowshipGrantForm::route('/{record}/edit'),
         ];
     }    
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_FELLOWSHIP_GRANT_FORMS);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_FELLOWSHIP_GRANT_FORMS);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_CREATE_FELLOWSHIP_GRANT_FORM);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_EDIT_FELLOWSHIP_GRANT_FORM);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_DELETE_FELLOWSHIP_GRANT_FORM);
+    }
 }

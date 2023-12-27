@@ -31,6 +31,8 @@ use App\Models\MarriageForm;
 use App\Models\ProjectClosureForm;
 use App\Models\DisabledForm;
 use App\Models\RelativeDeathForm;
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Model;
 
 class RefundFormResource extends Resource
 {
@@ -172,4 +174,29 @@ class RefundFormResource extends Resource
             'edit' => Pages\EditRefundForm::route('/{record}/edit'),
         ];
     }    
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_REFUND_FORMS);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_REFUND_FORMS);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_CREATE_REFUND_FORM);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_EDIT_REFUND_FORM);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_DELETE_REFUND_FORM);
+    }
 }

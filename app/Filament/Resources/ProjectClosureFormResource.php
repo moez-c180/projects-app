@@ -24,6 +24,8 @@ use App\Models\ProjectClosureReason;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\BooleanColumn;
 use App\Models\Membership;
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Model;
 
 class ProjectClosureFormResource extends Resource
 {
@@ -170,4 +172,29 @@ class ProjectClosureFormResource extends Resource
             'edit' => Pages\EditProjectClosureForm::route('/{record}/edit'),
         ];
     }    
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_PROJECT_CLOSURE_FORMS);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_PROJECT_CLOSURE_FORMS);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_CREATE_PROJECT_CLOSURE_FORM);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_EDIT_PROJECT_CLOSURE_FORM);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_DELETE_PROJECT_CLOSURE_FORM);
+    }
 }

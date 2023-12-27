@@ -16,6 +16,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Filament\Pages\Actions\Action;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Actions\Reports\GetFinancialBranchVsDepartmentExportAction;
+use App\Models\Permission;
 
 
 class CoFinancialBranchVsDepartmentReport extends Page
@@ -29,6 +30,7 @@ class CoFinancialBranchVsDepartmentReport extends Page
     protected static ?string $navigationGroup = 'التقارير';
 
     protected static ?string $title = 'يومية عددية بالخدمة - عامليين';
+    protected static array | string $middlewares = ['can:'.Permission::CAN_SEE_IN_SERVICE_CO_MEMBERS_REPORT];
 
     protected static ?int $navigationSort = 2;
     public $data;

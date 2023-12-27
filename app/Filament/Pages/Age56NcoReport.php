@@ -11,6 +11,7 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Concerns\InteractsWithTable;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use App\Models\Permission;
 
 class Age56NcoReport extends Page implements HasTable
 {
@@ -25,6 +26,8 @@ class Age56NcoReport extends Page implements HasTable
     protected static ?string $title = 'تقرير ٥٦ شرفيين';
 
     protected static ?int $navigationSort = 2;
+
+    protected static array | string $middlewares = ['can:'.Permission::CAN_SEE_NCO_65_REPORTS];
 
     protected function getTableQuery(): Builder 
     {

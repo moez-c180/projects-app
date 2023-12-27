@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f265b9fdfbe4d6b86fe324182c1c7c03",
+    "content-hash": "f2e382f111b8ed8ef411559bd2242bec",
     "packages": [
         {
             "name": "akaunting/laravel-money",
@@ -2454,74 +2454,6 @@
             "time": "2023-06-18T04:00:35+00:00"
         },
         {
-            "name": "lab404/laravel-impersonate",
-            "version": "1.7.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/404labfr/laravel-impersonate.git",
-                "reference": "d8ab69f05daab4117b313e11ca007fbf3199a1ab"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/404labfr/laravel-impersonate/zipball/d8ab69f05daab4117b313e11ca007fbf3199a1ab",
-                "reference": "d8ab69f05daab4117b313e11ca007fbf3199a1ab",
-                "shasum": ""
-            },
-            "require": {
-                "laravel/framework": "^6.0 | ^7.0 | ^8.0 | ^9.0 | ^10.0",
-                "php": "^7.2 | ^8.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.3.3",
-                "orchestra/database": "^4.0 | ^5.0 | ^6.0 | ^7.0 | ^8.0",
-                "orchestra/testbench": "^4.0 | ^5.0 | ^6.0 | ^7.0 | ^8.0",
-                "phpunit/phpunit": "^7.5 | ^8.0 | ^9.0 | ^10.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Lab404\\Impersonate\\ImpersonateServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/helpers.php"
-                ],
-                "psr-4": {
-                    "Lab404\\Impersonate\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Marceau Casals",
-                    "email": "marceau@casals.fr"
-                }
-            ],
-            "description": "Laravel Impersonate is a plugin that allows to you to authenticate as your users.",
-            "keywords": [
-                "auth",
-                "impersonate",
-                "impersonation",
-                "laravel",
-                "laravel-package",
-                "laravel-plugin",
-                "package",
-                "plugin",
-                "user"
-            ],
-            "support": {
-                "issues": "https://github.com/404labfr/laravel-impersonate/issues",
-                "source": "https://github.com/404labfr/laravel-impersonate/tree/1.7.4"
-            },
-            "time": "2023-01-25T16:56:05+00:00"
-        },
-        {
             "name": "laravel/framework",
             "version": "v9.52.15",
             "source": {
@@ -4862,75 +4794,6 @@
             "time": "2023-02-25T19:38:58+00:00"
         },
         {
-            "name": "phpsa/filament-authentication",
-            "version": "v2.4.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpsa/filament-authentication.git",
-                "reference": "c381825acc319053a64f54c08128993cb2358e71"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpsa/filament-authentication/zipball/c381825acc319053a64f54c08128993cb2358e71",
-                "reference": "c381825acc319053a64f54c08128993cb2358e71",
-                "shasum": ""
-            },
-            "require": {
-                "filament/filament": "^2.16",
-                "lab404/laravel-impersonate": "^1.7",
-                "php": "^8.0",
-                "spatie/laravel-package-tools": "^1.13",
-                "spatie/laravel-permission": "^5.5"
-            },
-            "require-dev": {
-                "laravel/pint": "^1.2"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Phpsa\\FilamentAuthentication\\FilamentAuthenticationProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Phpsa\\FilamentAuthentication\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Craig G Smith",
-                    "email": "vxdhost@gmail.com"
-                }
-            ],
-            "description": "User & Role (via Spatie Roles/Permissions) Manager Resource For Filament Admin",
-            "homepage": "https://cgs4k.nz",
-            "keywords": [
-                "cli",
-                "filament",
-                "laravel",
-                "resource",
-                "ui",
-                "user"
-            ],
-            "support": {
-                "issues": "https://github.com/phpsa/filament-authentication/issues",
-                "source": "https://github.com/phpsa/filament-authentication/tree/v2.4.2"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/phpsa",
-                    "type": "github"
-                }
-            ],
-            "time": "2023-05-15T22:36:40+00:00"
-        },
-        {
             "name": "phpsa/filament-password-reveal",
             "version": "v1.1.4",
             "source": {
@@ -5951,6 +5814,86 @@
             "time": "2023-02-14T16:54:54+00:00"
         },
         {
+            "name": "ryangjchandler/filament-profile",
+            "version": "v0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ryangjchandler/filament-profile.git",
+                "reference": "5aaeffc5e5484cc7dbf17a21540a2e07005122e7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ryangjchandler/filament-profile/zipball/5aaeffc5e5484cc7dbf17a21540a2e07005122e7",
+                "reference": "5aaeffc5e5484cc7dbf17a21540a2e07005122e7",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^2.0",
+                "illuminate/contracts": "^9.0|^10.0",
+                "php": "^8.0",
+                "spatie/laravel-package-tools": "^1.11"
+            },
+            "require-dev": {
+                "nunomaduro/collision": "^6.0|^7.0",
+                "nunomaduro/larastan": "^2.0",
+                "orchestra/testbench": "^7.0|^8.0",
+                "pestphp/pest": "^1.21",
+                "pestphp/pest-plugin-laravel": "^1.1",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^9.5|^10.0",
+                "spatie/laravel-ray": "^1.26"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "RyanChandler\\FilamentProfile\\FilamentProfileServiceProvider"
+                    ],
+                    "aliases": {
+                        "FilamentProfile": "RyanChandler\\FilamentProfile\\Facades\\FilamentProfile"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "RyanChandler\\FilamentProfile\\": "src",
+                    "RyanChandler\\FilamentProfile\\Database\\Factories\\": "database/factories"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ryan Chandler",
+                    "email": "support@ryangjchandler.co.uk",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple profile page for Filament.",
+            "homepage": "https://github.com/ryangjchandler/filament-profile",
+            "keywords": [
+                "filament-profile",
+                "laravel",
+                "ryangjchandler"
+            ],
+            "support": {
+                "issues": "https://github.com/ryangjchandler/filament-profile/issues",
+                "source": "https://github.com/ryangjchandler/filament-profile/tree/v0.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/ryangjchandler",
+                    "type": "github"
+                }
+            ],
+            "abandoned": true,
+            "time": "2023-03-21T09:58:48+00:00"
+        },
+        {
             "name": "savannabits/filament-flatpickr",
             "version": "v1.1.0",
             "source": {
@@ -6712,35 +6655,35 @@
         },
         {
             "name": "spatie/laravel-permission",
-            "version": "5.10.2",
+            "version": "6.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "671e46e079cbd4990a98427daaa09f4977b57ca9"
+                "reference": "4d119986c862ac0168b77338c85d8236bb559a88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/671e46e079cbd4990a98427daaa09f4977b57ca9",
-                "reference": "671e46e079cbd4990a98427daaa09f4977b57ca9",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/4d119986c862ac0168b77338c85d8236bb559a88",
+                "reference": "4d119986c862ac0168b77338c85d8236bb559a88",
                 "shasum": ""
             },
             "require": {
-                "illuminate/auth": "^7.0|^8.0|^9.0|^10.0",
-                "illuminate/container": "^7.0|^8.0|^9.0|^10.0",
-                "illuminate/contracts": "^7.0|^8.0|^9.0|^10.0",
-                "illuminate/database": "^7.0|^8.0|^9.0|^10.0",
-                "php": "^7.3|^8.0"
+                "illuminate/auth": "^8.12|^9.0|^10.0|^11.0",
+                "illuminate/container": "^8.12|^9.0|^10.0|^11.0",
+                "illuminate/contracts": "^8.12|^9.0|^10.0|^11.0",
+                "illuminate/database": "^8.12|^9.0|^10.0|^11.0",
+                "php": "^8.0"
             },
             "require-dev": {
-                "orchestra/testbench": "^5.0|^6.0|^7.0|^8.0",
-                "phpunit/phpunit": "^9.4",
-                "predis/predis": "^1.1"
+                "laravel/passport": "^11.0",
+                "orchestra/testbench": "^6.23|^7.0|^8.0|^9.0",
+                "phpunit/phpunit": "^9.4|^10.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "5.x-dev",
-                    "dev-master": "5.x-dev"
+                    "dev-main": "6.x-dev",
+                    "dev-master": "6.x-dev"
                 },
                 "laravel": {
                     "providers": [
@@ -6768,7 +6711,7 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Permission handling for Laravel 6.0 and up",
+            "description": "Permission handling for Laravel 8.0 and up",
             "homepage": "https://github.com/spatie/laravel-permission",
             "keywords": [
                 "acl",
@@ -6782,7 +6725,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-permission/issues",
-                "source": "https://github.com/spatie/laravel-permission/tree/5.10.2"
+                "source": "https://github.com/spatie/laravel-permission/tree/6.3.0"
             },
             "funding": [
                 {
@@ -6790,7 +6733,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-07-04T13:38:13+00:00"
+            "time": "2023-12-24T06:58:02+00:00"
         },
         {
             "name": "spatie/laravel-settings",

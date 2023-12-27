@@ -16,7 +16,10 @@ use App\Observers\MembershipObserver;
 use App\Observers\MemberWalletObserver;
 use App\Observers\RefundFormObserver;
 use App\Models\Member;
+use App\Models\Permission;
 use App\Observers\MemberObserver;
+use Opcodes\LogViewer\Facades\LogViewer;
+use App\Models\Role;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -64,6 +67,12 @@ class AppServiceProvider extends ServiceProvider
             NavigationGroup::make()
                 ->label('إعدادات')
                 ->collapsed(),
+            NavigationGroup::make()
+                ->label('إدارة النظام')
+                ->collapsed(),
+            NavigationGroup::make()
+                ->label('الحساب')
+                ->collapsed(),
         ]);
 
         Carbon::setWeekStartsAt(Carbon::SATURDAY);
@@ -83,6 +92,10 @@ class AppServiceProvider extends ServiceProvider
         MemberWallet::observe(MemberWalletObserver::class);
         Membership::observe(MembershipObserver::class);
         RefundForm::observe(RefundFormObserver::class);
+
+        // LogViewer::auth(function ($request) {
+        //     return array_intersect( $request->user()->getRoleNames()->toArray(), [Role::ROOT_ADMIN, Role::SUPER_ADMIN]);
+        // });
 
     }
 }

@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use App\Models\Permission;
 
 class SafeEntryResource extends Resource
 {
@@ -176,4 +177,30 @@ class SafeEntryResource extends Resource
             'edit' => Pages\EditSafeEntry::route('/{record}/edit'),
         ];
     }    
+
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_SAFE_ENTRIES);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_SAFE_ENTRIES);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_CREATE_SAFE_ENTRY);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_EDIT_SAFE_ENTRY);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_DELETE_SAFE_ENTRY);
+    }
 }

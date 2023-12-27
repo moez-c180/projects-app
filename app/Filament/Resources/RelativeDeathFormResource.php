@@ -24,6 +24,8 @@ use Filament\Tables\Columns\TextColumn;
 use stdClass;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Actions\Action;
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Model;
 
 class RelativeDeathFormResource extends Resource
 {
@@ -162,4 +164,30 @@ class RelativeDeathFormResource extends Resource
             'edit' => Pages\EditRelativeDeathForm::route('/{record}/edit'),
         ];
     }    
+
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_RELATIVE_DEATH_FORMS);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_RELATIVE_DEATH_FORMS);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_CREATE_RELATIVE_DEATH_FORM);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_EDIT_RELATIVE_DEATH_FORM);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_DELETE_RELATIVE_DEATH_FORM);
+    }
 }

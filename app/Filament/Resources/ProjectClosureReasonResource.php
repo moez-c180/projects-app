@@ -16,6 +16,8 @@ use Filament\Forms\Components\Card;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 use stdClass;
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Model;
 
 class ProjectClosureReasonResource extends Resource
 {
@@ -80,4 +82,29 @@ class ProjectClosureReasonResource extends Resource
             'edit' => Pages\EditProjectClosureReason::route('/{record}/edit'),
         ];
     }    
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
 }

@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\Select;
 use App\Models\Member;
 use Filament\Forms\Components\DatePicker;
+use App\Models\Permission;
 
 class MemberJobResource extends Resource
 {
@@ -121,14 +122,29 @@ class MemberJobResource extends Resource
             'view' => Pages\ViewMemberJob::route('/{record}'),
             'edit' => Pages\EditMemberJob::route('/{record}/edit'),
         ];
-    }    
+    }
+    
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_MEMBER_JOBS);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return false;
+    }
 
     public static function canCreate(): bool
     {
         return false;
     }
 
-    public static function canView(Model $record): bool
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_EDIT_MEMBER_JOB);
+    }
+    
+    public static function canDelete(Model $record): bool
     {
         return false;
     }

@@ -15,16 +15,16 @@ class ReviewSeeder extends Seeder
      */
     public function run()
     {
-        Review::create([
+        Review::firstOrcreate([
             'name' => 'شهري'
         ]);
-        Review::create([
+        Review::firstOrcreate([
             'name' => 'سداد نقدي'
         ]);
-        Review::create([
+        Review::firstOrcreate([
             'name' => 'تحت التحصيل'
         ]);
-        Review::create([
+        Review::firstOrcreate([
             'name' => 'نشرة'
         ]);
     }

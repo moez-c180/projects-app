@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 use Filament\Tables\Columns\TextColumn;
 use stdClass;
 use Filament\Tables\Columns\BadgeColumn;
+use App\Models\Permission;
 
 class MemberWalletResource extends Resource
 {
@@ -108,7 +109,17 @@ class MemberWalletResource extends Resource
     }
 
     public static function getEloquentQuery(): Builder
-{
-    return parent::getEloquentQuery()->orderByDesc('created_at')->orderByDesc('id');
-}
+    {
+        return parent::getEloquentQuery()->orderByDesc('created_at')->orderByDesc('id');
+    }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_MEMBER_WALLET_TRANSACTIONS);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_MEMBER_WALLET_TRANSACTIONS);
+    }
 }

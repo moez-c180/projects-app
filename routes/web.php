@@ -20,9 +20,4 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 */
 
 Route::redirect('/', 'admin');
-
-Route::get('member', function() {
-    Member::query()->update(['wallet' => null]);
-    Membership::truncate();
-    MemberWallet::truncate();
-});
+Route::redirect('login', 'admin/login')->name('login');

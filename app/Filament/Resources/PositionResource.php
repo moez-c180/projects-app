@@ -19,6 +19,8 @@ use Filament\Tables\Columns\TextColumn;
 use stdClass;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Model;
 
 class PositionResource extends Resource
 {
@@ -96,4 +98,30 @@ class PositionResource extends Resource
             'edit' => Pages\EditPosition::route('/{record}/edit'),
         ];
     }    
+
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_ACCESS_SYSTEM_CORE_VALUES);
+    }
 }

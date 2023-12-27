@@ -16,6 +16,7 @@ use App\Models\Member;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\SelectFilter;
 use Carbon\Carbon;
+use App\Models\Permission;
 
 class AgeForm65Report extends Page implements HasTable
 {
@@ -30,6 +31,8 @@ class AgeForm65Report extends Page implements HasTable
     protected static ?string $title = 'تقرير تكريم السن';
 
     protected static ?int $navigationSort = 1;
+
+    protected static array | string $middlewares = ['can:'.Permission::CAN_SEE_AGE_OF_HONORING_REPORT];
 
     protected function getTableQuery(): Builder 
     {

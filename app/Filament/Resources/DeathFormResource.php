@@ -23,6 +23,8 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Forms\Components\Toggle;
 use Closure;
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Model;
 
 class DeathFormResource extends Resource
 {
@@ -220,5 +222,30 @@ class DeathFormResource extends Resource
             'view' => Pages\ViewDeathForm::route('/{record}'),
             'edit' => Pages\EditDeathForm::route('/{record}/edit'),
         ];
+    }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_DEATH_FORMS);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_DEATH_FORMS);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_CREATE_DEATH_FORM);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_EDIT_DEATH_FORM);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_DELETE_DEATH_FORM);
     }
 }

@@ -26,6 +26,8 @@ use Filament\Notifications\Notification;
 use Filament\Tables\Actions\DeleteAction;
 use Maatwebsite\Excel\Facades\Excel;
 use Filament\Forms\Components\Toggle;
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Model;
 
 class MembershipSheetImportResource extends Resource
 {
@@ -164,5 +166,11 @@ class MembershipSheetImportResource extends Resource
             'view' => Pages\ViewMembershipSheetImport::route('/{record}'),
             'edit' => Pages\EditMembershipSheetImport::route('/{record}/edit'),
         ];
-    }    
+    }   
+    
+    
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_UPLOAD_MEMBERSHIPS_SHEET);
+    }
 }

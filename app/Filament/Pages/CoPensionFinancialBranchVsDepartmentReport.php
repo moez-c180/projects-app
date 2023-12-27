@@ -16,6 +16,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Filament\Pages\Actions\Action;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Actions\Reports\GetFinancialBranchVsDepartmentExportAction;
+use App\Models\Permission;
 
 
 class CoPensionFinancialBranchVsDepartmentReport extends Page
@@ -30,6 +31,7 @@ class CoPensionFinancialBranchVsDepartmentReport extends Page
 
     protected static ?string $title = 'يومية عددية معاش - عامليين';
 
+    protected static array | string $middlewares = ['can:'.Permission::CAN_SEE_ON_PENSION_CO_MEMBERS_REPORT];
     protected static ?int $navigationSort = 2;
     public $data;
     public $isNco = false;

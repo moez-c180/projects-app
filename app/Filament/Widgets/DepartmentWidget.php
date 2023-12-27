@@ -7,6 +7,7 @@ use App\Models\Member;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Card;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Permission;
 
 class DepartmentWidget extends BaseWidget
 {

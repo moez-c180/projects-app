@@ -27,6 +27,8 @@ use App\Models\Unit;
 use Carbon\Carbon;
 use App\Filament\Resources\MembershipResource\Pages\ImportMembershipsSheet;
 use Filament\Notifications\Notification;
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Model;
 
 class MembershipResource extends Resource
 {
@@ -178,4 +180,29 @@ class MembershipResource extends Resource
             'edit' => Pages\EditMembership::route('/{record}/edit'),
         ];
     }    
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_MEMBERSHIPS);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_MEMBERSHIPS);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_CREATE_MEMBERSHIP);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_EDIT_MEMBERSHIP);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_DELETE_MEMBERSHIP);
+    }
 }

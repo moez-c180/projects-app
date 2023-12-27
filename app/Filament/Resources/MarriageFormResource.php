@@ -26,6 +26,8 @@ use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Card;
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Model;
 
 class MarriageFormResource extends Resource
 {
@@ -156,4 +158,29 @@ class MarriageFormResource extends Resource
             'edit' => Pages\EditMarriageForm::route('/{record}/edit'),
         ];
     }    
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_MARRIAGE_FORMS);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_MARRIAGE_FORMS);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_CREATE_MARRIAGE_FORM);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_EDIT_MARRIAGE_FORM);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_DELETE_MARRIAGE_FORM);
+    }
 }

@@ -25,6 +25,8 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\Toggle;
 use Filament\Pages\Actions\Action;
 use App\Models\Category;
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Model;
 
 class MemberPromotionResource extends Resource
 {
@@ -129,5 +131,30 @@ class MemberPromotionResource extends Resource
             'view' => Pages\ViewMemberPromotion::route('/{record}'),
             'edit' => Pages\EditMemberPromotion::route('/{record}/edit'),
         ];
-    }    
+    }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_MEMBER_PROMOTIONS);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_MEMBER_PROMOTIONS);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_CREATE_MEMBER_PROMOTION);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_EDIT_MEMBER_PROMOTION);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_DELETE_MEMBER_PROMOTION);
+    }
 }

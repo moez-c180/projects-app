@@ -22,6 +22,8 @@ use stdClass;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Actions\Action;
 use Closure;
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Model;
 
 class DisabledFormResource extends Resource
 {
@@ -192,5 +194,31 @@ class DisabledFormResource extends Resource
             'view' => Pages\ViewDisabledForm::route('/{record}'),
             'edit' => Pages\EditDisabledForm::route('/{record}/edit'),
         ];
-    }    
+    }  
+    
+    
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_DISABLED_FORMS);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_DISABLED_FORMS);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_CREATE_DISABLED_FORM);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_EDIT_DISABLED_FORM);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_DELETE_DISABLED_FORM);
+    }
 }

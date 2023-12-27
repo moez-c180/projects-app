@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Models\Permission as BasePermission;
+
+class Permission extends BasePermission
+{
+    const CAN_SEE_HOME_INSIGHTS = 'can-see-home-insights';
+    const CAN_SEE_MEMBER_JOBS = 'can-see-member-jobs';
+    const CAN_CREATE_MEMBER_JOB = 'can-create-member-job';
+    const CAN_EDIT_MEMBER_JOB = 'can-edit-member-job';
+    const CAN_DELETE_MEMBER_JOB = 'can-delete-member-job';
+    const CAN_SEE_MEMBER_PROMOTIONS = 'can-see-member-promotions';
+    const CAN_CREATE_MEMBER_PROMOTION = 'can-create-member-promotion';
+    const CAN_EDIT_MEMBER_PROMOTION = 'can-edit-member-promotion';
+    const CAN_DELETE_MEMBER_PROMOTION = 'can-delete-member-promotion';
+    const CAN_CREATE_MEMBER_PROMOTION_PENSION = 'can-create-member-promotion-pension';
+    const CAN_SEE_MEMBERS = 'can-see-members';
+    const CAN_CREATE_MEMBER = 'can-create-member';
+    const CAN_EDIT_MEMBER = 'can-edit-member';
+    const CAN_DELETE_MEMBER = 'can-delete-member';
+    const CAN_EXPORT_MEMBERS = 'can-export-members';
+    const CAN_IMPORT_MEMBERS = 'can-import-members';
+    const CAN_SEE_MEMBER_UNITS = 'can-see-member-units';
+    const CAN_CREATE_MEMBER_UNIT = 'can-create-member-unit';
+    const CAN_EDIT_MEMBER_UNIT = 'can-edit-member-unit';
+    const CAN_DELETE_MEMBER_UNIT = 'can-delete-member-unit';
+    const CAN_CREATE_MEMBER_UNIT_JOB = 'can-create-member-unit-job';
+    const CAN_SEE_SAFE_ENTRIES = 'can-see-safe-entries';
+    const CAN_CREATE_SAFE_ENTRY = 'can-create-safe-entry';
+    const CAN_EDIT_SAFE_ENTRY = 'can-edit-safe-entry';
+    const CAN_DELETE_SAFE_ENTRY = 'can-delete-safe-entry';
+    const CAN_SEE_MEMBERS_WITH_LATE_PAYMENTS_REPORT = 'can-see-members-with-late-payments-report';
+    const CAN_EXPORT_MEMBERS_WITH_LATE_PAYMENTS_REPORT = 'can-export-members-with-late-payments-report';
+    const CAN_SEE_AGE_OF_HONORING_REPORT = 'can-see-age-of-honoring-report';
+    const CAN_SEE_NCO_65_REPORTS = 'can-see-nco-65-reports';
+    const CAN_SEE_IN_SERVICE_CO_MEMBERS_REPORT = 'can-see-in-service-co-members-report';
+    const CAN_SEE_ON_PENSION_CO_MEMBERS_REPORT = 'can-see-on-pension-co-members-report';
+    const CAN_SEE_IN_SERVICE_NCO_MEMBERS_REPORT = 'can-see-in-service-nco-members-report';
+    const CAN_SEE_ON_PENSION_NCO_MEMBERS_REPORT = 'can-see-on-pension-nco-members-report';
+    const CAN_SEE_MEMBERSHIPS = 'can-see-memberships';
+    const CAN_CREATE_MEMBERSHIP = 'can-create-membership';
+    const CAN_EDIT_MEMBERSHIP = 'can-edit-membership';
+    const CAN_DELETE_MEMBERSHIP = 'can-delete-membership';
+    const CAN_UPLOAD_MEMBERSHIPS_SHEET = 'can-upload-memberships-sheet';
+    const CAN_SEE_MEMBER_WALLET_TRANSACTIONS = 'can-see-member-wallet-transactions';
+    const CAN_SEE_AGE_FORMS = 'can-see-age-forms';
+    const CAN_CREATE_AGE_FORM = 'can-create-age-form';
+    const CAN_EDIT_AGE_FORM = 'can-edit-age-form';
+    const CAN_DELETE_AGE_FORM = 'can-delete-age-form';
+    const CAN_SEE_DEATH_FORMS = 'can-see-death-forms';
+    const CAN_CREATE_DEATH_FORM = 'can-create-death-form';
+    const CAN_EDIT_DEATH_FORM = 'can-edit-death-form';
+    const CAN_DELETE_DEATH_FORM = 'can-delete-death-form';
+    const CAN_SEE_DISABLED_FORMS = 'can-see-disabled-forms';
+    const CAN_CREATE_DISABLED_FORM = 'can-create-disabled-form';
+    const CAN_EDIT_DISABLED_FORM = 'can-edit-disabled-form';
+    const CAN_DELETE_DISABLED_FORM = 'can-delete-disabled-form';
+    const CAN_SEE_FELLOWSHIP_GRANT_FORMS = 'can-see-fellowship-grant-forms';
+    const CAN_CREATE_FELLOWSHIP_GRANT_FORM = 'can-create-fellowship-grant-form';
+    const CAN_EDIT_FELLOWSHIP_GRANT_FORM = 'can-edit-fellowship-grant-form';
+    const CAN_DELETE_FELLOWSHIP_GRANT_FORM = 'can-delete-fellowship-grant-form';
+    const CAN_SEE_MARRIAGE_FORMS = 'can-see-marriage-forms';
+    const CAN_CREATE_MARRIAGE_FORM = 'can-create-marriage-form';
+    const CAN_EDIT_MARRIAGE_FORM = 'can-edit-marriage-form';
+    const CAN_DELETE_MARRIAGE_FORM = 'can-delete-marriage-form';
+    const CAN_SEE_PROJECT_CLOSURE_FORMS = 'can-see-project-closure-forms';
+    const CAN_CREATE_PROJECT_CLOSURE_FORM = 'can-create-project-closure-form';
+    const CAN_EDIT_PROJECT_CLOSURE_FORM = 'can-edit-project-closure-form';
+    const CAN_DELETE_PROJECT_CLOSURE_FORM = 'can-delete-project-closure-form';
+    const CAN_SEE_RELATIVE_DEATH_FORMS = 'can-see-relative-death-forms';
+    const CAN_CREATE_RELATIVE_DEATH_FORM = 'can-create-relative-death-form';
+    const CAN_EDIT_RELATIVE_DEATH_FORM = 'can-edit-relative-death-form';
+    const CAN_DELETE_RELATIVE_DEATH_FORM = 'can-delete-relative-death-form';
+    const CAN_SEE_REFUND_FORMS = 'can-see-refund-forms';
+    const CAN_CREATE_REFUND_FORM = 'can-create-refund-form';
+    const CAN_EDIT_REFUND_FORM = 'can-edit-refund-form';
+    const CAN_DELETE_REFUND_FORM = 'can-delete-refund-form';
+    const CAN_ACCESS_SYSTEM_CORE_VALUES = 'can-access-system-core-values';
+    const CAN_ACCESS_ACTIVITY_LOGS = 'can-access-activity-logs';
+}

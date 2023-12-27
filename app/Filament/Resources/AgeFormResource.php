@@ -27,6 +27,8 @@ use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Notifications\Notification;
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Model;
 
 class AgeFormResource extends Resource
 {
@@ -158,4 +160,30 @@ class AgeFormResource extends Resource
             'edit' => Pages\EditAgeForm::route('/{record}/edit'),
         ];
     }    
+
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_AGE_FORMS);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_AGE_FORMS);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_CREATE_AGE_FORM);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_EDIT_AGE_FORM);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_DELETE_AGE_FORM);
+    }
 }

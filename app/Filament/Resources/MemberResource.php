@@ -44,6 +44,8 @@ use Filament\Tables\Filters\TernaryFilter;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use App\Models\Review;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Permission;
 
 class MemberResource extends Resource
 {
@@ -396,4 +398,30 @@ class MemberResource extends Resource
             'edit' => Pages\EditMember::route('/{record}/edit'),
         ];
     }    
+
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_MEMBERS);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_SEE_MEMBERS);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can(Permission::CAN_CREATE_MEMBER);
+    }
+
+    public static function canEdit(Model $record): bool 
+    {
+        return auth()->user()->can(Permission::CAN_EDIT_MEMBER);
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can(Permission::CAN_DELETE_MEMBER);
+    }
 }
