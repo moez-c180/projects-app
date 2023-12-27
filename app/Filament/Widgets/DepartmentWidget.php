@@ -21,7 +21,7 @@ class DepartmentWidget extends BaseWidget
             ->whereHas('category', fn($query) => $query->where('is_nco', false))
             ->count();
         $coPension = Member::query()
-            ->whereNull('pension_date')
+            ->whereNotNull('pension_date')
             ->whereHas('category', fn($query) => $query->where('is_nco', false))
             ->count();;
         $totalCo = $coInService + $coPension;
