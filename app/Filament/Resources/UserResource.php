@@ -30,6 +30,12 @@ class UserResource extends Resource
     protected static ?int $navigationSort = 1;
     protected static ?string $label = 'مديري النظام ';
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereHas('roles', fn($query) => $query->where('name', '!=', Role::ROOT_ADMIN));
+    }
+
     public static function form(Form $form): Form
     {
         return $form
