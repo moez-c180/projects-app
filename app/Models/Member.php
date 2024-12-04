@@ -186,7 +186,7 @@ class Member extends Model
     {
         return $this->hasMany(MemberPromotion::class);
     }
-    
+
     /**
      * Get all of the memberUnits for the Member
      *
@@ -206,7 +206,7 @@ class Member extends Model
     {
         return $this->belongsTo(BankName::class);
     }
-    
+
     /**
      * Get the unit that owns the Member
      *
@@ -216,7 +216,7 @@ class Member extends Model
     {
         return $this->belongsTo(Unit::class);
     }
-    
+
     /**
      * Get the financialBranch that owns the Member
      *
@@ -226,8 +226,8 @@ class Member extends Model
     {
         return $this->belongsTo(FinancialBranch::class);
     }
-    
-    
+
+
     /**
      * Get the department that owns the Member
      *
@@ -237,7 +237,7 @@ class Member extends Model
     {
         return $this->belongsTo(Department::class);
     }
-    
+
     public function review(): BelongsTo
     {
         return $this->belongsTo(Review::class);
@@ -245,13 +245,15 @@ class Member extends Model
 
     public function getRankName()
     {
-        if ($this->is_general_staff)
-        {
+        if (!$this->rank) {
+            return null;
+        }
+
+        if ($this->is_general_staff) {
             return implode(" ", [$this->rank->name, "أ ح"]);
         }
-        
-        if ($this->is_institute_graduate)
-        {
+
+        if ($this->is_institute_graduate) {
             return implode(" ", [$this->rank->name, "معهد فني"]);
         }
         return $this->rank?->name;
@@ -384,14 +386,12 @@ class Member extends Model
 
     public function getSubscriptionValue(): int
     {
-        if ($this->is_nco)
-        {
+        if ($this->is_nco) {
             if (is_null($this->pension_date)) {
                 return app(SystemConstantsSettings::class)->subscription_fees_nco_in_service;
             } else {
                 return app(SystemConstantsSettings::class)->subscription_fees_nco_out_service;
             }
-            
         } else {
             if (is_null($this->pension_date)) {
                 return app(SystemConstantsSettings::class)->subscription_fees_co_in_service;
@@ -412,11 +412,10 @@ class Member extends Model
         $until = $until ?? now();
         $diffInMonths = Carbon::parse($this->membership_start_date)
             ->diffInMonths($until);
-        
+
         $membershipDate = Carbon::parse($this->membership_start_date);
         $period = $membershipDate->range($until, 1, 'month');
-        foreach($period as $date)
-        {
+        foreach ($period as $date) {
             $monthDays[] = $date->format('Y-m-01');
         }
 
@@ -426,7 +425,7 @@ class Member extends Model
     public function getUnpaidMembershipMonths(?Carbon $until = null): array
     {
         $paidMembershipMonths = Membership::where('member_id', $this->id)->pluck('membership_date')->toArray();
-        $paidMembershipMonths = array_map(function($record) {
+        $paidMembershipMonths = array_map(function ($record) {
             return $record->format('Y-m-d');
         }, $paidMembershipMonths);
 
@@ -459,7 +458,7 @@ class Member extends Model
             ->orWhereLike('seniority_number', $search)
             ->orWhereLike('national_id_number', $search);
     }
-    
+
     public function scopeSearchName(Builder $builder, $search): Builder
     {
         return $builder
@@ -474,8 +473,7 @@ class Member extends Model
             MarriageForm::class,
             RelativeDeathForm::class,
         ])->get();
-        foreach($data as $row)
-        {
+        foreach ($data as $row) {
             if ($row->formable->pending == 0)
                 $total += $row->formable->amount;
         }
@@ -484,8 +482,7 @@ class Member extends Model
 
     public function getFuneralFeesValue(): int
     {
-        if ($this->category->is_nco)
-        {
+        if ($this->category->is_nco) {
             return app(SystemConstantsSettings::class)->nco_funeral_fees;
         } else {
             return app(SystemConstantsSettings::class)->co_funeral_fees;
@@ -494,8 +491,7 @@ class Member extends Model
 
     public function getDeathFormValue(): int
     {
-        if ($this->category->is_nco)
-        {
+        if ($this->category->is_nco) {
             return app(SystemConstantsSettings::class)->nco_death;
         } else {
             return app(SystemConstantsSettings::class)->co_death;
@@ -504,8 +500,7 @@ class Member extends Model
 
     public function getFellowshipGrantValue(): int
     {
-        if ($this->category->is_nco)
-        {
+        if ($this->category->is_nco) {
             return app(SystemConstantsSettings::class)->nco_grant;
         } else {
             return app(SystemConstantsSettings::class)->co_grant;
@@ -514,11 +509,11 @@ class Member extends Model
 
     public function scopeOfNco(Builder $builder, bool $isNco): Builder
     {
-        return $builder->whereHas('category', function($query) use ($isNco) {
+        return $builder->whereHas('category', function ($query) use ($isNco) {
             $query->whereIsNco($isNco);
         });
     }
-    
+
     public function scopeOnPension(Builder $builder, bool $onPension): Builder
     {
         if ($onPension === true)
